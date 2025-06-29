@@ -14,7 +14,7 @@ export default function UserDashboard() {
             fontFamily: "sans-serif"
         }}>
             <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Welcome!</h1>
-            <p style={{ fontSize: "1.2rem" }}>This is the User's Dashboard.</p>
+            <p style={{ fontSize: "1.2rem" }}>This is the User&apos;s Dashboard.</p>
         </div>
     );
 }
