@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #182237;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #2e374a;
+    color: white;
+    font-size: 14px;
+}
+
+.input::placeholder {
+    color: #a0a0a0;
+}
+
+.button {
+    padding: 10px;
+    background-color: teal;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #006666;
+}
+
+.mapContainer {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
