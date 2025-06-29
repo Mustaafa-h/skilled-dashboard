@@ -15,6 +15,7 @@ export default function UserDashboard() {
         }}>
             <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Welcome!</h1>
             <p style={{ fontSize: "1.2rem" }}>This is the User&apos;s Dashboard.</p>
+
         </div>
     );
 }
