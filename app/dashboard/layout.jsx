@@ -10,6 +10,7 @@ import Footer from "../ui/dashboard/footer/footer";
 const Layout = ({ children }) => {
     const router = useRouter();
     const [isAuthorized, setIsAuthorized] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
         const role = localStorage.getItem("role");
@@ -20,8 +21,12 @@ const Layout = ({ children }) => {
         }
     }, [router]);
 
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen);
+    };
+
     if (!isAuthorized) {
-        return null; // Prevents flicker while checking
+        return null; 
     }
 
     return (
@@ -29,13 +34,23 @@ const Layout = ({ children }) => {
             <div className={styles.menu}>
                 <Sidebar />
             </div>
+            {sidebarOpen && (
+                <>
+                    <div className={styles.sidebarBackdrop} onClick={toggleSidebar}></div>
+                    <div className={styles.sidebarOverlay}>
+                        <Sidebar onClose={toggleSidebar} />
+                    </div>
+                </>
+            )}
+
             <div className={styles.content}>
-                <Navbar />
+                <Navbar onToggleSidebar={toggleSidebar} />
                 {children}
                 <Footer />
             </div>
         </div>
     );
+
 };
 
 export default Layout;

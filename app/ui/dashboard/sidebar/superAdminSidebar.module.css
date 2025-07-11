@@ -1,0 +1,113 @@
+.container {
+    width: 250px;
+    background-color: #111827;
+    color: #f9fafb;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    z-index: 100;
+}
+
+.open {
+    transform: translateX(0) !important;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #1f2937;
+}
+
+.userImage {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userDetail {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.userTitle {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cat {
+    color: #9ca3af;
+    font-weight: 600;
+    font-size: 12px;
+    margin: 15px 0 5px 15px;
+    text-transform: uppercase;
+}
+
+.menuLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    color: #f9fafb;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.menuLink:hover {
+    background-color: #1f2937;
+}
+
+.active .menuLink,
+.menuLink.active {
+    background-color: #374151;
+}
+
+.icon {
+    font-size: 18px;
+}
+
+.linkText {
+    flex: 1;
+}
+
+.logout {
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #f9fafb;
+    width: 100%;
+}
+
+.logout:hover {
+    background-color: #1f2937;
+}
+
+@media (max-width: 768px) {
+    .container {
+        transform: translateX(0%);
+    }
+
+    .container.open {
+        transform: translateX(0) !important;
+    }
+}

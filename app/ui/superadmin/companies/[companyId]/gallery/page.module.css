@@ -1,0 +1,79 @@
+.container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+.uploadSection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.fileInput,
+.textInput {
+    padding: 0.5rem;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    border: 1px solid #333;
+    border-radius: 0.375rem;
+    flex: 1;
+    min-width: 150px;
+}
+
+.uploadButton {
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.uploadButton:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+.uploadButton:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+.galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+}
+
+.imageCard {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+}
+
+.image {
+    width: 100%;
+    border-radius: 0.375rem;
+    object-fit: cover;
+}
+
+.imageDescription {
+    color: #ccc;
+    font-size: 0.9rem;
+    text-align: center;
+    word-break: break-word;
+}

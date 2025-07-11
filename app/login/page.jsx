@@ -1,49 +1,96 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/app/lib/api";
 
 export default function LoginPage() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
     const router = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        if (username === "company" && password === "123") {
-            localStorage.setItem("role", "company");
-            router.push("/dashboard");
-        } else if (username === "user" && password === "123") {
-            localStorage.setItem("role", "user");
-            router.push("/dashboard-user");
-        }
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-        else {
-            setError("Invalid credentials. Please try again.");
+    try {
+        console.log("🚀 Attempting login with:", { email, password });
+
+        const response = await login(email, password);
+        console.log("✅ Login API response:", response.data);
+
+        if (response.data.success && response.data.data.accessToken) {
+            const token = response.data.data.accessToken;
+            localStorage.setItem("token", token);
+            console.log("✅ Saved JWT to localStorage:", token);
+
+            // Decode token to get role
+            const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+            console.log("✅ Decoded token payload:", tokenPayload);
+
+            const role = tokenPayload.role?.toLowerCase();
+            console.log("✅ User role:", role);
+
+            if (role === "superadmin") {
+                console.log("✅ Redirecting to /dashboard-superadmin");
+                router.push("/dashboard-superadmin");
+            } else if (role === "admin") {
+                console.log("✅ Redirecting to /dashboard");
+                router.push("/dashboard");
+            } else {
+                console.error("❌ Unauthorized role:", role);
+                setError("Unauthorized role.");
+            }
+        } else {
+            console.error("❌ Invalid credentials or missing token:", response.data);
+            setError(response.data.message || "Invalid credentials");
         }
-    };
+    } catch (err) {
+        console.error("❌ Login error:", err);
+        setError(err.response?.data?.message || "An error occurred. Please try again.");
+    } finally {
+        setLoading(false);
+    }
+};
+
+
 
     return (
-        <div style={{ maxWidth: "400px", margin: "auto", padding: "2rem", textAlign: "center" }}>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Login</button>
+        <div style={{ maxWidth: "400px", margin: "80px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px" }}>
+            <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Login</h2>
+            <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: "10px" }}>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
+                    />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
+                    />
+                </div>
+                {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    style={{ width: "100%", padding: "10px", borderRadius: "4px", background: "#0070f3", color: "white", border: "none" }}
+                >
+                    {loading ? "Logging in..." : "Login"}
+                </button>
             </form>
-            {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
         </div>
     );
 }

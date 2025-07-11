@@ -1,60 +1,88 @@
 .container {
   display: flex;
-  gap: 50px;
-  margin-top: 20px;
-}
-
-.infoContainer {
-  flex: 1;
-  background-color: var(--bgSoft);
-  padding: 20px;
-  border-radius: 10px;
-  font-weight: bold;
-  color: var(--textSoft);
-  height: max-content;
-}
-
-.imgContainer{
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  height: 300px;
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.formContainer {
-  flex: 3;
-  background-color: var(--bgSoft);
   padding: 20px;
-  border-radius: 10px;
+  box-sizing: border-box;
 }
 
-.form{
+.form {
+  background-color: var(--bgSoft);
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.form input, .form textarea, .form select{
-  padding: 20px;
-  border: 2px solid #2e374a;
-  border-radius: 5px;
+.input {
+  padding: 12px 15px;
+  border-radius: 6px;
+  border: 1px solid var(--borderSoft);
   background-color: var(--bg);
   color: var(--text);
-  margin: 10px 0px;
-}
-
-.form label{
-  font-size: 12px;
-}
-
-.form button{
+  font-size: 16px;
   width: 100%;
-  padding: 20px;
-  background-color: teal;
-  color: var(--text);
+  box-sizing: border-box;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #5d57c9;
+  box-shadow: 0 0 0 2px rgba(93, 87, 201, 0.3);
+}
+
+.button {
+  background-color: #5d57c9;
+  color: white;
+  padding: 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-top: 20px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.button:hover {
+  background-color: #4c47a8;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 1024px) {
+  .form {
+    width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form {
+    width: 98%;
+    padding: 15px;
+  }
+
+  .input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 10px;
+  }
 }

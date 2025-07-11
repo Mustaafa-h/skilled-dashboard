@@ -10,7 +10,6 @@ export async function POST(req) {
         const username = formData.get("username");
         const email = formData.get("email");
 
-        // Check if user with same username or email exists
         const existingUser = await User.findOne({
             $or: [{ username }, { email }]
         });

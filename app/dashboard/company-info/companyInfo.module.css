@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.contentWrapper {
+  background-color: var(--bgSoft);
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 88%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.infoCard {
+  background-color: var(--bg);
+  padding: 20px;
+  border-radius: 10px;
+  color: var(--textSoft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 1rem;
+}
+
+.infoCard p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .contentWrapper {
+    padding: 15px;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .infoCard {
+    padding: 15px;
+    font-size: 0.95rem;
+  }
+}

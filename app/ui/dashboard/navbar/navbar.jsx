@@ -1,38 +1,68 @@
 "use client";
+
 import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 import {
-  MdNotifications,
-  MdOutlineChat,
-  MdPublic,
-  MdSearch,
+    MdNotifications,
+    MdOutlineChat,
+    MdPublic,
+    MdSearch,
+    MdMenu,
 } from "react-icons/md";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
 
-const Navbar = () => {
-  const pathname = usePathname();
+const Navbar = ({ onToggleSidebar }) => {
+    const t = useTranslations();
+    const pathname = usePathname();
+    const notificationCount = 3;
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.title}>
-        {{
-          users: "Workers",
-          products: "Services"
-        }[pathname.split("/").pop()] || "Dashboard"}
-      </div>
+    const pageKey = pathname.split("/").pop();
 
-      <div className={styles.menu}>
-        <div className={styles.search}>
-          <MdSearch />
-          <input type="text" placeholder="Search..." className={styles.input} />
+    const titles = {
+        users: t("workers", { defaultValue: "Workers" }),
+        products: t("services", { defaultValue: "Services" }),
+        // add additional page title mappings if needed
+    };
+
+    // Context-aware notifications route
+    const notificationPath = pathname.startsWith("/dashboard-superadmin")
+        ? "/dashboard-superadmin/notifications"
+        : "/dashboard/notifications";
+
+    return (
+        <div className={styles.container}>
+            {/* Hamburger menu */}
+            <div
+                className={styles.hamburger}
+                onClick={onToggleSidebar}
+                role="button"
+                aria-label="Toggle sidebar"
+            >
+                <MdMenu size={24} />
+            </div>
+
+            {/* Page title */}
+            <div className={styles.title}>
+                {titles[pageKey] || t("dashboard", { defaultValue: "Dashboard" })}
+            </div>
+
+            {/* Right menu */}
+            <div className={styles.menu}>
+
+                <div className={styles.icons}>
+                    <MdOutlineChat size={20} />
+                    <Link href={notificationPath} className={styles.notificationWrapper}>
+                        <MdNotifications size={20} />
+                        {notificationCount > 0 && (
+                            <span className={styles.badge}>{notificationCount}</span>
+                        )}
+                    </Link>
+                    <MdPublic size={20} />
+                </div>
+            </div>
         </div>
-        <div className={styles.icons}>
-          <MdOutlineChat size={20} />
-          <MdNotifications size={20} />
-          <MdPublic size={20} />
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Navbar;

@@ -1,0 +1,87 @@
+.container {
+  background: var(--bgSoft);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+  text-align: center;
+}
+
+.serviceBlock {
+  margin-bottom: 25px;
+}
+
+.prefBlock {
+  background: var(--bg);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.prefDescription {
+  font-size: 0.9rem;
+  color: var(--textSoft);
+  margin-bottom: 10px;
+}
+
+.optionRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bgSoft);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priceInput {
+  width: 90px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.saveButton {
+  padding: 6px 12px;
+  background-color: #5d57c9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.saveButton:hover {
+  background-color: #4b45b0;
+}
+
+.loading {
+  color: var(--text);
+  text-align: center;
+  margin-top: 30px;
+  font-size: 1.2rem;
+}
+
+.noOptions {
+  font-size: 0.85rem;
+  color: var(--textSoft);
+  margin-top: 5px;
+}

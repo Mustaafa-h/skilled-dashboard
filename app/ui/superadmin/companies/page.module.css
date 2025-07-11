@@ -1,0 +1,87 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #121212;
+    color: #f0f0f0;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.addButton {
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.addButton:hover {
+    background-color: #1d4ed8;
+}
+
+.searchInput {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #333;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.table tr {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.table tr:hover {
+    background-color: #2a2a2a;
+}
+
+.deleteButton {
+    padding: 0.25rem 0.5rem;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.deleteButton:hover {
+    background-color: #b91c1c;
+}
+
+.statusText {
+    text-transform: capitalize;
+}

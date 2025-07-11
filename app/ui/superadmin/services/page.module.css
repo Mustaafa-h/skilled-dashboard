@@ -1,0 +1,115 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #121212;
+    color: #f0f0f0;
+    min-height: 100vh;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.addButton {
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.addButton:hover {
+    background-color: #1d4ed8;
+}
+
+.servicesList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.serviceCard {
+    border: 1px solid #333;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: #1e1e1e;
+}
+
+.serviceTitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.serviceDescription {
+    color: #ccc;
+    margin-bottom: 0.5rem;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.button {
+    padding: 0.375rem 0.75rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    background-color: #1d4ed8;
+}
+
+.deleteButton {
+    background-color: #dc2626;
+}
+
+.deleteButton:hover {
+    background-color: #b91c1c;
+}
+
+.subServiceList {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.subServiceItem {
+    border: 1px solid #555;
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    background-color: #2a2a2a;
+}
+
+.subServiceDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.subServiceName {
+    font-weight: 500;
+}
+
+.noSubServices {
+    color: #999;
+}
