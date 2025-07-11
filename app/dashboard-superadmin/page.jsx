@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import styles from "@/app/ui/superadmin/dashboard/superAdminLayout.module.css";
 import { getAllCompanies, getCompanyWorkers } from "@/app/lib/api";
 
@@ -13,40 +13,40 @@ export default function SuperAdminDashboardPage() {
     });
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchMetrics = async () => {
-            try {
-                const companiesRes = await getAllCompanies();
-                const companies = companiesRes.data.data || [];
-                const totalCompanies = companies.length;
+    const fetchMetrics = useCallback(async () => {
+        try {
+            const companiesRes = await getAllCompanies();
+            const companies = companiesRes.data.data || [];
+            const totalCompanies = companies.length;
 
-                let totalWorkers = 0;
-                await Promise.all(
-                    companies.map(async (company) => {
-                        try {
-                            const workersRes = await getCompanyWorkers(company.id);
-                            totalWorkers += workersRes.data.data.length;
-                        } catch (err) {
-                            console.error(`Error fetching workers for company ${company.id}:`, err);
-                        }
-                    })
-                );
+            let totalWorkers = 0;
+            await Promise.all(
+                companies.map(async (company) => {
+                    try {
+                        const workersRes = await getCompanyWorkers(company.id);
+                        totalWorkers += workersRes.data.data.length;
+                    } catch (err) {
+                        console.error(`Error fetching workers for company ${company.id}:`, err);
+                    }
+                })
+            );
 
-                setMetrics({
-                    companies: totalCompanies,
-                    workers: totalWorkers,
-                    admins: 5,
-                    transactions: 12
-                });
-            } catch (err) {
-                console.error("Error fetching SuperAdmin metrics:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMetrics();
+            setMetrics({
+                companies: totalCompanies,
+                workers: totalWorkers,
+                admins: 5,
+                transactions: 12
+            });
+        } catch (err) {
+            console.error("Error fetching SuperAdmin metrics:", err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
+
+    useEffect(() => {
+        fetchMetrics();
+    }, [fetchMetrics]);
 
     return (
         <div className={styles.dashboard}>

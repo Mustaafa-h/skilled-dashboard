@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
     getAllServices,
@@ -25,22 +25,23 @@ export default function AddCompanyServicePage() {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [servicesRes, subServicesRes] = await Promise.all([
-                    getAllServices(),
-                    getAllSubServices(),
-                ]);
-                setServices(servicesRes.data.data || []);
-                setSubServices(subServicesRes.data.data || []);
-            } catch (error) {
-                console.error("Error fetching services:", error);
-                toast.error("Failed to load services.");
-            }
-        };
-        fetchData();
+    const fetchData = useCallback(async () => {
+        try {
+            const [servicesRes, subServicesRes] = await Promise.all([
+                getAllServices(),
+                getAllSubServices(),
+            ]);
+            setServices(servicesRes.data.data || []);
+            setSubServices(subServicesRes.data.data || []);
+        } catch (error) {
+            console.error("Error fetching services:", error);
+            toast.error("Failed to load services.");
+        }
     }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleContinue = async () => {
         if (!selectedServiceId || !baseCost) {

@@ -57,12 +57,7 @@ export const getCompany = async (companyId) => API.get(`/companies/${companyId}`
 export const createCompany = async (companyData) => API.post(`/companies`, companyData);
 export const updateCompany = async (companyId, companyData) => API.put(`/companies/${companyId}`, companyData);
 export const deleteCompany = async (companyId) => {
-  try {
-    await API.delete(`/companies/${companyId}`);
-    return { success: true };
-  } catch (error) {
-    throw error;
-  }
+  return API.delete(`/companies/${companyId}`).then(() => ({ success: true }));
 };
 
 // ===================== Services =====================

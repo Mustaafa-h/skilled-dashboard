@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -19,7 +19,7 @@ export default function CompanyServicesPage() {
     const [allServices, setAllServices] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             const [companyRes, servicesRes] = await Promise.all([
@@ -34,11 +34,11 @@ export default function CompanyServicesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [companyId]);
 
     useEffect(() => {
         fetchData();
-    }, [companyId]);
+    }, [fetchData]);
 
     const handleDeleteSubService = async (subServiceId) => {
         if (!confirm("Are you sure you want to remove this sub-service?")) return;

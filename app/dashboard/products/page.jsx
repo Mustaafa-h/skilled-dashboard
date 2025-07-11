@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import Link from "next/link";
 import styles from "@/app/ui/dashboard/products/products.module.css";
@@ -16,7 +16,7 @@ export default function ProductsPage() {
 
   const companyId = "6c886af4-701a-4133-b68f-1647ad3efcad";
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [companyRes, servicesRes] = await Promise.all([
@@ -32,7 +32,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [companyId, t]);
 
   const handleDelete = async (subServiceId) => {
     if (!confirm(t("confirmDelete", { defaultValue: "Are you sure you want to remove this sub-service?" }))) return;
@@ -48,7 +48,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const groupSubservicesByServiceId = () => {
     if (!companyData) return {};
@@ -64,7 +64,6 @@ export default function ProductsPage() {
 
   const groupedSubservices = groupSubservicesByServiceId();
 
-  // Create a mapping for serviceId -> serviceName for fast lookup
   const serviceIdToName = {};
   services.forEach((service) => {
     serviceIdToName[service.id] = service.name;
@@ -75,7 +74,9 @@ export default function ProductsPage() {
       <div className={styles.top}>
         <h2>Services</h2>
         <Link href="/dashboard/products/add">
-          <button className={styles.addButton}>{t("addNewSubService", { defaultValue: "Add New Sub-Service" })}</button>
+          <button className={styles.addButton}>
+            {t("addNewSubService", { defaultValue: "Add New Sub-Service" })}
+          </button>
         </Link>
       </div>
 

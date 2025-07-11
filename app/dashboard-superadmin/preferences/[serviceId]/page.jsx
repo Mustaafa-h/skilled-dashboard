@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
     getServiceById,
@@ -20,7 +20,7 @@ export default function ServicePreferencesPage() {
     const [preferences, setPreferences] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             const [serviceRes, prefsRes] = await Promise.all([
@@ -31,8 +31,7 @@ export default function ServicePreferencesPage() {
 
             const cleanedPrefs = (prefsRes.data.data || []).map(pref => ({
                 ...pref,
-                options: (pref.options || [])
-                    .filter(opt => opt && opt.id && opt.is_active !== false)
+                options: (pref.options || []).filter(opt => opt && opt.id && opt.is_active !== false)
             }));
             setPreferences(cleanedPrefs);
         } catch (error) {
@@ -41,11 +40,11 @@ export default function ServicePreferencesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [serviceId]);
 
     useEffect(() => {
         if (serviceId) fetchData();
-    }, [serviceId]);
+    }, [serviceId, fetchData]);
 
     const handleDeletePrefType = async (prefTypeId) => {
         if (!confirm("Delete this preference type and its options?")) return;
