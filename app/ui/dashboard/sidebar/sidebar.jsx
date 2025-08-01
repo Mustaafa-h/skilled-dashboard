@@ -1,6 +1,7 @@
 "use client";
+
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MenuLink from "./menuLink/menuLink";
 import styles from "./sidebar.module.css";
@@ -11,31 +12,50 @@ import {
   MdSupervisedUserCircle,
   MdShoppingBag,
   MdAttachMoney,
-  MdWork,
-  MdAnalytics,
-  MdPeople,
   MdOutlineSettings,
   MdHelpCenter,
   MdPhotoLibrary,
 } from "react-icons/md";
+import { getCompany } from "../../../lib/api";
 
 const Sidebar = ({ onClose }) => {
   const t = useTranslations();
   const pathname = usePathname();
   const prevPath = useRef(pathname);
+  const [companyName, setCompanyName] = useState("Loading...");
+  const [companyLogo, setCompanyLogo] = useState("/noavatar.png");
 
   useEffect(() => {
     if (prevPath.current !== pathname) {
       prevPath.current = pathname;
-      if (onClose) {
-        onClose();
-      }
+      if (onClose) onClose();
     }
   }, [pathname, onClose]);
 
+  useEffect(() => {
+    const fetchCompany = async () => {
+      const companyId = localStorage.getItem("companyId");
+      if (!companyId) return;
+
+      try {
+        const res = await getCompany(companyId);
+        const companyData = res?.data?.data;
+
+        setCompanyName(companyData?.name || "Company");
+        // setCompanyLogo(companyData?.logo_url || "/noavatar.png");
+      } catch (err) {
+        console.error("Failed to fetch company:", err);
+        setCompanyName("Company");
+        setCompanyLogo("/noavatar.png");
+      }
+    };
+
+    fetchCompany();
+  }, []);
+
   const user = {
-    img: "/noavatar.png",
-    username: t("accountManager", { defaultValue: "Account Manager" }),
+    img: companyLogo,
+    username: companyName,
     role: t("administrator", { defaultValue: "Administrator" }),
   };
 
@@ -43,76 +63,22 @@ const Sidebar = ({ onClose }) => {
     {
       title: t("pages", { defaultValue: "Pages" }),
       list: [
-        {
-          title: t("dashboard", { defaultValue: "Dashboard" }),
-          path: "/dashboard",
-          icon: <MdDashboard />,
-        },
-        {
-          title: t("companyInfo", { defaultValue: "Company Info" }),
-          path: "/dashboard/company-info",
-          icon: <MdBusiness />,
-        },
-        {
-          title: t("workers", { defaultValue: "Workers" }),
-          path: "/dashboard/users",
-          icon: <MdSupervisedUserCircle />,
-        },
-        {
-          title: t("services", { defaultValue: "Services" }),
-          path: "/dashboard/products",
-          icon: <MdShoppingBag />,
-        },
-        {
-          title: t("transactions", { defaultValue: "Transactions" }),
-          path: "/dashboard/transactions",
-          icon: <MdAttachMoney />,
-        },
-        {
-          title: t("gallery", { defaultValue: "Gallery" }),
-          path: "/dashboard/gallery",
-          icon: <MdPhotoLibrary />,
-        },
-      ],
-    },
-    {
-      title: t("analytics", { defaultValue: "Analytics" }),
-      list: [
-        {
-          title: t("revenue", { defaultValue: "Revenue" }),
-          path: "/dashboard/revenue",
-          icon: <MdWork />,
-        },
-        {
-          title: t("reports", { defaultValue: "Reports" }),
-          path: "/dashboard/reports",
-          icon: <MdAnalytics />,
-        },
-        {
-          title: t("teams", { defaultValue: "Teams" }),
-          path: "/dashboard/teams",
-          icon: <MdPeople />,
-        },
+        { title: t("dashboard", { defaultValue: "Dashboard" }), path: "/dashboard", icon: <MdDashboard /> },
+        { title: t("companyInfo", { defaultValue: "Company Info" }), path: "/dashboard/company-info", icon: <MdBusiness /> },
+        { title: t("workers", { defaultValue: "Workers" }), path: "/dashboard/users", icon: <MdSupervisedUserCircle /> },
+        { title: t("services", { defaultValue: "Services" }), path: "/dashboard/products", icon: <MdShoppingBag /> },
+        { title: t("orders", { defaultValue: "Orders" }), path: "/dashboard/orders", icon: <MdAttachMoney /> },
+        { title: t("Gallery", { defaultValue: "Gallery" }), path: "/dashboard/gallery", icon: <MdPhotoLibrary /> },
+
       ],
     },
     {
       title: t("company", { defaultValue: "Company" }),
       list: [
-        {
-          title: t("preferences", { defaultValue: "Preferences" }),
-          path: "/dashboard/preferences",
-          icon: <MdOutlineSettings />,
-        },
-        {
-          title: t("settings", { defaultValue: "Settings" }),
-          path: "/dashboard/settings",
-          icon: <MdOutlineSettings />,
-        },
-        {
-          title: t("privacyPolicy", { defaultValue: "Privacy Policy" }),
-          path: "/dashboard/privacy",
-          icon: <MdHelpCenter />,
-        },
+        { title: t("admins", { defaultValue: "Admins" }), path: "/dashboard/admins", icon: <MdSupervisedUserCircle /> },
+        { title: t("preferences", { defaultValue: "Preferences" }), path: "/dashboard/preferences", icon: <MdOutlineSettings /> },
+        { title: t("settings", { defaultValue: "Settings" }), path: "/dashboard/settings", icon: <MdOutlineSettings /> },
+        { title: t("privacyPolicy", { defaultValue: "Privacy Policy" }), path: "/dashboard/privacy", icon: <MdHelpCenter /> },
       ],
     },
   ];
@@ -123,7 +89,7 @@ const Sidebar = ({ onClose }) => {
         <Image
           className={styles.userImage}
           src={user.img}
-          alt="User"
+          alt="Company Logo"
           width={50}
           height={50}
         />

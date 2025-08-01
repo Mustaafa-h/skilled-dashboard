@@ -5,12 +5,15 @@ import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { getServiceById, updateService } from "@/app/lib/api";
 import styles from "@/app/ui/superadmin/shared/form.module.css";
+import { useTranslations } from "next-intl";
 
 export default function EditServicePage() {
     const router = useRouter();
     const { serviceId } = useParams();
+    const t = useTranslations("editService");
 
     const [loading, setLoading] = useState(true);
+    const [updating, setUpdating] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         slug: "",
@@ -19,12 +22,14 @@ export default function EditServicePage() {
         image_url: "",
         is_active: true
     });
+    const [iconFile, setIconFile] = useState(null);
 
     useEffect(() => {
         const fetchService = async () => {
             try {
                 const response = await getServiceById(serviceId);
-                const data = response.data?.data;
+                const data = response.data;
+                console.log("Fetched service data:", data);
                 if (data) {
                     setFormData({
                         name: data.name || "",
@@ -37,52 +42,71 @@ export default function EditServicePage() {
                 }
             } catch (error) {
                 console.error("Error fetching service:", error);
-                toast.error("Failed to fetch service data.");
+                toast.error(t("fetchError", { defaultValue: "Failed to fetch service data." }));
             } finally {
                 setLoading(false);
             }
         };
 
         fetchService();
-    }, [serviceId]);
+    }, [serviceId, t]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             [name]: type === "checkbox" ? checked : value
-        });
+        }));
+    };
+
+    const handleIconChange = (e) => {
+        const file = e.target.files[0];
+        setIconFile(file);
+        console.log("Selected icon file:", file);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setUpdating(true);
         try {
-            const response = await updateService(serviceId, formData);
+            const payload = new FormData();
+            payload.append("name", formData.name);
+            payload.append("slug", formData.slug);
+            payload.append("description", formData.description);
+            if (iconFile) {
+                payload.append("icon", iconFile);
+                console.log("Icon appended:", iconFile.name);
+            }
+
+            console.log("Final payload (FormData entries):", Array.from(payload.entries()));
+
+            const response = await updateService(serviceId, payload);
+            console.log("Update response:", response);
+
             if (response.data?.success) {
-                toast.success("Service updated successfully.");
+                toast.success(t("success", { defaultValue: "Service updated successfully." }));
                 router.push("/dashboard-superadmin/services");
             } else {
-                toast.error(response.data?.message || "Failed to update service.");
+                toast.error(response.data?.message || t("fail", { defaultValue: "Failed to update service." }));
             }
         } catch (error) {
             console.error("Error updating service:", error);
-            toast.error("Error updating service.");
+            toast.error(t("error", { defaultValue: "Error updating service." }));
         } finally {
-            setLoading(false);
+            setUpdating(false);
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{t("loading", { defaultValue: "Loading..." })}</p>;
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Edit Service</h1>
+            <h1 className={styles.title}>{t("title", { defaultValue: "Edit Service" })}</h1>
             <form onSubmit={handleSubmit} className={styles.form}>
                 <input
                     type="text"
                     name="name"
-                    placeholder="Service Name"
+                    placeholder={t("name", { defaultValue: "Service Name" })}
                     value={formData.name}
                     onChange={handleChange}
                     required
@@ -91,7 +115,7 @@ export default function EditServicePage() {
                 <input
                     type="text"
                     name="slug"
-                    placeholder="Slug"
+                    placeholder={t("slug", { defaultValue: "Slug" })}
                     value={formData.slug}
                     onChange={handleChange}
                     required
@@ -99,27 +123,23 @@ export default function EditServicePage() {
                 />
                 <textarea
                     name="description"
-                    placeholder="Description"
+                    placeholder={t("description", { defaultValue: "Description" })}
                     value={formData.description}
                     onChange={handleChange}
                     className={styles.textarea}
                 />
                 <input
-                    type="url"
-                    name="icon_url"
-                    placeholder="Icon URL"
-                    value={formData.icon_url}
-                    onChange={handleChange}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleIconChange}
                     className={styles.input}
                 />
-                <input
-                    type="url"
-                    name="image_url"
-                    placeholder="Image URL"
-                    value={formData.image_url}
-                    onChange={handleChange}
-                    className={styles.input}
-                />
+                {formData.icon_url && !iconFile && (
+                    <div className={styles.previewContainer}>
+                        <p>{t("currentIcon", { defaultValue: "Current Icon:" })}</p>
+                        <img src={formData.icon_url} alt="Current Icon" className={styles.imagePreview} />
+                    </div>
+                )}
                 <label className={styles.checkboxLabel}>
                     <input
                         type="checkbox"
@@ -127,11 +147,13 @@ export default function EditServicePage() {
                         checked={formData.is_active}
                         onChange={handleChange}
                         className={styles.checkbox}
-                    />{" "}
-                    Active
+                    />
+                    {t("active", { defaultValue: "Active" })}
                 </label>
-                <button type="submit" disabled={loading} className={styles.button}>
-                    {loading ? "Updating..." : "Update Service"}
+                <button type="submit" disabled={updating} className={styles.button}>
+                    {updating
+                        ? t("updating", { defaultValue: "Updating..." })
+                        : t("updateBtn", { defaultValue: "Update Service" })}
                 </button>
             </form>
         </div>

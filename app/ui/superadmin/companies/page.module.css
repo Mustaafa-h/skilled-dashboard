@@ -85,3 +85,21 @@
 .statusText {
     text-transform: capitalize;
 }
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.editButton {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background-color: #3c7dc4;
+}

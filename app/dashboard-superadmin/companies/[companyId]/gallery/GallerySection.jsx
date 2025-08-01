@@ -5,8 +5,11 @@ import { supabase } from "@/app/lib/supabase";
 import { addCompanyImage, getCompanyImages } from "@/app/lib/api";
 import toast from "react-hot-toast";
 import styles from "@/app/ui/superadmin/companies/[companyId]/gallery/page.module.css";
+import { useTranslations } from "next-intl";
 
 export default function GallerySection({ companyId }) {
+  const t = useTranslations();
+
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState(null);
@@ -20,7 +23,7 @@ export default function GallerySection({ companyId }) {
       setImages(data.data || []);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch images.");
+      toast.error(t("gallery.fetchError", { defaultValue: "Failed to fetch images." }));
     }
   };
 
@@ -32,11 +35,11 @@ export default function GallerySection({ companyId }) {
 
   const handleUpload = async () => {
     if (!file) {
-      toast.error("Please select a file.");
+      toast.error(t("gallery.selectFile", { defaultValue: "Please select a file." }));
       return;
     }
     if (!description.trim()) {
-      toast.error("Please add a description.");
+      toast.error(t("gallery.addDescription", { defaultValue: "Please add a description." }));
       return;
     }
     setUploading(true);
@@ -59,13 +62,13 @@ export default function GallerySection({ companyId }) {
         sort_order: 1
       });
 
-      toast.success("Image uploaded!");
+      toast.success(t("gallery.uploadSuccess", { defaultValue: "Image uploaded!" }));
       setFile(null);
       setDescription("");
       fetchImages();
     } catch (error) {
       console.error(error);
-      toast.error("Upload failed.");
+      toast.error(t("gallery.uploadError", { defaultValue: "Upload failed." }));
     } finally {
       setUploading(false);
     }
@@ -73,7 +76,7 @@ export default function GallerySection({ companyId }) {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Company Gallery</h2>
+      <h2 className={styles.title}>{t("gallery.title", { defaultValue: "Company Gallery" })}</h2>
       <div className={styles.uploadSection}>
         <input
           type="file"
@@ -83,7 +86,7 @@ export default function GallerySection({ companyId }) {
         />
         <input
           type="text"
-          placeholder="Image description"
+          placeholder={t("gallery.descriptionPlaceholder", { defaultValue: "Image description" })}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className={styles.textInput}
@@ -93,7 +96,9 @@ export default function GallerySection({ companyId }) {
           disabled={uploading}
           className={styles.uploadButton}
         >
-          {uploading ? "Uploading..." : "Upload"}
+          {uploading
+            ? t("gallery.uploading", { defaultValue: "Uploading..." })
+            : t("gallery.upload", { defaultValue: "Upload" })}
         </button>
       </div>
       <div className={styles.galleryGrid}>

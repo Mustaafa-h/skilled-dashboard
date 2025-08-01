@@ -7,21 +7,18 @@ import MenuLink from "./menuLink/menuLink";
 import styles from "./superAdminSidebar.module.css";
 import { useTranslations } from "next-intl";
 import {
+    MdSupervisedUserCircle,
     MdDashboard,
     MdBusiness,
-    MdGroup,
     MdMiscellaneousServices,
     MdTune,
     MdPhotoLibrary,
-    MdReceiptLong,
-    MdBarChart,
-    MdAdminPanelSettings,
     MdSettings,
     MdNotifications
 } from "react-icons/md";
 
 const SuperAdminSidebar = ({ onClose, menuOpen }) => {
-    const t = useTranslations();
+    const t = useTranslations("Sidebar");
     const pathname = usePathname();
     const prevPath = useRef(pathname);
 
@@ -37,30 +34,54 @@ const SuperAdminSidebar = ({ onClose, menuOpen }) => {
     const user = {
         img: "/noavatar.png",
         username: "SuperAdmin",
-        role: "Platform Administrator",
+        role: t("userRole", { defaultValue: "Platform Administrator" }),
     };
 
     const menuItems = [
         {
-            title: "Platform",
+            title: t("section.platform", { defaultValue: "Platform" }),
             list: [
-                { title: "Dashboard", path: "/dashboard-superadmin", icon: <MdDashboard /> },
-                { title: "Companies", path: "/dashboard-superadmin/companies", icon: <MdBusiness /> },
-                { title: "Workers", path: "/dashboard-superadmin/workers", icon: <MdGroup /> },
-                { title: "Services", path: "/dashboard-superadmin/services", icon: <MdMiscellaneousServices /> },
-                { title: "Preferences", path: "/dashboard-superadmin/preferences", icon: <MdTune /> },
-                { title: "Gallery", path: "/dashboard-superadmin/gallery", icon: <MdPhotoLibrary /> },
-                { title: "Transactions", path: "/dashboard-superadmin/transactions", icon: <MdReceiptLong /> },
-                { title: "Reports", path: "/dashboard-superadmin/reports", icon: <MdBarChart /> },
-                { title: "Admin Management", path: "/dashboard-superadmin/admins", icon: <MdAdminPanelSettings /> },
-                { title: "Settings", path: "/dashboard-superadmin/settings", icon: <MdSettings /> },
-                { title: "Notifications", path: "/dashboard-superadmin/notifications", icon: <MdNotifications /> },
+                {
+                    title: t("dashboard", { defaultValue: "Dashboard" }),
+                    path: "/dashboard-superadmin",
+                    icon: <MdDashboard />,
+                },
+                {
+                    title: t("companies", { defaultValue: "Companies" }),
+                    path: "/dashboard-superadmin/companies",
+                    icon: <MdBusiness />,
+                },
+                {
+                    title: t("services", { defaultValue: "Services" }),
+                    path: "/dashboard-superadmin/services",
+                    icon: <MdMiscellaneousServices />,
+                },
+                {
+                    title: t("preferences", { defaultValue: "Preferences" }),
+                    path: "/dashboard-superadmin/preferences",
+                    icon: <MdTune />,
+                },
+                { title: t("banners", { defaultValue: "Banners" }), path: "/dashboard-superadmin/banners", icon: <MdPhotoLibrary /> },
+
+
+                { title: t("admins", { defaultValue: "Admins" }), path: "/dashboard-superadmin/admins", icon: <MdSupervisedUserCircle /> },
+
+                {
+                    title: t("settings", { defaultValue: "Settings" }),
+                    path: "/dashboard-superadmin/settings",
+                    icon: <MdSettings />,
+                },
+                {
+                    title: t("notifications", { defaultValue: "Notifications" }),
+                    path: "/dashboard-superadmin/notifications",
+                    icon: <MdNotifications />,
+                },
             ],
         },
     ];
 
     return (
-         <div className={`${styles.container} ${menuOpen ? styles.open : ""}`}>
+        <div className={`${styles.container} ${menuOpen ? styles.open : ""}`}>
             <div className={styles.user}>
                 <Image
                     className={styles.userImage}

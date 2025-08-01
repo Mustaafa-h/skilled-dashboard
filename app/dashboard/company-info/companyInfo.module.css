@@ -8,29 +8,52 @@
 
 .contentWrapper {
   background-color: var(--bgSoft);
-  padding: 20px;
+  padding: 24px;
   border-radius: 12px;
   width: 100%;
-  max-width: 88%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 900px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
 }
 
 .title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--text);
-  text-align: center;
-  margin-bottom: 1rem;
+  margin: 0;
+}
+
+.editButton {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s ease;
+  white-space: nowrap;
+}
+
+.editButton:hover {
+  background-color: #2563eb;
 }
 
 .infoCard {
   background-color: var(--bg);
-  padding: 20px;
+  padding: 24px;
   border-radius: 10px;
   color: var(--textSoft);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
   font-size: 1rem;
 }
 
@@ -41,17 +64,37 @@
   gap: 0.5rem;
 }
 
-@media (max-width: 600px) {
-  .contentWrapper {
-    padding: 15px;
-  }
-  
-  .title {
-    font-size: 1.25rem;
-  }
-  
+@media (max-width: 768px) {
   .infoCard {
-    padding: 15px;
+    grid-template-columns: 1fr;
+  }
+
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .editButton {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .contentWrapper {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .infoCard {
+    padding: 16px;
     font-size: 0.95rem;
   }
 }

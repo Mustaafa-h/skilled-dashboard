@@ -6,7 +6,6 @@ import {
     MdNotifications,
     MdOutlineChat,
     MdPublic,
-    MdSearch,
     MdMenu,
 } from "react-icons/md";
 import Link from "next/link";

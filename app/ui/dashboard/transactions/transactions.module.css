@@ -1,117 +1,71 @@
 .container {
-  background-color: var(--bgSoft);
-  padding: 20px;
-  border-radius: 10px;
+  margin-top: 2rem;
+  padding: 1rem;
 }
 
 .title {
-  margin-bottom: 20px;
-  font-weight: 200;
-  color: var(--textSoft);
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .tableContainer {
-  width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   border-radius: 8px;
 }
 
-.tableContainer::-webkit-scrollbar {
-  height: 6px;
-}
-
-.tableContainer::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 3px;
-}
-
-.tableContainer::-webkit-scrollbar-track {
-  background: #222;
-}
-
 .table {
+  width: 100%;
   min-width: 600px;
-  /* enables horizontal scroll on small screens */
   border-collapse: collapse;
-  min-width: 100%;
-  /* fill container when possible */
+  background-color: #1e1d46;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.table th,
+.table thead {
+  background-color: #0d0925;
+}
+
 .table td {
-  padding: 0.75rem 1rem;
-  text-align: left;
-}
-
-.user {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.userImage {
-  object-fit: cover;
-  border-radius: 50%;
+  padding: 1rem;
+  border-bottom: 1px solid #101329;
+  font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 .status {
-  border-radius: 5px;
-  padding: 5px;
-  font-size: 14px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
   color: white;
 }
 
 .pending {
-  background-color: #f7cb7375;
+  background-color: #b49d47;
 }
 
+.completed,
 .done {
-  background-color: #afd6ee75;
+  background-color: #4a90e2;
 }
 
 .cancelled {
-  background-color: #f7737375;
+  background-color: #c94f5a;
 }
 
-/* === Responsiveness === */
-@media (max-width: 768px) {
-
-  .container,
-  .wrapper,
-  .card,
-  .content,
-  .table,
-  .sidebar,
-  .navbar,
-  .form,
-  .input,
-  .button {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 1rem !important;
-    box-sizing: border-box !important;
-  }
-
-  .flex-row {
-    flex-direction: column !important;
-  }
-
-  .grid {
-    grid-template-columns: 1fr !important;
-  }
+.confirmed {
+  background-color: #3d9970;
 }
 
-@media (max-width: 480px) {
-
-  .text,
-  .title,
-  .subtitle,
-  .label {
-    font-size: 90% !important;
+@media screen and (max-width: 600px) {
+  .table td {
+    padding: 0.75rem;
+    font-size: 0.85rem;
   }
 
-  .button {
-    padding: 0.5rem 1rem !important;
+  .title {
+    font-size: 1.2rem;
   }
 }

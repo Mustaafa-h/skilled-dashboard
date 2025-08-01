@@ -1,28 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/app/lib/supabase";
-import { addCompanyImage } from "@/app/lib/api";
-import { getCompanyImages } from "@/app/lib/api";
+import { addCompanyImage, getCompanyImages, deleteCompanyImage } from "@/app/lib/api";
 import styles from "@/app/ui/dashboard/gallery/gallery.module.css";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function GalleryPage() {
+  const t = useTranslations();
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState(null);
   const [description, setDescription] = useState("");
 
-  const bucketName = "company-images";
-  const companyId = "6c886af4-701a-4133-b68f-1647ad3efcad";
+  const companyId = typeof window !== "undefined" ? localStorage.getItem("companyId") : null;
 
   const fetchImages = async () => {
     try {
+      console.log("📥 Fetching gallery images...");
       const { data } = await getCompanyImages(companyId);
-      setImages(data.data); // backend returns an array of images
+      console.log("✅ Loaded images:", data.data);
+      setImages(data.data);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to fetch images from server.");
+      console.error("❌ Error loading images:", error);
+      toast.error(t("fetchImagesFailed"));
     }
   };
 
@@ -32,69 +33,70 @@ export default function GalleryPage() {
 
   const handleUpload = async () => {
     if (!file) {
-      toast.error("Please select a file first.");
+      toast.error(t("selectFileFirst"));
       return;
     }
     if (!description.trim()) {
-      toast.error("Please enter a description.");
+      toast.error(t("enterDescription"));
       return;
     }
 
     setUploading(true);
-    const fileName = `${Date.now()}-${file.name}`;
+    const payload = new FormData();
+    payload.append("description", description.trim());
+    payload.append("image", file);
 
     try {
-      // Upload to Supabase
-      const { error: uploadError } = await supabase.storage
-        .from(bucketName)
-        .upload(`${companyId}/${fileName}`, file);
+      console.log("📤 Uploading image:", file.name);
+      await addCompanyImage(companyId, payload);
+      toast.success(t("imageUploaded"));
 
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: urlData } = await supabase.storage
-        .from(bucketName)
-        .getPublicUrl(`${companyId}/${fileName}`);
-      const publicUrl = urlData.publicUrl;
-
-      // Add to company gallery via backend
-      await addCompanyImage(companyId, {
-        url: publicUrl,
-        description: description.trim(),
-        image_type: "gallery",
-        sort_order: 1
-      });
-
-      toast.success("Image uploaded and added to gallery!");
       setFile(null);
       setDescription("");
       fetchImages();
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload image.");
+      console.error("❌ Upload failed:", error);
+      toast.error(t("uploadFailed"));
     } finally {
       setUploading(false);
     }
   };
 
+  const handleDelete = async (imageId) => {
+    if (!confirm(t("confirmDeleteImage") || "Are you sure you want to delete this image?")) return;
+
+    try {
+      console.log("🗑️ Deleting image with ID:", imageId);
+      await deleteCompanyImage(imageId);
+      toast.success(t("imageDeleted"));
+      fetchImages();
+    } catch (err) {
+      console.error("❌ Delete error:", err);
+      toast.error(t("deleteFailed"));
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Company Gallery</h2>
+      <h2>{t("companyGallery")}</h2>
 
       <div className={styles.controls}>
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => setFile(e.target.files[0])}
+          onChange={(e) => {
+            setFile(e.target.files[0]);
+            console.log("📸 Selected file:", e.target.files[0]);
+          }}
         />
         <input
           type="text"
-          placeholder="Enter image description..."
+          placeholder={t("enterImageDescription")}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <button onClick={handleUpload} disabled={uploading}>
-          {uploading ? "Uploading..." : "Upload"}
+          {uploading ? t("uploading") : t("upload")}
         </button>
       </div>
 
@@ -103,6 +105,12 @@ export default function GalleryPage() {
           <div className={styles.card} key={image.id || idx}>
             <img src={image.url} alt={image.description || `Image ${idx}`} className={styles.image} />
             <p>{image.description}</p>
+            <button
+              className={styles.deleteButton}
+              onClick={() => handleDelete(image.id)}
+            >
+              {t("delete")}
+            </button>
           </div>
         ))}
       </div>

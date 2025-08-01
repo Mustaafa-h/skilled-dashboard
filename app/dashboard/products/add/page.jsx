@@ -7,6 +7,7 @@ import {
   addCompanySubService,
   getAllServices,
   getAllSubServices,
+  getCompany,
 } from "@/app/lib/api";
 import styles from "@/app/ui/dashboard/products/addProduct/addProduct.module.css";
 import toast from "react-hot-toast";
@@ -16,6 +17,7 @@ export default function AddSubServicePage() {
   const t = useTranslations();
 
   const [services, setServices] = useState([]);
+  const [companyServices, setCompanyServices] = useState([]);
   const [subServices, setSubServices] = useState([]);
   const [filteredSubServices, setFilteredSubServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState("");
@@ -23,28 +25,37 @@ export default function AddSubServicePage() {
   const [selectedSubServiceIds, setSelectedSubServiceIds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [companySubserviceIds, setCompanySubserviceIds] = useState([]);
 
-  const companyId = "6c886af4-701a-4133-b68f-1647ad3efcad";
+  const companyId = (typeof window !== "undefined" ? localStorage.getItem("companyId") : null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const servicesResponse = await getAllServices();
-        setServices(servicesResponse.data.data);
+        const [servicesResponse, subServicesResponse, companyRes] = await Promise.all([
+          getAllServices(),
+          getAllSubServices(),
+          getCompany(companyId),
+        ]);
 
-        const subServicesResponse = await getAllSubServices();
+        setServices(servicesResponse.data.data);
         setSubServices(subServicesResponse.data.data);
+
+        const companyData = companyRes.data.data;
+        setCompanyServices(companyData.companyServices.map((s) => s.service_id));
+        setCompanySubserviceIds(companyData.subserviceDetails.map((s) => s.id));
       } catch (error) {
-        console.error("Fetch services error:", error);
-        toast.error("Failed to load services.");
+        console.error("❌ Fetch error:", error);
+        toast.error(t("loadError"));
       }
     };
+
     fetchData();
-  }, []);
+  }, [companyId, t]);
 
   const handleContinue = async () => {
     if (!selectedServiceId || !baseCost) {
-      toast.error("Please select a main service and enter a base cost.");
+      toast.error(t("selectServiceAndCost"));
       return;
     }
 
@@ -52,15 +63,14 @@ export default function AddSubServicePage() {
     try {
       const costValue = parseFloat(baseCost) * 1000;
       await addCompanyService(companyId, selectedServiceId, costValue);
-      toast.success("Main service associated successfully.");
-      const filtered = subServices.filter(
-        (sub) => sub.service_id === selectedServiceId
-      );
-      setFilteredSubServices(filtered);
+      toast.success(t("mainServiceAdded"));
+
+      const relatedSubs = subServices.filter((sub) => sub.service_id === selectedServiceId);
+      setFilteredSubServices(relatedSubs);
       setStep(2);
     } catch (error) {
-      console.error("Add main service error:", error);
-      toast.error("Failed to associate main service.");
+      console.error("❌ Add main service error:", error);
+      toast.error(t("mainServiceAddFail"));
     } finally {
       setLoading(false);
     }
@@ -75,16 +85,16 @@ export default function AddSubServicePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (selectedSubServiceIds.length === 0) {
-      toast.error("You must select at least one sub-service. Removing main service.");
+      toast.error(t("mustSelectSub"));
       try {
         await removeCompanyService(companyId, selectedServiceId);
-        toast.success("Main service removed.");
+        toast.success(t("mainServiceRemoved"));
         setStep(1);
         setSelectedServiceId("");
         setBaseCost("");
       } catch (error) {
-        console.error("Remove main service error:", error);
-        toast.error("Failed to remove main service.");
+        console.error("❌ Remove main service error:", error);
+        toast.error(t("mainServiceRemoveFail"));
       }
       return;
     }
@@ -95,18 +105,19 @@ export default function AddSubServicePage() {
         try {
           await addCompanySubService(companyId, selectedServiceId, subId);
         } catch (innerError) {
-          console.error(`Failed to add sub-service ${subId}:`, innerError);
-          toast.error(`Sub-service already associated.`);
+          console.warn(`⚠️ Sub-service ${subId} already associated.`, innerError);
+          toast.error(t("someSubAlready"));
         }
       }
-      toast.success("Sub-services added successfully.");
+
+      toast.success(t("subAddedSuccess"));
       setStep(1);
       setSelectedServiceId("");
       setBaseCost("");
       setSelectedSubServiceIds([]);
     } catch (error) {
-      console.error("Add sub-services error:", error);
-      toast.error("Failed to add sub-services.");
+      console.error("❌ Add sub-services error:", error);
+      toast.error(t("subAddFail"));
     } finally {
       setLoading(false);
     }
@@ -117,59 +128,68 @@ export default function AddSubServicePage() {
       <form onSubmit={handleSubmit} className={styles.form}>
         {step === 1 && (
           <>
-            <label>Select Main Service</label>
+            <label>{t("selectMainService")}</label>
             <select
               value={selectedServiceId}
               onChange={(e) => setSelectedServiceId(e.target.value)}
               required
             >
-              <option value="">-- Select a Service --</option>
-              {services.map((service) => (
-                <option key={service.id} value={service.id}>
-                  {service.name}
-                </option>
-              ))}
+              <option value="">{t("selectServicePlaceholder")}</option>
+              {services
+                .filter((service) => !companyServices.includes(service.id))
+                .map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
+                ))}
             </select>
 
-            <label>Base Cost (in thousands IQD)</label>
+            <label>{t("baseCostLabel")}</label>
             <input
               type="number"
               value={baseCost}
               onChange={(e) => setBaseCost(e.target.value)}
-              placeholder="e.g., 3 = 3000 IQD"
+              placeholder={t("baseCostPlaceholder")}
               required
             />
-            <small className={styles.hint}>Enter cost in thousands. E.g., 3 means 3000 IQD.</small>
+            <small className={styles.hint}>
+              {t("actualValue")}: {baseCost ? baseCost * 1000 : 0} IQD
+            </small>
 
             <button type="button" onClick={handleContinue} disabled={loading}>
-              {loading ? "Processing..." : "Continue to Select Sub-Services"}
+              {loading ? t("processing") : t("continueToSub")}
             </button>
           </>
         )}
 
         {step === 2 && (
           <>
-            <label>Select Sub-Services</label>
+            <label>{t("selectSubservices")}</label>
             {filteredSubServices.length > 0 ? (
               <div className={styles.subServiceGrid}>
-                {filteredSubServices.map((sub) => (
-                  <div
-                    key={sub.id}
-                    className={`${styles.subServiceCard} ${
-                      selectedSubServiceIds.includes(sub.id) ? styles.selected : ""
-                    }`}
-                    onClick={() => handleSubServiceToggle(sub.id)}
-                  >
-                    {sub.name}
-                  </div>
-                ))}
+                {filteredSubServices.map((sub) => {
+                  const isDisabled = companySubserviceIds.includes(sub.id);
+                  const isSelected = selectedSubServiceIds.includes(sub.id);
+                  return (
+                    <div
+                      key={sub.id}
+                      className={`${styles.subServiceCard} ${
+                        isSelected ? styles.selected : ""
+                      } ${isDisabled ? styles.disabled : ""}`}
+                      onClick={() => !isDisabled && handleSubServiceToggle(sub.id)}
+                      title={isDisabled ? t("alreadyAdded") : ""}
+                    >
+                      {sub.name}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
-              <p>No sub-services available for this main service.</p>
+              <p>{t("noSubsAvailable")}</p>
             )}
 
             <button type="submit" disabled={loading}>
-              {loading ? "Saving..." : "Save Sub-Services"}
+              {loading ? t("saving") : t("saveSubs")}
             </button>
           </>
         )}

@@ -8,8 +8,10 @@ import {
 } from "@/app/lib/api";
 import toast from "react-hot-toast";
 import styles from "@/app/ui/superadmin/companies/[companyId]/workers/page.module.css";
+import { useTranslations } from "next-intl";
 
 export default function CompanyWorkersPage() {
+    const t = useTranslations();
     const { companyId } = useParams();
     const router = useRouter();
     const [workers, setWorkers] = useState([]);
@@ -21,7 +23,7 @@ export default function CompanyWorkersPage() {
             setWorkers(res.data.data || []);
         } catch (err) {
             console.error("Error fetching workers:", err);
-            toast.error("Failed to fetch workers.");
+            toast.error(t("workers.fetchError", { defaultValue: "Failed to fetch workers." }));
         } finally {
             setLoading(false);
         }
@@ -32,14 +34,14 @@ export default function CompanyWorkersPage() {
     }, [companyId]);
 
     const handleDeleteWorker = async (workerId) => {
-        if (!confirm("Are you sure you want to delete this worker?")) return;
+        if (!confirm(t("workers.confirmDelete", { defaultValue: "Are you sure you want to delete this worker?" }))) return;
         try {
             await deleteCompanyWorker(workerId);
-            toast.success("Worker deleted successfully.");
+            toast.success(t("workers.deleteSuccess", { defaultValue: "Worker deleted successfully." }));
             fetchWorkers();
         } catch (err) {
             console.error("Error deleting worker:", err);
-            toast.error("Failed to delete worker.");
+            toast.error(t("workers.deleteError", { defaultValue: "Failed to delete worker." }));
         }
     };
 
@@ -49,44 +51,39 @@ export default function CompanyWorkersPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Company Workers</h1>
+            <h1 className={styles.title}>{t("workers.title", { defaultValue: "Company Workers" })}</h1>
             <button
                 onClick={handleAddWorker}
                 className={styles.addButton}
             >
-                + Add Worker
+                + {t("workers.addButton", { defaultValue: "Add Worker" })}
             </button>
 
             {loading ? (
-                <p>Loading workers...</p>
+                <p>{t("workers.loading", { defaultValue: "Loading workers..." })}</p>
             ) : workers.length === 0 ? (
-                <p>No workers found for this company.</p>
+                <p>{t("workers.empty", { defaultValue: "No workers found for this company." })}</p>
             ) : (
                 <div className={styles.grid}>
                     {workers.map((worker) => (
-                        <div
-                            key={worker.id}
-                            className={styles.card}
-                        >
-                            <p><strong>Name:</strong> {worker.full_name}</p>
-                            <p><strong>Phone:</strong> {worker.phone}</p>
-                            <p><strong>Nationality:</strong> {worker.nationality}</p>
-                            <p><strong>Gender:</strong> {worker.gender}</p>
-                            <p><strong>Status:</strong> {worker.is_active ? "Active" : "Inactive"}</p>
+                        <div key={worker.id} className={styles.card}>
+                            <p><strong>{t("workers.name", { defaultValue: "Name:" })}</strong> {worker.full_name}</p>
+                            <p><strong>{t("workers.phone", { defaultValue: "Phone:" })}</strong> {worker.phone}</p>
+                            <p><strong>{t("workers.nationality", { defaultValue: "Nationality:" })}</strong> {worker.nationality}</p>
+                            <p><strong>{t("workers.gender", { defaultValue: "Gender:" })}</strong> {worker.gender}</p>
+                            <p><strong>{t("workers.status", { defaultValue: "Status:" })}</strong> {worker.is_active ? t("workers.active", { defaultValue: "Active" }) : t("workers.inactive", { defaultValue: "Inactive" })}</p>
                             <div className={styles.buttonGroup}>
                                 <button
-                                    onClick={() =>
-                                        router.push(`/dashboard-superadmin/companies/${companyId}/workers/edit/${worker.id}`)
-                                    }
+                                    onClick={() => router.push(`/dashboard-superadmin/companies/${companyId}/workers/edit/${worker.id}`)}
                                     className={`${styles.button} ${styles.editButton}`}
                                 >
-                                    Edit
+                                    {t("workers.edit", { defaultValue: "Edit" })}
                                 </button>
                                 <button
                                     onClick={() => handleDeleteWorker(worker.id)}
                                     className={`${styles.button} ${styles.deleteButton}`}
                                 >
-                                    Delete
+                                    {t("workers.delete", { defaultValue: "Delete" })}
                                 </button>
                             </div>
                         </div>

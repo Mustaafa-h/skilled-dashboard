@@ -2,95 +2,126 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/lib/api";
 
 export default function LoginPage() {
-    const router = useRouter();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+      if (password.length < 6) {
+    setError("Password must be at least 6 characters long");
+    return;
+  }
+
     try {
-        console.log("🚀 Attempting login with:", { email, password });
+      console.log("🔐 Attempting login with:", { email, password });
 
-        const response = await login(email, password);
-        console.log("✅ Login API response:", response.data);
+      const response = await fetch("/api/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("❌ Login failed:", errorData.message);
+        throw new Error(errorData.message || "Login failed");
+      }
 
-        if (response.data.success && response.data.data.accessToken) {
-            const token = response.data.data.accessToken;
-            localStorage.setItem("token", token);
-            console.log("✅ Saved JWT to localStorage:", token);
+            // Step 2: Fetch /api/profile to get user data
+      const profileRes = await fetch("/api/profile", {
+        method: "GET",
+        credentials: "include",
+      } );
+      console.log("prfRes==",profileRes)
+      if (!profileRes.ok) {
+        throw new Error("Failed to fetch profile");
+      }
 
-            // Decode token to get role
-            const tokenPayload = JSON.parse(atob(token.split(".")[1]));
-            console.log("✅ Decoded token payload:", tokenPayload);
+      const profile = await profileRes.json(); 
 
-            const role = tokenPayload.role?.toLowerCase();
-            console.log("✅ User role:", role);
+      console.log("prof==",profile)
 
-            if (role === "superadmin") {
-                console.log("✅ Redirecting to /dashboard-superadmin");
-                router.push("/dashboard-superadmin");
-            } else if (role === "admin") {
-                console.log("✅ Redirecting to /dashboard");
-                router.push("/dashboard");
-            } else {
-                console.error("❌ Unauthorized role:", role);
-                setError("Unauthorized role.");
-            }
-        } else {
-            console.error("❌ Invalid credentials or missing token:", response.data);
-            setError(response.data.message || "Invalid credentials");
-        }
+      const result = await response.json();
+      console.log("✅ Login result:", result);
+
+      const user = result.data?.user || result.user || result.data || {};
+      const role = user.role?.toLowerCase?.();
+      const companyId = profile.data.companyId|| null;
+
+      console.log("loginpage user-==",user)
+      console.log(" user == ",user,"🧾", "Role:", role, "| Company ID:", companyId);
+
+      if (!role) {
+        throw new Error("No role returned from login.");
+      }
+
+      //  store in localStorage
+      localStorage.setItem("role", role);
+      localStorage.setItem("token", result.data.token)
+      if (role === "company_admin" && companyId) {
+        localStorage.setItem("companyId", companyId);
+      }
+
+      // Redirect based on role
+      if (role === "superadmin") {
+        router.push("/dashboard-superadmin");
+      } else if (role === "company_admin") {
+        router.push("/dashboard");
+      } else {
+        setError("Unauthorized role.");
+      }
     } catch (err) {
-        console.error("❌ Login error:", err);
-        setError(err.response?.data?.message || "An error occurred. Please try again.");
+      console.error("🔥 Login exception:", err);
+      setError(err.message || "An unexpected error occurred. Please try again.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-
-
-    return (
-        <div style={{ maxWidth: "400px", margin: "80px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px" }}>
-            <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "10px" }}>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
-                </div>
-                {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{ width: "100%", padding: "10px", borderRadius: "4px", background: "#0070f3", color: "white", border: "none" }}
-                >
-                    {loading ? "Logging in..." : "Login"}
-                </button>
-            </form>
+  return (
+    <div style={{ maxWidth: "400px", margin: "80px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: "10px" }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
+          />
         </div>
-    );
+        <div style={{ marginBottom: "10px" }}>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
+          />
+        </div>
+        {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ width: "100%", padding: "10px", borderRadius: "4px", background: "#0070f3", color: "white", border: "none" }}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+    </div>
+  );
 }

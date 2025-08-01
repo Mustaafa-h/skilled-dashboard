@@ -16,7 +16,8 @@ export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const companyId = "6c886af4-701a-4133-b68f-1647ad3efcad";
+const companyId = (typeof window !== "undefined" ? localStorage.getItem("companyId") : null);
+
   const ITEMS_PER_PAGE = 6;
 
   const fetchWorkers = async () => {
@@ -54,7 +55,6 @@ export default function UsersPage() {
     fetchWorkers();
   }, []);
 
-  // Filter workers based on search
   const filteredWorkers = useMemo(() => {
     return workers.filter(worker => {
       const query = searchQuery.toLowerCase();
@@ -103,7 +103,7 @@ export default function UsersPage() {
           {currentWorkers.map(worker => (
             <div className={styles.workerCard} key={worker._id}>
               <img
-                src={worker.photo_url || "/noavatar.png"}
+                src={worker.image_url || "/noavatar.png"}
                 alt="Worker Avatar"
                 className={styles.workerImage}
               />

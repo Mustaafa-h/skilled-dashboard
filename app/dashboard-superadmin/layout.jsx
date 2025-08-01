@@ -5,33 +5,38 @@ import { useRouter } from "next/navigation";
 import SuperAdminSidebar from "@/app/ui/dashboard/sidebar/superAdminSidebar";
 import Topbar from "@/app/ui/dashboard/navbar/navbar";
 import styles from "@/app/ui/superadmin/dashboard/superAdminLayout.module.css";
-import { getUserFromLocalStorage } from "@/app/lib/auth";
 
 export default function SuperAdminLayout({ children }) {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const router = useRouter();
 
-    useEffect(() => {
-        const user = getUserFromLocalStorage();
-        if (!user || user.role.toLowerCase() !== "superadmin") {
-            router.push("/login");
-        }
-    }, [router]);
+  useEffect(() => {
+    const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
 
-    const closeSidebar = () => setMenuOpen(false);
+    if (role === "superadmin") {
+      setIsAuthorized(true);
+    } else {
+      router.push("/login");
+    }
+  }, [router]);
 
-    return (
-        <div className={styles.container}>
-            {menuOpen && <div className={styles.backdrop} onClick={closeSidebar}></div>}
+  const closeSidebar = () => setMenuOpen(false);
 
-            <div className={`${styles.menu} ${menuOpen ? styles.open : ""}`}>
-                <SuperAdminSidebar onClose={closeSidebar} />
-            </div>
+  if (!isAuthorized) return null;
 
-            <div className={`${styles.content} ${menuOpen ? styles.shifted : ""}`}>
-                <Topbar onToggleSidebar={() => setMenuOpen(prev => !prev)} />
-                {children}
-            </div>
-        </div>
-    );
+  return (
+    <div className={styles.container}>
+      {menuOpen && <div className={styles.backdrop} onClick={closeSidebar}></div>}
+
+      <div className={`${styles.menu} ${menuOpen ? styles.open : ""}`}>
+        <SuperAdminSidebar onClose={closeSidebar} />
+      </div>
+
+      <div className={`${styles.content} ${menuOpen ? styles.shifted : ""}`}>
+        <Topbar onToggleSidebar={() => setMenuOpen(prev => !prev)} />
+        {children}
+      </div>
+    </div>
+  );
 }

@@ -5,38 +5,69 @@ import { useRouter } from "next/navigation";
 import { createService } from "@/app/lib/api";
 import toast from "react-hot-toast";
 import styles from "@/app/ui/superadmin/shared/form.module.css";
+import { useTranslations } from "next-intl";
 
 export default function AddServicePage() {
     const router = useRouter();
+    const t = useTranslations("addService");
+
     const [formData, setFormData] = useState({
         name: "",
         slug: "",
         description: "",
-        icon_url: "",
-        image_url: "",
         sort_order: 0,
         is_active: true
     });
+    const [iconFile, setIconFile] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        console.log("Changed field:", name, "=", type === "checkbox" ? checked : value);
         setFormData({
             ...formData,
             [name]: type === "checkbox" ? checked : value
         });
     };
 
+    const handleIconChange = (e) => {
+        const file = e.target.files[0];
+        setIconFile(file);
+        console.log("Selected icon file:", file);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("Submitting create service form");
+
         try {
-            await createService(formData);
-            toast.success("Service created successfully.");
-            router.push("/dashboard-superadmin/services");
+            const payload = new FormData();
+            payload.append("name", formData.name);
+            payload.append("slug", formData.slug);
+            payload.append("description", formData.description);
+            payload.append("sort_order", formData.sort_order);
+            payload.append("is_active", formData.is_active);
+
+            if (iconFile) {
+                payload.append("icon", iconFile);
+                console.log("Appended icon to payload:", iconFile.name);
+            }
+
+            console.log("Final FormData payload:", Array.from(payload.entries()));
+
+            const response = await createService(payload);
+            console.log("API response:", response);
+
+            if (response.data?.success) {
+                toast.success(t("success", { defaultValue: "Service created successfully." }));
+                router.push("/dashboard-superadmin/services");
+            } else {
+                toast.error(response.data?.message || t("fail", { defaultValue: "Failed to create service." }));
+            }
         } catch (error) {
             console.error("Error creating service:", error);
-            toast.error("Failed to create service.");
+            toast.error(t("error", { defaultValue: "Failed to create service." }));
         } finally {
             setLoading(false);
         }
@@ -44,12 +75,12 @@ export default function AddServicePage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Create New Service</h1>
+            <h1 className={styles.title}>{t("title", { defaultValue: "Create New Service" })}</h1>
             <form onSubmit={handleSubmit} className={styles.form}>
                 <input
                     type="text"
                     name="name"
-                    placeholder="Service Name"
+                    placeholder={t("name", { defaultValue: "Service Name" })}
                     value={formData.name}
                     onChange={handleChange}
                     required
@@ -58,7 +89,7 @@ export default function AddServicePage() {
                 <input
                     type="text"
                     name="slug"
-                    placeholder="Slug"
+                    placeholder={t("slug", { defaultValue: "Slug" })}
                     value={formData.slug}
                     onChange={handleChange}
                     required
@@ -66,32 +97,22 @@ export default function AddServicePage() {
                 />
                 <textarea
                     name="description"
-                    placeholder="Description"
+                    placeholder={t("description", { defaultValue: "Description" })}
                     value={formData.description}
                     onChange={handleChange}
                     required
                     className={styles.textarea}
                 />
                 <input
-                    type="url"
-                    name="icon_url"
-                    placeholder="Icon URL"
-                    value={formData.icon_url}
-                    onChange={handleChange}
-                    className={styles.input}
-                />
-                <input
-                    type="url"
-                    name="image_url"
-                    placeholder="Image URL"
-                    value={formData.image_url}
-                    onChange={handleChange}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleIconChange}
                     className={styles.input}
                 />
                 <input
                     type="number"
                     name="sort_order"
-                    placeholder="Sort Order"
+                    placeholder={t("sortOrder", { defaultValue: "Sort Order" })}
                     value={formData.sort_order}
                     onChange={handleChange}
                     className={styles.input}
@@ -104,10 +125,12 @@ export default function AddServicePage() {
                         onChange={handleChange}
                         className={styles.checkbox}
                     />{" "}
-                    Active
+                    {t("active", { defaultValue: "Active" })}
                 </label>
                 <button type="submit" disabled={loading} className={styles.button}>
-                    {loading ? "Creating..." : "Create Service"}
+                    {loading
+                        ? t("creating", { defaultValue: "Creating..." })
+                        : t("createBtn", { defaultValue: "Create Service" })}
                 </button>
             </form>
         </div>

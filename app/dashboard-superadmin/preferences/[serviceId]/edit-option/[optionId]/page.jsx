@@ -13,9 +13,11 @@ export default function EditPreferenceOptionPage() {
     const [formData, setFormData] = useState({
         value: "",
         display_name: "",
+        display_nameAR: "",
         description: "",
         is_default: false
     });
+
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
 
@@ -23,7 +25,7 @@ export default function EditPreferenceOptionPage() {
         setLoading(true);
         try {
             const res = await getPreferenceOptionById(optionId);
-            const option = res.data?.data;
+            const option = res.data;
 
             if (!option) {
                 toast.error("Option not found.");
@@ -34,11 +36,12 @@ export default function EditPreferenceOptionPage() {
             setFormData({
                 value: option.value || "",
                 display_name: option.display_name || "",
+                display_nameAR: option.display_nameAR || "",
                 description: option.description || "",
                 is_default: option.is_default || false
             });
         } catch (error) {
-            console.error("Error fetching option:", error);
+            console.error("❌ Error fetching option:", error);
             toast.error("Failed to fetch option data.");
             router.push(`/dashboard-superadmin/preferences/${serviceId}`);
         } finally {
@@ -47,9 +50,7 @@ export default function EditPreferenceOptionPage() {
     };
 
     useEffect(() => {
-        if (optionId) {
-            fetchOption();
-        }
+        if (optionId) fetchOption();
     }, [optionId]);
 
     const handleChange = (e) => {
@@ -73,20 +74,23 @@ export default function EditPreferenceOptionPage() {
             const payload = {
                 value: formData.value.trim(),
                 display_name: formData.display_name.trim(),
+                display_nameAR: formData.display_nameAR.trim() || null,
                 description: formData.description.trim() || null,
                 is_default: formData.is_default,
                 display_order: 0,
                 is_active: true
             };
 
+            console.log("📤 Updating option with payload:", payload);
             await updatePreferenceOption(optionId, payload);
+
             toast.success("Preference option updated successfully.");
             router.push(`/dashboard-superadmin/preferences/${serviceId}`);
         } catch (error) {
-            console.error("Error updating preference option:", error);
+            console.error("❌ Error updating preference option:", error);
             const details = error.response?.data?.details;
             if (details && Array.isArray(details)) {
-                details.forEach(msg => toast.error(msg));
+                details.forEach((msg) => toast.error(msg));
             } else {
                 toast.error("Failed to update preference option.");
             }
@@ -120,6 +124,14 @@ export default function EditPreferenceOptionPage() {
                         required
                         className={styles.input}
                     />
+                    <input
+                        type="text"
+                        name="display_nameAR"
+                        placeholder="Display Name (Arabic)"
+                        value={formData.display_nameAR}
+                        onChange={handleChange}
+                        className={styles.input}
+                    />
                     <textarea
                         name="description"
                         placeholder="Description"
@@ -134,8 +146,7 @@ export default function EditPreferenceOptionPage() {
                             checked={formData.is_default}
                             onChange={handleChange}
                             className={styles.checkbox}
-                        />{" "}
-                        Default Option
+                        /> Default Option
                     </label>
                     <button type="submit" disabled={updating} className={styles.button}>
                         {updating ? "Updating..." : "Update Preference Option"}

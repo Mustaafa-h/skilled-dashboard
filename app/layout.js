@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import fs from 'fs';
 import path from 'path';
 import Providers from './providers';
-import { Toaster } from 'react-hot-toast'; // ✅ Add this
+import { Toaster } from 'react-hot-toast'; 
 
 export default function RootLayout({ children }) {
   const cookieStore = cookies();
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       <body>
         <Providers locale={locale} messages={messages}>
           {children}
-          <Toaster position="top-right" /> {/* ✅ Add this */}
+          <Toaster position="top-right" /> 
         </Providers>
       </body>
     </html>

@@ -57,19 +57,19 @@ export default function SuperAdminDashboardPage() {
                 <div className={styles.cards}>
                     <div className={styles.card}>
                         <h3>Total Companies</h3>
-                        <p>{metrics.companies}</p>
+                        { <p>{metrics.companies}</p> }
                     </div>
                     <div className={styles.card}>
                         <h3>Total Workers</h3>
-                        <p>{metrics.workers}</p>
+                        { <p>{metrics.workers}</p> }
                     </div>
                     <div className={styles.card}>
                         <h3>Total Admins</h3>
-                        <p>{metrics.admins}</p>
+                        { <p>{metrics.admins}</p> }
                     </div>
                     <div className={styles.card}>
                         <h3>Total Transactions</h3>
-                        <p>{metrics.transactions}</p>
+                        { <p>{metrics.transactions}</p> }
                     </div>
                 </div>
             )}
