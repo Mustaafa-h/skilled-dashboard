@@ -16,7 +16,6 @@ export default function AdminsPage() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
     email: "",
     password: "",
     companyId: "",
@@ -57,8 +56,8 @@ export default function AdminsPage() {
     e.preventDefault();
     console.log("📤 Submitting new admin:", formData);
 
-    const { name, email, phone, password, companyId } = formData;
-    if (!name || !email || !phone || !password || !companyId) {
+    const { name, email,  password, companyId } = formData;
+    if (!name || !email || !password || !companyId) {
       toast.error(t("admins.emptyFields", { defaultValue: "All fields are required." }));
       return;
     }
@@ -70,7 +69,6 @@ export default function AdminsPage() {
       router.refresh();
       setFormData({
         name: "",
-        phone: "",
         email: "",
         password: "",
         companyId: "",
@@ -103,14 +101,6 @@ export default function AdminsPage() {
             name="name"
             placeholder={t("admins.name", { defaultValue: "Name" })}
             value={formData.name}
-            onChange={handleChange}
-            className={styles.input}
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder={t("admins.phone", { defaultValue: "Phone" })}
-            value={formData.phone}
             onChange={handleChange}
             className={styles.input}
           />

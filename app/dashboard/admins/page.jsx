@@ -20,7 +20,6 @@ export default function CompanyAdminsPage() {
 
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
     email: "",
     password: "",
     companyId: companyId || "",
@@ -57,7 +56,7 @@ export default function CompanyAdminsPage() {
     e.preventDefault();
     console.log("📤 Submitting new admin:", formData);
 
-    if (!formData.name || !formData.email || !formData.phone || !formData.password) {
+    if (!formData.name || !formData.email || !formData.password) {
       toast.error(t("admins.emptyFields", { defaultValue: "All fields are required." }));
       return;
     }
@@ -94,7 +93,6 @@ export default function CompanyAdminsPage() {
             <div key={admin.id} className={styles.card}>
               <p><strong>{admin.name}</strong></p>
               <p>{admin.email}</p>
-              <p>{admin.phone}</p>
               <p>
                 {t("admins.role", { defaultValue: "Role:" })} {admin.role}
               </p>
@@ -110,14 +108,6 @@ export default function CompanyAdminsPage() {
             name="name"
             placeholder={t("admins.name", { defaultValue: "Name" })}
             value={formData.name}
-            onChange={handleChange}
-            className={styles.input}
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder={t("admins.phone", { defaultValue: "Phone" })}
-            value={formData.phone}
             onChange={handleChange}
             className={styles.input}
           />

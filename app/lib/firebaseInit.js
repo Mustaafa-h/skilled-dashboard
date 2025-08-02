@@ -1,19 +1,35 @@
+// app/lib/firebaseInit.js
 import { initializeApp } from "firebase/app";
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
+import { getInstallations } from "firebase/installations";
 
+// ===== Firebase (COMPANY PROJECT) – hardcoded for testing =====
 const firebaseConfig = {
-  apiKey: "AIzaSyB1LrlzgzrqDJZnX6pKxeFknCtSsJ_tp_o",
-  authDomain: "push-test-4ec2a.firebaseapp.com",
-  projectId: "push-test-4ec2a",
-  storageBucket: "push-test-4ec2a.firebasestorage.app",
-  messagingSenderId: "783184967499",
-  appId: "1:783184967499:web:a543f7f1a4bb089e211ace"
+  apiKey: "AIzaSyDFynNZFUf1-uxtNJHqsnZMiq4S_Oy3SiU",
+  authDomain: "barq-38a57.firebaseapp.com",
+  databaseURL: "https://barq-38a57-default-rtdb.firebaseio.com",
+  projectId: "barq-38a57",
+  storageBucket: "barq-38a57.firebasestorage.app",
+  messagingSenderId: "1032193218712",
+  appId: "1:1032193218712:web:a9b8dd08fd6c692d1498ed",
+  measurementId: "G-Z2ZVVJQBTZ",
 };
-const app = initializeApp(firebaseConfig);
 
+console.log("[firebaseInit] Initializing Firebase with project:", firebaseConfig.projectId);
+export const app = initializeApp(firebaseConfig);
+
+// messaging can be null on SSR/unsupported
 let messaging = null;
 if (typeof window !== "undefined" && "Notification" in window) {
-  messaging = getMessaging(app);
+  try {
+    messaging = getMessaging(app);
+    console.log("[firebaseInit] Messaging initialized");
+  } catch (e) {
+    console.warn("[firebaseInit] Messaging not supported or failed to init:", e);
+  }
+} else {
+  console.log("[firebaseInit] Messaging skipped (SSR or Notification not in window)");
 }
 
-export { messaging, onMessage, getToken };
+// export commonly used things
+export { messaging, onMessage, getToken, getInstallations };

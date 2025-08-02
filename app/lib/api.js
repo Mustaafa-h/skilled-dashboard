@@ -240,12 +240,18 @@ export const deleteBanner = async (bannerId) =>
 export const getAdmins = () =>
    withCatch(() => JSON_API.get("auth/getUsers"));
 
-export const registerAdmin = () =>
-   withCatch(() => JSON_API.get("auth/getUsers"));
+export const registerAdmin = async() =>
+   withCatch(() => JSON_API.post("auth/register-admin"));
 
-export const registerCompanyAdmin = () =>
-   withCatch(() => JSON_API.get("auth/register-company-admin"));
+export const registerCompanyAdmin = async(formData) =>
+   withCatch(() => JSON_API.post("auth/register-company-admin",formData));
 
+//=================notifications===================
+export const pushFcmAndFid = async(deviceId, fcmToken) =>
+   withCatch(() => JSON_API.post("auth/devices",{deviceId, fcmToken}));
+
+export const getDevice = async() =>
+   withCatch(() => JSON_API.get("auth/devices"));
 
 export default API;
 
