@@ -1,0 +1,99 @@
+/* app/dashboard/chat/chat.module.css */
+.container {
+  display: flex;
+  height: 100%;
+  background-color: var(--background);
+}
+
+.rooms {
+  width: 300px;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background-color: var(--sidebar-bg);
+}
+
+.roomItem {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.roomItem:hover {
+  background-color: var(--hover-bg);
+}
+
+.active {
+  background-color: var(--active-bg);
+}
+
+.roomName {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.roomSnippet {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unreadBadge {
+  background-color: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  float: right;
+}
+
+.chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--content-bg);
+}
+
+.messagesContainer {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.messageIncoming,
+.messageOutgoing {
+  max-width: 60%;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.messageIncoming {
+  align-self: flex-start;
+  background-color: var(--incoming-bg);
+}
+
+.messageOutgoing {
+  align-self: flex-end;
+  background-color: var(--outgoing-bg);
+}
+
+.messageContent {
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.messageTime {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.emptyPlaceholder {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+}

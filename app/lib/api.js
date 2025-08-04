@@ -255,3 +255,28 @@ export const getDevice = async() =>
 
 export default API;
 
+
+// ================ chat endpoints ============================================
+
+/**
+ * Fetch list of chat rooms for the current user.
+ * GET /api/v1/chat/rooms
+ */
+export const getChatRooms = () =>
+  withCatch(() => JSON_API.get("chat/rooms"));
+
+/**
+ * Fetch paginated messages for a specific chat room.
+ * GET /api/v1/chat/rooms/{roomId}/messages?page={page}&limit={limit}
+ *
+ * @param {string} roomId
+ * @param {number} [page=1]
+ * @param {number} [limit=50]
+ */
+export const getChatMessages = (roomId, page = 1, limit = 50) =>
+  withCatch(() =>
+    JSON_API.get(`chat/rooms/${roomId}/messages?page=${page}&limit=${limit}`)
+  );
+
+
+// ================ end chat endpoints ========================================

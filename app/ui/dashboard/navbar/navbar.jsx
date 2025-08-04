@@ -5,7 +5,6 @@ import styles from "./navbar.module.css";
 import {
     MdNotifications,
     MdOutlineChat,
-    MdPublic,
     MdMenu,
 } from "react-icons/md";
 import Link from "next/link";
@@ -52,12 +51,11 @@ const Navbar = ({ onToggleSidebar }) => {
                 <div className={styles.icons}>
                     <MdOutlineChat size={20} />
                     <Link href={notificationPath} className={styles.notificationWrapper}>
-                        <MdNotifications size={20} />
+                       <MdNotifications size={20} />
                         {notificationCount > 0 && (
                             <span className={styles.badge}>{notificationCount}</span>
                         )}
                     </Link>
-                    <MdPublic size={20} />
                 </div>
             </div>
         </div>

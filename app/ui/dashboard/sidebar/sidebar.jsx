@@ -15,6 +15,12 @@ import {
   MdOutlineSettings,
   MdHelpCenter,
   MdPhotoLibrary,
+  MdChat,
+  MdChatBubbleOutline,
+  MdChatBubble,
+  MdDesignServices,
+  MdCleaningServices,
+  MdRoomPreferences,
 } from "react-icons/md";
 import { getCompany } from "../../../lib/api";
 
@@ -66,8 +72,9 @@ const Sidebar = ({ onClose }) => {
         { title: t("dashboard", { defaultValue: "Dashboard" }), path: "/dashboard", icon: <MdDashboard /> },
         { title: t("companyInfo", { defaultValue: "Company Info" }), path: "/dashboard/company-info", icon: <MdBusiness /> },
         { title: t("workers", { defaultValue: "Workers" }), path: "/dashboard/users", icon: <MdSupervisedUserCircle /> },
-        { title: t("services", { defaultValue: "Services" }), path: "/dashboard/products", icon: <MdShoppingBag /> },
+        { title: t("services", { defaultValue: "Services" }), path: "/dashboard/products", icon: <MdCleaningServices /> },
         { title: t("orders", { defaultValue: "Orders" }), path: "/dashboard/orders", icon: <MdAttachMoney /> },
+         { title: t("chat", { defaultValue: "chat" }), path: "/dashboard/chat", icon: <MdChatBubble /> },
         { title: t("Gallery", { defaultValue: "Gallery" }), path: "/dashboard/gallery", icon: <MdPhotoLibrary /> },
 
       ],
@@ -76,7 +83,7 @@ const Sidebar = ({ onClose }) => {
       title: t("company", { defaultValue: "Company" }),
       list: [
         { title: t("admins", { defaultValue: "Admins" }), path: "/dashboard/admins", icon: <MdSupervisedUserCircle /> },
-        { title: t("preferences", { defaultValue: "Preferences" }), path: "/dashboard/preferences", icon: <MdOutlineSettings /> },
+        { title: t("preferences", { defaultValue: "Preferences" }), path: "/dashboard/preferences", icon: <MdRoomPreferences /> },
         { title: t("settings", { defaultValue: "Settings" }), path: "/dashboard/settings", icon: <MdOutlineSettings /> },
         { title: t("privacyPolicy", { defaultValue: "Privacy Policy" }), path: "/dashboard/privacy", icon: <MdHelpCenter /> },
       ],

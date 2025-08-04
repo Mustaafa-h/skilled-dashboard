@@ -27,7 +27,9 @@
     "react-icons": "4.11.0",
     "react-leaflet": "^4.2.1",
     "recharts": "2.9.0",
-    "use-debounce": "9.0.4"
+    "socket.io-client": "^4.8.1",
+    "use-debounce": "9.0.4",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "eslint": "8",

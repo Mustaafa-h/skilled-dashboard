@@ -1,33 +1,42 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import styles from "./notifications.module.css";
-import { useTranslations } from "next-intl";
+import {
+  loadNotifications,
+  subscribeNotifications,
+} from "@/app/lib/notificationsClient";
 
-const NotificationsPage = () => {
-  const t = useTranslations();
+export default function NotificationsPage() {
+  const [items, setItems] = useState([]);
 
-  const notifications = [
-    { id: 1, title: t("newUserRegistered", { defaultValue: "New user registered" }), date: "July 5, 2025", read: false },
-    { id: 2, title: t("serviceUpdated", { defaultValue: "Service updated" }), date: "July 4, 2025", read: true },
-    { id: 3, title: t("monthlyReportReady", { defaultValue: "Monthly report ready" }), date: "July 3, 2025", read: false },
-  ];
+  useEffect(() => {
+    // initial load
+    setItems(loadNotifications());
+    // live updates (new tab + same tab)
+    const unsub = subscribeNotifications(setItems);
+    return unsub;
+  }, []);
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{t("notificationsTitle", { defaultValue: "Notifications" })}</h2>
+      <h2 className={styles.title}>Notifications</h2>
+
+      {!items.length && (
+        <p style={{ opacity: 0.6 }}>No notifications yet.</p>
+      )}
+
       <div className={styles.notificationsList}>
-        {notifications.map((n) => (
-          <div
-            key={n.id}
-            className={`${styles.notification} ${n.read ? styles.read : styles.unread}`}
-          >
-            <p className={styles.notificationTitle}>{n.title}</p>
-            <span className={styles.notificationDate}>{n.date}</span>
+        {items.map((n) => (
+          <div key={n.id} className={styles.notification}>
+            <div className={styles.notificationTitle}>{n.title}</div>
+            {n.body && <div style={{ opacity: 0.8 }}>{n.body}</div>}
+            <span className={styles.notificationDate}>
+              {new Date(n.createdAt).toLocaleString()}
+            </span>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default NotificationsPage;
+}

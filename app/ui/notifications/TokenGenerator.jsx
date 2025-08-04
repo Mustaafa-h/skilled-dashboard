@@ -5,11 +5,14 @@ import { app, messaging, getToken, onMessage } from "@/app/lib/firebaseInit";
 import { getInstallations, getId } from "firebase/installations";
 import { pushFcmAndFid, getDevice } from "@/app/lib/api";
 import toast from "react-hot-toast";
+import { addNotification } from "@/app/lib/notificationsClient";
+
 
 const VAPID_PUBLIC_KEY =
   "BN8xZHedJu_bwri5G6VcRQ2j9oRMhNf9ovaUHXsRPeThGv3OZiQYkEo4d2Qqg_xwwAMs3mN2UMimllKO0qrNYQg";
 
 const TokenGenerator = () => {
+
   const router = useRouter();
   const [token, setToken] = useState("");
   const unsubRef = useRef(null);
@@ -112,6 +115,8 @@ const TokenGenerator = () => {
         // 5) Foreground messages: toast + alert
         try {
           unsubRef.current = onMessage(messaging, (payload) => {
+
+
             console.log("[TokenGenerator] Foreground message:", payload);
 
             // Prefer the notification fields; fall back to data if needed
@@ -120,6 +125,7 @@ const TokenGenerator = () => {
 
             // Useful data you can route with
             const { type, bookingId, companyId, messageId } = payload.data || {};
+
 
             toast.custom((t) => (
               <div
@@ -182,6 +188,14 @@ const TokenGenerator = () => {
                 </button>
               </div>
             ), { duration: 6000, position: "top-right" });
+            // Save in localStorage so the notifications page can show it
+            addNotification({
+              id: payload?.messageId || `${Date.now()}`,
+              title,
+              body,
+              createdAt: new Date().toISOString(),
+              data: payload?.data || {},
+            });
 
 
           });
