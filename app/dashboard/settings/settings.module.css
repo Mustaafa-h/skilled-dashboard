@@ -1,0 +1,49 @@
+
+/*
+app/dashboard/settings/settings.module.css
+*/
+.container {
+  padding: var(--gap-lg) var(--gap-sm);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.heading {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: var(--gap-md);
+  color: var(--text);
+}
+
+.label {
+  margin-bottom: var(--gap-sm);
+  font-size: 1rem;
+  color: var(--textSoft);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--gap-sm);
+}
+
+.button {
+  padding: var(--gap-xs) var(--gap-md);
+  border: none;
+  border-radius: var(--radius);
+  background: var(--bgSoft);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  background: var(--disabled-bg);
+  cursor: not-allowed;
+}

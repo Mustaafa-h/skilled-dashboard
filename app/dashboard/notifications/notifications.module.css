@@ -1,7 +1,14 @@
+/* app/dashboard/notifications/notifications.module.css */
+
+/* ------------------------------------------------------
+   Uses token values from globals.css for consistent spacing, colors, and shadows
+------------------------------------------------------ */
+
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--gap-lg) var(--gap-sm);
+  box-sizing: border-box;
 }
 
 .title {
@@ -9,54 +16,84 @@
   font-weight: 600;
   color: var(--text);
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--gap-md);
 }
 
 .notificationsList {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--gap-sm);
 }
 
 .notification {
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: var(--bgSoft);
+  background: var(--bgSoft);
+  padding: var(--gap-md);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.notification:hover {
+  transform: translateY(-2px);
 }
 
 .unread {
-  border-left: 4px solid #7c3aed; 
+  box-shadow: inset 4px 0 0 0 var(--accent);
 }
 
 .read {
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .notificationTitle {
   font-size: 1rem;
+  font-weight: 500;
   color: var(--text);
+  margin: 0;
 }
 
 .notificationDate {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: var(--textSoft);
 }
 
-@media (max-width: 480px) {
+.markAllBtn {
+  display: inline-block;
+  margin-bottom: var(--gap-md);
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.markAllBtn:hover {
+  background: var(--bgSoft);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--gap-md) var(--gap-sm);
+  }
   .notification {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.25rem;
+    gap: var(--gap-xs);
   }
 }
 
-/* notifications.module.css add-ons */
-.markAllBtn { padding: 6px 10px; border: 1px solid #4b5563; border-radius: 8px; background:#111827; color:#e5e7eb; }
-.notification { width:100%; text-align:left; border-radius:10px; padding:14px 16px; border:1px solid #263043; background:#0f172a; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.unread { box-shadow: inset 2px 0 0 0 #8b5cf6; } /* purple bar like your screenshot */
-.read { opacity: 0.75; }
-.notificationTitle { font-weight: 600; }
-.notificationDate { font-size: 12px; color:#9ca3af; }
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.25rem;
+  }
+  .notificationDate {
+    font-size: 0.75rem;
+  }
+}

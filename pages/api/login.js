@@ -1,57 +1,65 @@
-// /pages/api/login.js (for pages router)
+// pages/api/login.js
+
 import { serialize } from "cookie";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    return res
+      .status(405)
+      .json({ success: false, message: "Method not allowed" });
   }
 
   const { email, password } = req.body;
 
   try {
-    const response = await fetch("http://ec2-3-68-193-86.eu-central-1.compute.amazonaws.com/api/v1/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "*/*",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
+    // 1️⃣ Call backend login
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ email, password }),
+      }
+    );
     const result = await response.json();
-
-    const token = result?.data?.access_token || result?.data?.accessToken;
-    const user = result?.data.user;
-
-
     console.log("🔐 API login result:", result);
-    console.log(user,"=user==")
 
-    if (!token || !user) {
+    const accessToken  = result?.data?.accessToken;
+    const refreshToken = result?.data?.refreshToken;
+    const user         = result?.data?.user;
+
+    if (!accessToken || !refreshToken || !user) {
       console.error("🚫 Missing token or user in response.");
-      return res.status(401).json({ message: "Login failed. Missing token or user." });
+      return res
+        .status(401)
+        .json({ success: false, message: "Login failed: missing token or user." });
     }
 
-    //  Set token as httpOnly cookie
-    res.setHeader("Set-Cookie", serialize("token", token, {
+    // 2️⃣ Set HttpOnly cookies
+    const cookieOpts = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure:   process.env.NODE_ENV === "production",
       sameSite: "strict",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    }));
+      path:     "/",
+    };
+    res.setHeader("Set-Cookie", [
+      serialize("accessToken",  accessToken,  { ...cookieOpts, maxAge: result.data.accessExpiresIn }),
+      serialize("refreshToken", refreshToken, { ...cookieOpts, maxAge: result.data.refreshExpiresIn }),
+    ]);
 
-    //  Send back needed info for routing
+    // 3️⃣ Return user + raw accessToken for localStorage
     return res.status(200).json({
-      success: true,
-      data: {
-        role: user.role,
-        company: user.companyId || null,
-        token: token
-      }
+      success:     true,
+      user: {
+        role:      user.role.toLowerCase(),
+        companyId: user.companyId || null,
+      },
+      accessToken,
     });
-  } catch (error) {
-    console.error("🔥 Login API error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+  } catch (err) {
+    console.error("🔥 Login API error:", err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 }

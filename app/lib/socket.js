@@ -3,6 +3,9 @@ import { io } from 'socket.io-client';
 
 let socket = null;
 
+/**
+ * Initialize and return a singleton Socket.IO client, authenticated via JWT.
+ */
 export function connectSocket() {
   if (socket) {
     console.log('[Socket] connectSocket: socket already initialized');
@@ -20,10 +23,11 @@ export function connectSocket() {
     console.warn('[Socket] No auth token found in localStorage');
   }
 
-  // Derive root URL for chat (remove /api/v1 if present)
+  // Derive root URL for chat (strip /api/v1 if present in base URL)
   let rootUrl = '';
-  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
-    rootUrl = process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+  const base = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (base) {
+    rootUrl = base.replace(/\/api\/v1\/?$/, '');
   } else if (typeof window !== 'undefined') {
     rootUrl = window.location.origin;
   }
@@ -33,59 +37,85 @@ export function connectSocket() {
   socket = io(chatUrl, {
     transports: ['websocket'],
     auth: { token },
-    extraHeaders: { Authorization: `Bearer ${token}` },
+    extraHeaders: { Authorization: token ? `Bearer ${token}` : undefined },
   });
 
+  // Core events
   socket.on('connect', () => {
     console.log('[Socket] on connect:', socket.id);
   });
-
   socket.on('disconnect', (reason) => {
     console.log('[Socket] on disconnect:', reason);
   });
-
   socket.on('connect_error', (error) => {
     console.error('[Socket] on connect_error:', error);
   });
-
   socket.on('connection_established', (payload) => {
     console.log('[Socket] on connection_established:', payload);
+  });
+
+  // Debug: log every event
+  socket.onAny((event, ...args) => {
+    console.log(`[Socket] event received: ${event}`, ...args);
   });
 
   return socket;
 }
 
 /**
- * Disconnect the current Socket.IO client.
+ * Manually disconnect and clear the singleton.
  */
 export function disconnectSocket() {
-  if (socket) {
-    socket.disconnect();
-    console.log('[Socket] disconnectSocket: socket manually disconnected');
-    socket = null;
-  } else {
+  if (!socket) {
     console.warn('[Socket] disconnectSocket: no socket to disconnect');
+    return;
   }
+  socket.disconnect();
+  console.log('[Socket] disconnectSocket: socket manually disconnected');
+  socket = null;
 }
 
 /**
- * Subscribe to a Socket.IO event.
+ * Listen for a specific socket event.
  */
 export function onEvent(event, callback) {
   if (!socket) {
-    console.warn('[Socket] onEvent: called before socket is initialized', event);
+    console.warn('[Socket] onEvent: socket not initialized for event', event);
     return;
   }
   socket.on(event, callback);
 }
 
 /**
- * Emit a Socket.IO event with payload.
+ * Stop listening for a specific socket event.
+ */
+export function offEvent(event, callback) {
+  if (!socket) {
+    console.warn('[Socket] offEvent: socket not initialized for event', event);
+    return;
+  }
+  socket.off(event, callback);
+}
+
+/**
+ * Emit an event with an optional payload.
  */
 export function emitEvent(event, payload) {
   if (!socket) {
-    console.warn('[Socket] emitEvent: called before socket is initialized', event, payload);
+    console.warn('[Socket] emitEvent: socket not initialized for event', event, payload);
     return;
   }
+  console.log('[Socket] emitEvent:', event, payload);
   socket.emit(event, payload);
+}
+
+/**
+ * Listen to all socket events (firehose mode).
+ */
+export function onAnyEvent(listener) {
+  if (!socket) {
+    console.warn('[Socket] onAnyEvent: socket not initialized');
+    return;
+  }
+  socket.onAny(listener);
 }

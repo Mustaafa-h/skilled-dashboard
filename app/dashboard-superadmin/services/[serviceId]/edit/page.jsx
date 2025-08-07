@@ -18,6 +18,7 @@ export default function EditServicePage() {
         name: "",
         slug: "",
         description: "",
+        sort_order: 0,
         icon_url: "",
         image_url: "",
         is_active: true
@@ -35,6 +36,7 @@ export default function EditServicePage() {
                         name: data.name || "",
                         slug: data.slug || "",
                         description: data.description || "",
+                        sort_order: data.sort_order ?? 0,
                         icon_url: data.icon_url || "",
                         image_url: data.image_url || "",
                         is_active: data.is_active ?? true
@@ -42,7 +44,9 @@ export default function EditServicePage() {
                 }
             } catch (error) {
                 console.error("Error fetching service:", error);
-                toast.error(t("fetchError", { defaultValue: "Failed to fetch service data." }));
+                toast.error(
+                    t("fetchError", { defaultValue: "Failed to fetch service data." })
+                );
             } finally {
                 setLoading(false);
             }
@@ -53,6 +57,7 @@ export default function EditServicePage() {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        console.log("Changed field:", name, "=", type === "checkbox" ? checked : value);
         setFormData((prev) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value
@@ -73,25 +78,37 @@ export default function EditServicePage() {
             payload.append("name", formData.name);
             payload.append("slug", formData.slug);
             payload.append("description", formData.description);
+            payload.append("sort_order", formData.sort_order);
             if (iconFile) {
                 payload.append("icon", iconFile);
                 console.log("Icon appended:", iconFile.name);
             }
 
-            console.log("Final payload (FormData entries):", Array.from(payload.entries()));
+            console.log(
+                "Final payload (FormData entries):",
+                Array.from(payload.entries())
+            );
 
             const response = await updateService(serviceId, payload);
             console.log("Update response:", response);
 
-            if (response.data?.success) {
-                toast.success(t("success", { defaultValue: "Service updated successfully." }));
+            if (response.status === 200) {
+                toast.success(
+                    t("success", { defaultValue: "Service updated successfully." })
+                );
                 router.push("/dashboard-superadmin/services");
             } else {
-                toast.error(response.data?.message || t("fail", { defaultValue: "Failed to update service." }));
+                console.log(response)
+                toast.error(
+                    response.message ||
+                        t("fail", { defaultValue: "Failed to update service." })
+                );
             }
         } catch (error) {
             console.error("Error updating service:", error);
-            toast.error(t("error", { defaultValue: "Error updating service." }));
+            toast.error(
+                t("error", { defaultValue: "Error updating service." })
+            );
         } finally {
             setUpdating(false);
         }
@@ -101,7 +118,9 @@ export default function EditServicePage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>{t("title", { defaultValue: "Edit Service" })}</h1>
+            <h1 className={styles.title}>
+                {t("title", { defaultValue: "Edit Service" })}
+            </h1>
             <form onSubmit={handleSubmit} className={styles.form}>
                 <input
                     type="text"
@@ -129,6 +148,14 @@ export default function EditServicePage() {
                     className={styles.textarea}
                 />
                 <input
+                    type="number"
+                    name="sort_order"
+                    placeholder={t("sortOrder", { defaultValue: "Sort Order" })}
+                    value={formData.sort_order}
+                    onChange={handleChange}
+                    className={styles.input}
+                />
+                <input
                     type="file"
                     accept="image/*"
                     onChange={handleIconChange}
@@ -136,8 +163,16 @@ export default function EditServicePage() {
                 />
                 {formData.icon_url && !iconFile && (
                     <div className={styles.previewContainer}>
-                        <p>{t("currentIcon", { defaultValue: "Current Icon:" })}</p>
-                        <img src={formData.icon_url} alt="Current Icon" className={styles.imagePreview} />
+                        <p>
+                            {t("currentIcon", {
+                                defaultValue: "Current Icon:",
+                            })}
+                        </p>
+                        <img
+                            src={formData.icon_url}
+                            alt="Current Icon"
+                            className={styles.imagePreview}
+                        />
                     </div>
                 )}
                 <label className={styles.checkboxLabel}>

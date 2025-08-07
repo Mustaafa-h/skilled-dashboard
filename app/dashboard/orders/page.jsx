@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "@/app/ui/dashboard/orders/orders.module.css";
+import styles from "../../ui/dashboard/orders/orders.module.css";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 

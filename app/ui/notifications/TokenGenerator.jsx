@@ -1,3 +1,4 @@
+//app/ui/notifications/TokenGenerator.jsx
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { addCompanyImage, getCompanyImages, deleteCompanyImage } from "@/app/lib/api";
-import styles from "@/app/ui/dashboard/gallery/gallery.module.css";
+import styles from "../../ui/dashboard/gallery/gallery.module.css";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 

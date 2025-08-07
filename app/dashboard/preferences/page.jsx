@@ -1,5 +1,5 @@
 "use client";
-
+//app/dashboard/preferences/page.jsx
 import { useState, useEffect } from 'react';
 import styles from '@/app/ui/dashboard/preferences/preferences.module.css';
 import {
@@ -103,7 +103,7 @@ export default function PreferencesPage() {
         console.log('Created preference:', data);
         setStates(prev => ({
           ...prev,
-          [idKey]: { ...prev[idKey], id: data.data.id }
+          [idKey]: { ...prev[idKey], id: data.id }
         }));
         toast.success(t("preferenceCreated"));
       }

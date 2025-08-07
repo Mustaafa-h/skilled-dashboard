@@ -21,6 +21,7 @@ export default function AddPreferenceTypePage() {
     descriptionAR: "",
     is_required: false,
     is_active: true,
+    display_order: 0,              // ← new field
   });
 
   const [validationRules, setValidationRules] = useState({
@@ -43,7 +44,9 @@ export default function AddPreferenceTypePage() {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : 
+               name === "display_order" ? Number(value) :
+               value,
     }));
   };
 
@@ -95,7 +98,7 @@ export default function AddPreferenceTypePage() {
       descriptionAR: formData.descriptionAR.trim() || null,
       is_required: formData.is_required,
       is_active: formData.is_active,
-      display_order: 0,
+      display_order: formData.display_order,    // ← include dynamic display_order
       service_id: serviceId,
     };
 
@@ -141,12 +144,28 @@ export default function AddPreferenceTypePage() {
         <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} className={styles.textarea} />
         <textarea name="descriptionAR" placeholder="Description (Arabic)" value={formData.descriptionAR} onChange={handleChange} className={styles.textarea} />
 
+        {/* New display_order field */}
+        <input
+          type="number"
+          name="display_order"
+          placeholder={t("displayOrder", { defaultValue: "Display Order" })}
+          value={formData.display_order}
+          onChange={handleChange}
+          className={styles.input}
+        />
+
         {/* Checkboxes */}
-        <label className={styles.checkboxLabel}><input type="checkbox" name="is_required" checked={formData.is_required} onChange={handleChange} /> Required</label>
-        <label className={styles.checkboxLabel}><input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} /> Active</label>
+        <label className={styles.checkboxLabel}>
+          <input type="checkbox" name="is_required" checked={formData.is_required} onChange={handleChange} />{" "}
+          {t("addPrefType.required", { defaultValue: "Required" })}
+        </label>
+        <label className={styles.checkboxLabel}>
+          <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} />{" "}
+          {t("addPrefType.active", { defaultValue: "Active" })}
+        </label>
 
         {/* Type Selection */}
-        <label className={styles.label}>Preference Type:</label>
+        <label className={styles.label}>{t("addPrefType.prefType", { defaultValue: "Preference Type:" })}</label>
         <select name="type" value={formData.type} onChange={handleChange} className={styles.select}>
           <option value="single-select">single-select</option>
           <option value="multi-select">multi-select</option>
@@ -157,7 +176,7 @@ export default function AddPreferenceTypePage() {
         {/* Conditional Fields */}
         {formData.type === "number" && (
           <div className={styles.section}>
-            <h4>Validation Rules</h4>
+            <h4>{t("addPrefType.validationRules", { defaultValue: "Validation Rules" })}</h4>
             {Object.keys(validationRules).map((rule) => (
               <input
                 key={rule}
@@ -174,24 +193,38 @@ export default function AddPreferenceTypePage() {
 
         {["single-select", "multi-select"].includes(formData.type) && (
           <div className={styles.section}>
-            <h4>Options</h4>
+            <h4>{t("addPrefType.options", { defaultValue: "Options" })}</h4>
             {options.map((opt, i) => (
               <div key={i} className={styles.optionBlock}>
                 <input type="text" name="value" placeholder="Value" value={opt.value} onChange={(e) => handleOptionChange(i, e)} className={styles.input} />
                 <input type="text" name="display_name" placeholder="Display Name" value={opt.display_name} onChange={(e) => handleOptionChange(i, e)} className={styles.input} />
                 <input type="text" name="display_nameAR" placeholder="Display Name (Arabic)" value={opt.display_nameAR} onChange={(e) => handleOptionChange(i, e)} className={styles.input} />
                 <textarea name="description" placeholder="Description" value={opt.description} onChange={(e) => handleOptionChange(i, e)} className={styles.textarea} />
-                <label><input type="checkbox" name="is_default" checked={opt.is_default} onChange={(e) => handleOptionChange(i, e)} /> Default</label>
-                <label><input type="checkbox" name="is_active" checked={opt.is_active} onChange={(e) => handleOptionChange(i, e)} /> Active</label>
-                {options.length > 1 && <button type="button" onClick={() => removeOption(i)}>Remove</button>}
+                <label>
+                  <input type="checkbox" name="is_default" checked={opt.is_default} onChange={(e) => handleOptionChange(i, e)} />{" "}
+                  {t("addPrefType.default", { defaultValue: "Default" })}
+                </label>
+                <label>
+                  <input type="checkbox" name="is_active" checked={opt.is_active} onChange={(e) => handleOptionChange(i, e)} />{" "}
+                  {t("addPrefType.activeOption", { defaultValue: "Active" })}
+                </label>
+                {options.length > 1 && (
+                  <button type="button" onClick={() => removeOption(i)}>
+                    {t("addPrefType.remove", { defaultValue: "Remove" })}
+                  </button>
+                )}
               </div>
             ))}
-            <button type="button" onClick={addOption}>Add More Option</button>
+            <button type="button" onClick={addOption}>
+              {t("addPrefType.addOption", { defaultValue: "Add More Option" })}
+            </button>
           </div>
         )}
 
         <button type="submit" disabled={loading} className={styles.button}>
-          {loading ? "Creating..." : "Create Preference Type"}
+          {loading
+            ? t("addPrefType.creating", { defaultValue: "Creating..." })
+            : t("addPrefType.createBtn", { defaultValue: "Create Preference Type" })}
         </button>
       </form>
     </div>

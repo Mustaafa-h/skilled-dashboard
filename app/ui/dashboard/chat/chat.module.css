@@ -1,99 +1,121 @@
-/* app/dashboard/chat/chat.module.css */
+/* app/ui/dashboard/chat/chat.module.css */
+
+/* ------------------------------------------------------
+   Uses token values from globals.css for spacing, colors, shadows
+------------------------------------------------------ */
+
 .container {
-  display: flex;
   height: 100%;
-  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  padding: var(--gap-md);
 }
 
-.rooms {
-  width: 300px;
-  border-right: 1px solid var(--border);
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--gap-md);
+  color: var(--text);
+}
+
+.empty {
+  margin-top: var(--gap-lg);
+  color: var(--textSoft);
+  font-size: 1rem;
+}
+
+.list {
+  flex: 1;
   overflow-y: auto;
-  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
 }
 
-.roomItem {
-  padding: 12px;
-  cursor: pointer;
-  border-bottom: 1px solid var(--border);
+.item {
+  background: var(--bgSoft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.roomItem:hover {
-  background-color: var(--hover-bg);
+.item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
 }
 
-.active {
-  background-color: var(--active-bg);
+.link {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  padding: var(--gap-sm) var(--gap-md);
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius);
 }
 
-.roomName {
-  font-weight: bold;
-  margin-bottom: 4px;
+.link:hover {
+  background: var(--accent-transparent);
 }
 
-.roomSnippet {
+.name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.snippet {
+  grid-column: 1 / -1;
+  margin-top: var(--gap-xs);
   font-size: 0.875rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--textSoft);
 }
 
-.unreadBadge {
-  background-color: var(--badge-bg);
-  color: var(--badge-text);
-  border-radius: 12px;
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  float: right;
-}
-
-.chat {
-  flex: 1;
+.meta {
   display: flex;
-  flex-direction: column;
-  background-color: var(--content-bg);
+  align-items: center;
+  gap: var(--gap-xs);
+  justify-self: end;
 }
 
-.messagesContainer {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.messageIncoming,
-.messageOutgoing {
-  max-width: 60%;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-}
-
-.messageIncoming {
-  align-self: flex-start;
-  background-color: var(--incoming-bg);
-}
-
-.messageOutgoing {
-  align-self: flex-end;
-  background-color: var(--outgoing-bg);
-}
-
-.messageContent {
-  margin-bottom: 4px;
-  word-wrap: break-word;
-}
-
-.messageTime {
+.time {
   font-size: 0.75rem;
-  color: var(--text-muted);
-  text-align: right;
+  color: var(--textSoft);
 }
 
-.emptyPlaceholder {
-  padding: 24px;
-  text-align: center;
-  color: var(--text-muted);
+.badge {
+  background: var(--accent);
+  color: var(--text);
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* === Responsive adjustments === */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--gap-sm);
+  }
+  .title {
+    font-size: 1.25rem;
+  }
+  .list {
+    gap: var(--gap-xs);
+  }
+  .link {
+    padding: var(--gap-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.125rem;
+  }
+  .snippet {
+    font-size: 0.75rem;
+  }
+  .time,
+  .badge {
+    font-size: 0.6875rem; /* 11px */
+  }
 }

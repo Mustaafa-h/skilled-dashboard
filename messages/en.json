@@ -409,5 +409,13 @@
     "success": "Admin registered successfully.",
     "failed": "Failed to register admin.",
     "loadError": "Failed to load data."
+  },
+  "chat":"chat",
+    "chat": {
+    "noChats": "No conversations yet",
+    "emptyHistory": "Say hello!",
+    "errorLoadingHistory": "Unable to load messages",
+    "typing": "{{user}} is typing…",
+    "customer": "Customer"
   }
 }

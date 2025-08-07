@@ -1,152 +1,110 @@
-// app/dashboard/chat/page.jsx
+// app/dashboard/chat/page.jsx (Rooms List)
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import styles from "../../ui/dashboard/chat/chat.module.css";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
-import { connectSocket, onEvent } from "../../lib/socket";
-import { getChatRooms, getChatMessages } from "../../lib/api";
+import { connectSocket, onEvent, offEvent } from "../../lib/socket";
+import { getChatRooms } from "../../lib/api";
 
-const ChatPage = () => {
+export default function RoomsPage() {
   const t = useTranslations();
-
   const [rooms, setRooms] = useState([]);
-  const [activeRoomId, setActiveRoomId] = useState(null);
-  const [messagesByRoom, setMessagesByRoom] = useState({});
-  const [pageByRoom, setPageByRoom] = useState({});
-  const [hasMoreByRoom, setHasMoreByRoom] = useState({});
-  const containerRef = useRef(null);
 
-  // Attempt REST fetch first, then fallback to WebSocket unread_counts
   useEffect(() => {
-    // 1) always connect socket for real-time updates
-    const socket = connectSocket();
-    console.log("[ChatPage] Socket connected for rooms and events");
+    console.log("[RoomsPage] 🔄 Initializing rooms list");
 
-    onEvent("unread_counts", (counts) => {
-      console.log("[ChatPage] unread_counts:", counts);
-      const stubs = counts.map(({ chatRoomId: id, unreadCount }) => ({ id, unreadCount }));
-      setRooms(stubs);
-    });
-
-    // 2) try REST API for initial rooms list
+    // Fetch via REST
+    console.log("[RoomsPage] Fetching rooms via REST");
     getChatRooms()
       .then((res) => {
         if (res?.data) {
-          console.log("[ChatPage] REST rooms fetched:", res.data);
+          console.log("[RoomsPage] REST rooms:", res.data);
           setRooms(res.data);
         }
       })
       .catch((err) => {
-        console.warn("[ChatPage] REST rooms failed, using socket");
+        console.warn(
+          "[RoomsPage] REST rooms failed — falling back to socket",
+          err
+        );
+        toast.error(t("chat.errorLoadingRooms"));
       });
-  }, []);
 
-  // Fetch paginated messages via REST when selecting a room
-  const selectRoom = (room) => {
-    console.log("[ChatPage] selectRoom:", room);
-    setActiveRoomId(room.id);
-    if (!messagesByRoom[room.id]) {
-      fetchMessages(room.id);
-    }
-  };
+    // Connect to socket for fallback and new rooms
+    const socket = connectSocket();
+    console.log("[RoomsPage] Socket.IO connected (id pending)");
 
-  const fetchMessages = (roomId, page = 1) => {
-    console.log("[ChatPage] fetchMessages:", roomId, page);
-    getChatMessages(roomId, page)
-      .then((res) => {
-        if (!res || !res.data) {
-          console.error("[ChatPage] fetchMessages: no data for room", roomId);
-          toast.error(t("chat.errorLoadingHistory"));
-          return;
-        }
-        // data may be { messages: [...]} or an array directly
-        const msgs = Array.isArray(res.data)
-          ? res.data
-          : res.data.messages ?? [];
-
-        // Handle error shape
-        if (!Array.isArray(msgs)) {
-          console.error("[ChatPage] unexpected messages data for room", roomId, res.data);
-          toast.error(res.data.error || t("chat.errorLoadingHistory"));
-          return;
-        }
-
-        console.log("[ChatPage] messages fetched for room", roomId, msgs);
-        setMessagesByRoom((prev) => ({
-          ...prev,
-          [roomId]: page === 1 ? msgs : [...prev[roomId] || [], ...msgs],
-        }));
-        setPageByRoom((prev) => ({ ...prev, [roomId]: page }));
-        setHasMoreByRoom((prev) => ({ ...prev, [roomId]: msgs.length === 50 }));
-      })
-      .catch((err) => {
-        console.error("[ChatPage] error fetching messages:", err);
-        toast.error(t("chat.errorLoadingHistory"));
+    // Fallback unread counts for rooms
+    const handleUnread = (counts) => {
+      console.log("[Socket] event: unread_counts", counts);
+      setRooms((prev) => {
+        return counts.map(({ chatRoomId: id, unreadCountCompany }) => {
+          const existing = prev.find((r) => r.id === id);
+          return existing
+            ? { ...existing, unreadCountCompany }
+            : { id, unreadCountCompany };
+        });
       });
-  };
+    };
+    onEvent("unread_counts", handleUnread);
 
-  // Infinite scroll for history
-  const handleScroll = () => {
-    const el = containerRef.current;
-    if (!el || !activeRoomId) return;
-    if (el.scrollTop === 0 && hasMoreByRoom[activeRoomId]) {
-      const next = (pageByRoom[activeRoomId] || 1) + 1;
-      fetchMessages(activeRoomId, next);
-    }
-  };
+    // Listen for new rooms being created
+    const handleNewRoom = (room) => {
+      console.log("[Socket] event: chat_room_created", room);
+      setRooms((prev) => [room, ...prev]);
+    };
+    onEvent("chat_room_created", handleNewRoom);
+
+    // Cleanup
+    return () => {
+      console.log("[RoomsPage] Cleaning up socket listeners");
+      offEvent("unread_counts", handleUnread);
+      offEvent("chat_room_created", handleNewRoom);
+    };
+  }, [t]);
 
   return (
     <div className={styles.container}>
-      {/* Rooms list */}
-      <div className={styles.rooms}>
-        {rooms.length === 0 ? (
-          <p>{t("chat.noChats")}</p>
-        ) : (
-          rooms.map((room) => (
-            <div
-              key={room.id}
-              className={`${styles.roomItem} ${room.id === activeRoomId ? styles.active : ""}`}
-              onClick={() => selectRoom(room)}
-            >
-              <div className={styles.roomName}>{room.id}</div>
-              <div className={styles.roomSnippet}>{room.lastMessage?.content || ""}</div>
-              {room.unreadCount > 0 && <span className={styles.unreadBadge}>{room.unreadCount}</span>}
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Chat window */}
-      <div className={styles.chat}>
-        {activeRoomId ? (
-          <>
-            <div
-              className={styles.messagesContainer}
-              ref={containerRef}
-              onScroll={handleScroll}
-            >
-              {(messagesByRoom[activeRoomId] || []).map((msg) => (
-                <div
-                  key={msg.id}
-                  className={
-                    msg.senderRole === "company_admin" ? styles.messageOutgoing : styles.messageIncoming
-                  }
-                >
-                  <div className={styles.messageContent}>{msg.content}</div>
-                  <div className={styles.messageTime}>{new Date(msg.createdAt).toLocaleTimeString()}</div>
+      <h1 className={styles.title}>{t("chat.roomsTitle", { defaultValue: "Conversations" })}</h1>
+      {rooms.length === 0 ? (
+        <p className={styles.empty}>{t("chat.noChats")}</p>
+      ) : (
+        <ul className={styles.list}>
+          {rooms.map((room) => (
+            <li key={room.id} className={styles.item}>
+              <Link
+                href={`/dashboard/chat/${room.id}`}
+                className={styles.link}
+              >
+                <div className={styles.name}>
+                  {room.customerName || room.id}
                 </div>
-              ))}
-            </div>
-            <div className={styles.emptyPlaceholder}>{t("chat.emptyHistory")}</div>
-          </>
-        ) : (
-          <div className={styles.emptyPlaceholder}>{t("chat.noChats")}</div>
-        )}
-      </div>
+                <div className={styles.snippet}>
+                  {room.lastMessageSenderId || ""}
+                </div>
+                <div className={styles.snippet}>
+                  {room.lastMessage || ""}
+                </div>
+                <div className={styles.meta}>
+                  {room.lastMessageTime && (
+                    <span className={styles.time}>
+                      {new Date(room.lastMessageTime).toLocaleTimeString()}
+                    </span>
+                  )}
+                  {room.unreadCountCompany > 0 && (
+                    <span className={styles.badge}>
+                      {room.unreadCountCompany}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
-};
-
-export default ChatPage;
+}

@@ -1,0 +1,174 @@
+/* app/ui/superadmin/shared/form.module.css */
+
+/* ------------------------------------------------------
+   Uses token values from globals.css for a premium look
+------------------------------------------------------ */
+
+.container {
+  max-width: 1024px;
+  margin: var(--gap-lg) auto;
+  padding: 0 var(--gap-sm);
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--gap-md);
+}
+
+.button {
+  background-color: var(--accent);
+  color: var(--text);
+  padding: var(--gap-xs) var(--gap-sm);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.button:disabled {
+  background-color: var(--disabled-bg);
+  cursor: not-allowed;
+}
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gap-md);
+}
+
+.card {
+  background: var(--bgSoft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--gap-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.form {
+  background: var(--bgSoft);
+  padding: var(--gap-md);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  max-width: 400px;
+  margin-top: var(--gap-lg);
+}
+
+.input {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--gap-sm);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-transparent);
+}
+
+/* Loading & feedback text */
+.loading {
+  font-size: 1rem;
+  color: var(--textSoft);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+  .cardContainer {
+    grid-template-columns: 1fr;
+    gap: var(--gap-sm);
+  }
+  .form {
+    width: 100%;
+    padding: var(--gap-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  .button {
+    width: 100%;
+    justify-content: center;
+  }
+  .input {
+    font-size: 0.9rem;
+  }
+}
+
+/* ------------------------------------------------------
+   Uses token values defined in globals.css
+------------------------------------------------------ */
+
+.wrapper {
+  /* Center and constrain width */
+  max-width: 1440px;
+  margin: var(--gap-lg) auto 0;
+  padding: 0 var(--gap-sm);
+  box-sizing: border-box;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--gap-md);
+}
+
+/* Card container styling */
+.cards > * {
+  background: var(--bgSoft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--gap-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cards > *:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wrapper {
+    margin: var(--gap-md) auto 0;
+    padding: 0 0.75rem;
+  }
+  .main {
+    gap: var(--gap-md);
+  }
+  .cards {
+    grid-template-columns: 1fr;
+    gap: var(--gap-sm);
+  }
+}

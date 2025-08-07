@@ -24,6 +24,7 @@ export default function EditPreferenceTypePage() {
     descriptionAR: "",
     is_required: false,
     is_active: true,
+    display_order: 0,  // ← initialize
   });
 
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,8 @@ export default function EditPreferenceTypePage() {
           description: data.description || "",
           descriptionAR: data.descriptionAR || "",
           is_required: data.is_required || false,
-          is_active: data.is_active !== false, // default to true
+          is_active: data.is_active !== false,
+          display_order: data.display_order ?? 0,  // ← populate
         });
       } catch (error) {
         console.error("❌ Error fetching preference type:", error);
@@ -67,8 +69,16 @@ export default function EditPreferenceTypePage() {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox"
+        ? checked
+        : name === "display_order"
+        ? Number(value)
+        : value,
     }));
+    console.log("Changed field:", name, "=",
+      type === "checkbox" ? checked :
+      name === "display_order" ? Number(e.target.value) : e.target.value
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -106,7 +116,7 @@ export default function EditPreferenceTypePage() {
         descriptionAR: formData.descriptionAR.trim() || null,
         is_required: formData.is_required,
         is_active: formData.is_active,
-        display_order: 0,
+        display_order: formData.display_order,  // ← include
       };
 
       console.log("📤 Payload to update:", payload);
@@ -202,6 +212,16 @@ export default function EditPreferenceTypePage() {
             className={styles.textarea}
           />
 
+          {/* New display_order field */}
+          <input
+            type="number"
+            name="display_order"
+            placeholder={t("displayOrder", { defaultValue: "Display Order" })}
+            value={formData.display_order}
+            onChange={handleChange}
+            className={styles.input}
+          />
+
           <label className={styles.checkboxLabel}>
             <input
               type="checkbox"
@@ -209,7 +229,7 @@ export default function EditPreferenceTypePage() {
               checked={formData.is_required}
               onChange={handleChange}
               className={styles.checkbox}
-            />{" "}
+            />{' '}
             {t("editPrefType.required", { defaultValue: "Required" })}
           </label>
 
@@ -220,7 +240,7 @@ export default function EditPreferenceTypePage() {
               checked={formData.is_active}
               onChange={handleChange}
               className={styles.checkbox}
-            />{" "}
+            />{' '}
             {t("editPrefType.active", { defaultValue: "Active" })}
           </label>
 

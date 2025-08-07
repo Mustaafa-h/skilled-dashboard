@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import styles from "@/app/ui/dashboard/orders/[id]/singleorder.module.css";
+import styles from "../../../ui/dashboard/orders/[id]/singleorder.module.css";
 import { getCompanyWorkers } from "@/app/lib/api";
 import { useTranslations, useLocale } from "next-intl";
 import toast from "react-hot-toast";
@@ -203,8 +203,8 @@ const SingleOrderPage = () => {
           <MapPicker
             lat={parseFloat(booking.customer_lat)}
             lng={parseFloat(booking.customer_long)}
-            onLocationSelect={() => {}}
-             markerOptions={{ draggable: false }}
+            onLocationSelect={() => { }}
+            markerOptions={{ draggable: false }}
           />
         </div>
       </div>
@@ -232,16 +232,16 @@ const SingleOrderPage = () => {
               {booking.preferences.map((pref) => {
                 const typeName =
                   locale === "ar" &&
-                  pref.preference_type_nameAR
+                    pref.preference_type_nameAR
                     ? pref.preference_type_nameAR
                     : pref.preference_type_name;
                 const valueDisplay =
                   locale === "ar"
                     ? pref.customer_value_displayAR ||
-                      pref.customer_value_display ||
-                      pref.customer_value
+                    pref.customer_value_display ||
+                    pref.customer_value
                     : pref.customer_value_display ||
-                      pref.customer_value;
+                    pref.customer_value;
                 console.log("Rendering preference:", {
                   id: pref.id,
                   typeName,
@@ -273,30 +273,30 @@ const SingleOrderPage = () => {
           {t("preferredDate")}:{" "}
           {booking.preferred_time_slot
             ? new Date(
-                booking.preferred_time_slot
-              )
-                .toISOString()
-                .split("T")[0]
+              booking.preferred_time_slot
+            )
+              .toISOString()
+              .split("T")[0]
             : "-"}
         </div>
         <div>
           {t("preferredTime")}:{" "}
           {booking.preferred_time_slot
             ? (() => {
-                const utcTime = new Date(
-                  booking.preferred_time_slot
-                );
-                const hrs = utcTime.getUTCHours();
-                const mins = utcTime
-                  .getUTCMinutes()
-                  .toString()
-                  .padStart(2, "0");
-                const suffix = hrs >= 12 ? "PM" : "AM";
-                const hour12 = ((hrs + 11) % 12 + 1)
-                  .toString()
-                  .padStart(2, "0");
-                return `${hour12}:${mins} ${suffix}`;
-              })()
+              const utcTime = new Date(
+                booking.preferred_time_slot
+              );
+              const hrs = utcTime.getUTCHours();
+              const mins = utcTime
+                .getUTCMinutes()
+                .toString()
+                .padStart(2, "0");
+              const suffix = hrs >= 12 ? "PM" : "AM";
+              const hour12 = ((hrs + 11) % 12 + 1)
+                .toString()
+                .padStart(2, "0");
+              return `${hour12}:${mins} ${suffix}`;
+            })()
             : "-"}
         </div>
         <div>
@@ -333,7 +333,7 @@ const SingleOrderPage = () => {
       </div>
 
       {/* ASSIGN WORKER */}
-      <div className={styles.section}>
+      {/* <div className={styles.section}>
         <strong>{t("assignWorker")}</strong>
         {canAssign ? (
           <>
@@ -358,6 +358,9 @@ const SingleOrderPage = () => {
             <button onClick={assignWorker}>
               {t("assign")}
             </button>
+            <div>
+              {t("assigned-workers")}: {booking.assigned_worker_id}
+            </div>
           </>
         ) : (
           <p>
@@ -367,7 +370,7 @@ const SingleOrderPage = () => {
             })}
           </p>
         )}
-      </div>
+      </div> */}
 
       {/* STATUS BUTTONS */}
       {isNewOrPendingClient && (

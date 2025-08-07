@@ -1,88 +1,123 @@
+/* app/ui/dashboard/orders/[id]/singleorder.module.css */
+
+/* ------------------------------------------------------
+   Uses token values from globals.css for consistent spacing, colors, and shadows
+------------------------------------------------------ */
+
 .container {
-  padding: 2rem;
-  background-color: #ffffff;
-  color: #1a1a1a;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  max-width: 900px;
-  margin: auto;
-  font-family: 'Segoe UI', sans-serif;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--gap-lg) var(--gap-sm);
+  color: var(--text);
+  box-sizing: border-box;
 }
 
-.heading {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #222;
-  text-align: center;
+.container > h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: var(--gap-lg);
 }
 
 .section {
-  margin-bottom: 1.5rem;
-  border-left: 4px solid #0070f3;
-  padding-left: 1rem;
+  background: var(--bgSoft);
+  padding: var(--gap-md);
+  border-radius: var(--radius);
+  margin-bottom: var(--gap-lg);
+  box-shadow: var(--shadow);
 }
 
-.sectionHighlight {
-  background-color: #f4faff;
-  padding: 1rem;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #0070f3;
-  margin-bottom: 1.5rem;
-  border: 1px solid #cce8ff;
-}
-
-.sectionTitle {
+.section strong {
   display: block;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: #111;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--gap-xs);
 }
 
-.list {
-  padding-left: 1.2rem;
-  list-style: disc;
+.section div,
+.section li {
+  font-size: 1rem;
+  color: var(--textSoft);
+  margin-bottom: var(--gap-xs);
 }
 
-.button {
-  padding: 0.5rem 1rem;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 6px;
+.section ul {
+  list-style: disc inside;
+  padding-left: var(--gap-md);
+  margin: var(--gap-xs) 0;
+}
+
+.mapContainer {
+  margin-top: var(--gap-sm);
+  height: 300px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* Controls within sections */
+.section select,
+.section button {
+  font-size: 1rem;
+  padding: var(--gap-xs) var(--gap-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
   cursor: pointer;
-  margin-top: 0.5rem;
-  transition: background-color 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
+  margin-right: var(--gap-sm);
 }
 
-.button:hover {
-  background-color: #005bb5;
+.section button:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--text);
+  transform: translateY(-1px);
+  border-color: var(--accent);
 }
 
-.select {
-  padding: 0.4rem 0.8rem;
-  margin-top: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  max-width: 300px;
+.section button:disabled {
+  background: var(--disabled-bg);
+  cursor: not-allowed;
+  border-color: var(--disabled-bg);
 }
 
+/* Highlighted total section */
+.sectionHighlight {
+  background: var(--bgSoft);
+  border-left: 4px solid var(--accent);
+  padding: var(--gap-md);
+  border-radius: var(--radius);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-top: var(--gap-lg);
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
+    padding: var(--gap-md) var(--gap-sm);
   }
+  .mapContainer {
+    height: 200px;
+  }
+}
 
-  .heading {
+@media (max-width: 480px) {
+  .container > h2 {
     font-size: 1.5rem;
   }
-
-  .section {
-    padding-left: 0.8rem;
+  .mapContainer {
+    height: 150px;
   }
-
-  .button,
-  .select {
+  .section {
+    padding: var(--gap-sm);
+  }
+  .section select,
+  .section button {
     width: 100%;
+    margin-bottom: var(--gap-sm);
   }
 }

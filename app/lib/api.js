@@ -237,14 +237,19 @@ export const deleteBanner = async (bannerId) =>
   withCatch(() => API.delete(`/banners/${bannerId}`));
 
 //=================admins==========================
+
 export const getAdmins = () =>
    withCatch(() => JSON_API.get("auth/getUsers"));
 
-export const registerAdmin = async() =>
-   withCatch(() => JSON_API.post("auth/register-admin"));
+export const registerAdmin = async(superFormData) =>
+   withCatch(() => JSON_API.post("auth/register-admin", superFormData));
 
 export const registerCompanyAdmin = async(formData) =>
    withCatch(() => JSON_API.post("auth/register-company-admin",formData));
+
+export const resetAdminsPassword = async(formData) =>
+   withCatch(() => JSON_API.post("auth/reset-password-admins",formData));
+
 
 //=================notifications===================
 export const pushFcmAndFid = async(deviceId, fcmToken) =>

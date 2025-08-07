@@ -19,6 +19,7 @@ export default function AddPreferenceOptionPage() {
     description: "",
     is_default: false,
     is_active: true,
+    display_order: 0,        // ← initialize display_order
   });
 
   const [loading, setLoading] = useState(false);
@@ -27,8 +28,23 @@ export default function AddPreferenceOptionPage() {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : name === "display_order"
+          ? Number(value)
+          : value,
     }));
+    console.log(
+      "Changed field:",
+      name,
+      "=",
+      type === "checkbox"
+        ? checked
+        : name === "display_order"
+        ? Number(value)
+        : value
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -61,7 +77,7 @@ export default function AddPreferenceOptionPage() {
       description: formData.description.trim() || null,
       is_default: formData.is_default,
       is_active: formData.is_active,
-      display_order: 0,
+      display_order: formData.display_order,  // ← include display_order
     };
 
     console.log("📤 Payload to send:", payload);
@@ -141,6 +157,17 @@ export default function AddPreferenceOptionPage() {
           onChange={handleChange}
           className={styles.textarea}
         />
+
+        {/* New display_order field */}
+        <input
+          type="number"
+          name="display_order"
+          placeholder={t("displayOrder", { defaultValue: "Display Order" })}
+          value={formData.display_order}
+          onChange={handleChange}
+          className={styles.input}
+        />
+
         <label className={styles.checkboxLabel}>
           <input
             type="checkbox"
@@ -148,7 +175,7 @@ export default function AddPreferenceOptionPage() {
             checked={formData.is_default}
             onChange={handleChange}
             className={styles.checkbox}
-          />{" "}
+          />{' '}
           {t("addPrefOption.defaultOption", {
             defaultValue: "Default Option",
           })}
@@ -161,7 +188,7 @@ export default function AddPreferenceOptionPage() {
             checked={formData.is_active}
             onChange={handleChange}
             className={styles.checkbox}
-          />{" "}
+          />{' '}
           {t("addPrefOption.active", {
             defaultValue: "Active",
           })}

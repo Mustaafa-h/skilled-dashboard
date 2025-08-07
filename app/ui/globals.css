@@ -1,9 +1,20 @@
+/* app/ui/globals.css */
+
+/* 1. Import Cairo & set as base font */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+
+html,
+body {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* 2. Color tokens (existing) and new design tokens */
 :root {
+  /* Color palette */
   --bg: #151c2c;
   --bgSoft: #182237;
   --text: white;
   --textSoft: #b7bac1;
-
   --background: var(--bgSoft);
   --input-bg: #1f2937;
   --text-primary: var(--text);
@@ -12,8 +23,25 @@
   --accent-hover: #2563eb;
   --accent-transparent: rgba(59, 130, 246, 0.3);
   --disabled-bg: #475569;
+
+  /* Spacing scale */
+  --gap-xs: 0.5rem;   /* 8px */
+  --gap-sm: 1rem;     /* 16px */
+  --gap-md: 1.5rem;   /* 24px */
+  --gap-lg: 2rem;     /* 32px */
+  --gap-xl: 2.5rem;   /* 40px */
+
+  /* Border radius */
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius:    0.5rem;   /* 8px */
+  --radius-lg: 1rem;     /* 16px */
+
+  /* Shadows */
+  --shadow:       0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
 }
 
+/* 3. Reset & base styles */
 * {
   margin: 0;
   padding: 0;
@@ -30,9 +58,18 @@ a {
   text-decoration: none;
 }
 
-/* === Responsiveness Added === */
+/* 4. Responsive utility overrides */
 @media (max-width: 768px) {
-  .container, .wrapper, .card, .content, .table, .sidebar, .navbar, .form, .input, .button {
+  .container,
+  .wrapper,
+  .card,
+  .content,
+  .table,
+  .sidebar,
+  .navbar,
+  .form,
+  .input,
+  .button {
     width: 100% !important;
     max-width: 100% !important;
     padding: 0 1rem !important;
@@ -45,8 +82,12 @@ a {
     grid-template-columns: 1fr !important;
   }
 }
+
 @media (max-width: 480px) {
-  .text, .title, .subtitle, .label {
+  .text,
+  .title,
+  .subtitle,
+  .label {
     font-size: 90% !important;
   }
   .button {

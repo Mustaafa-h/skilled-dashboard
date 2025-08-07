@@ -15,10 +15,7 @@ import {
   MdOutlineSettings,
   MdHelpCenter,
   MdPhotoLibrary,
-  MdChat,
-  MdChatBubbleOutline,
   MdChatBubble,
-  MdDesignServices,
   MdCleaningServices,
   MdRoomPreferences,
 } from "react-icons/md";
@@ -28,9 +25,11 @@ const Sidebar = ({ onClose }) => {
   const t = useTranslations();
   const pathname = usePathname();
   const prevPath = useRef(pathname);
+
   const [companyName, setCompanyName] = useState("Loading...");
   const [companyLogo, setCompanyLogo] = useState("/noavatar.png");
 
+  // close sidebar when path changes
   useEffect(() => {
     if (prevPath.current !== pathname) {
       prevPath.current = pathname;
@@ -38,19 +37,34 @@ const Sidebar = ({ onClose }) => {
     }
   }, [pathname, onClose]);
 
+  // fetch company info once on mount
   useEffect(() => {
     const fetchCompany = async () => {
       const companyId = localStorage.getItem("companyId");
-      if (!companyId) return;
+      if (!companyId) {
+        console.warn("No companyId in localStorage");
+        return;
+      }
 
       try {
+        console.log("📡 Fetching company for ID:", companyId);
         const res = await getCompany(companyId);
         const companyData = res?.data?.data;
+        console.log("🏢 Company data:", companyData);
 
+        // name
         setCompanyName(companyData?.name || "Company");
-        // setCompanyLogo(companyData?.logo_url || "/noavatar.png");
+
+        // logo, fallback if null or empty
+        const logoUrl = companyData?.logo_url;
+        if (logoUrl) {
+          setCompanyLogo(logoUrl);
+        } else {
+          console.log("⚠️ No logo_url, falling back to noavatar");
+          setCompanyLogo("/noavatar.png");
+        }
       } catch (err) {
-        console.error("Failed to fetch company:", err);
+        console.error("❌ Failed to fetch company:", err);
         setCompanyName("Company");
         setCompanyLogo("/noavatar.png");
       }
@@ -74,9 +88,8 @@ const Sidebar = ({ onClose }) => {
         { title: t("workers", { defaultValue: "Workers" }), path: "/dashboard/users", icon: <MdSupervisedUserCircle /> },
         { title: t("services", { defaultValue: "Services" }), path: "/dashboard/products", icon: <MdCleaningServices /> },
         { title: t("orders", { defaultValue: "Orders" }), path: "/dashboard/orders", icon: <MdAttachMoney /> },
-         { title: t("chat", { defaultValue: "chat" }), path: "/dashboard/chat", icon: <MdChatBubble /> },
+        { title: t("Chat", { defaultValue: "Chat" }), path: "/dashboard/chat", icon: <MdChatBubble /> },
         { title: t("Gallery", { defaultValue: "Gallery" }), path: "/dashboard/gallery", icon: <MdPhotoLibrary /> },
-
       ],
     },
     {

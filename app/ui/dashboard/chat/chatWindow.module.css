@@ -1,0 +1,202 @@
+/* app/ui/dashboard/chat/chatWindow.module.css */
+
+/* ------------------------------------------------------
+   Uses token values from globals.css for spacing, colors, shadows
+------------------------------------------------------ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--gap-md);
+  background: var(--bg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: var(--gap-xs);
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+}
+
+.backButton:hover {
+  background: var(--accent-transparent);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-right: var(--gap-sm);
+}
+
+.messageIncoming,
+.messageOutgoing {
+  max-width: 80%;
+  padding: var(--gap-sm) var(--gap-md);
+  border-radius: var(--radius);
+  word-wrap: break-word;
+  box-shadow: var(--shadow);
+}
+
+.messageIncoming {
+  align-self: flex-start;
+  background: var(--bgSoft);
+  color: var(--text);
+}
+
+.messageOutgoing {
+  align-self: flex-end;
+  background: var(--accent);
+  color: var(--text);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-xs);
+}
+
+.senderName {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--textSoft);
+}
+
+.messageTime {
+  font-size: 0.75rem;
+  color: var(--textSoft);
+}
+
+.messageContent {
+  font-size: 1rem;
+}
+
+.emptyPlaceholder {
+  text-align: center;
+  color: var(--textSoft);
+  margin-top: var(--gap-lg);
+}
+
+.typingIndicator {
+  font-style: italic;
+  color: var(--textSoft);
+  padding: var(--gap-xs) 0;
+}
+
+.composer {
+  display: flex;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-md);
+}
+
+.input {
+  flex: 1;
+  padding: var(--gap-sm) var(--gap-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-transparent);
+}
+
+.sendButton {
+  padding: var(--gap-xs) var(--gap-lg);
+  background: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sendButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.sendButton:disabled {
+  background: var(--disabled-bg);
+  cursor: not-allowed;
+}
+
+/* === Responsive Adjustments === */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--gap-sm);
+  }
+  .header {
+    gap: var(--gap-xs);
+  }
+  .title {
+    font-size: 1.25rem;
+  }
+  .messagesContainer {
+    gap: var(--gap-xs);
+  }
+  .composer {
+    flex-direction: column;
+  }
+  .sendButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1rem;
+  }
+  .messageContent {
+    font-size: 0.875rem;
+  }
+  .messageIncoming,
+  .messageOutgoing {
+    padding: var(--gap-xs) var(--gap-sm);
+  }
+  .senderName,
+  .messageTime {
+    font-size: 0.6875rem;
+  }
+}
+
+.messageIncoming {
+  align-self: flex-start;
+  background: var(--bgSoft);       /* dark grey bubble */
+  color: var(--textSoft);          /* lighter text */
+  border-left: 4px solid var(--accent);  /* little accent stripe */
+}
+
+/* Outgoing from company/admin */
+.messageOutgoing {
+  align-self: flex-end;
+  background: var(--accent);       /* your blue accent bubble */
+  color: var(--text);              /* white text */
+  border-left: 4px solid var(--accent-hover); /* darker stripe */
+}
