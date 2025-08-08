@@ -6,7 +6,6 @@ import {
 
     MdMenu,
 } from "react-icons/md";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 const SuperAdminNavbar = ({ onToggleSidebar }) => {

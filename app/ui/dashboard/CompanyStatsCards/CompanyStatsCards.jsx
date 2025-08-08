@@ -10,7 +10,6 @@ const iconMap = {
   workers: <MdPeople size={24} />,
   services: <MdBuild size={24} />,
   subservices: <MdLayers size={24} />,
-  stock: <MdInventory2 size={24} />,
 };
 
 const Card = ({ icon, label, value }) => (
@@ -51,7 +50,6 @@ export default function CompanyStatsCards({ companyId }) {
       <Card icon={iconMap.workers} label={t("workers", { defaultValue: "Company Workers" })} value={workersCount} />
       <Card icon={iconMap.services} label={t("services", { defaultValue: "Services" })} value={servicesCount} />
       <Card icon={iconMap.subservices} label={t("subServices", { defaultValue: "Subservices" })} value={subservicesCount} />
-      <Card icon={iconMap.stock} label={t("stock", { defaultValue: "Stock" })} value={0} />
     </div>
   );
 }

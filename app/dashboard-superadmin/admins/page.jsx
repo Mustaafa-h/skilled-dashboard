@@ -10,7 +10,7 @@ import {
   resetAdminsPassword,
 } from "@/app/lib/api";
 import toast from "react-hot-toast";
-import styles from "@/app/ui/superadmin/shared/form.module.css";
+import styles from "@/app/ui/dashboard/admins/admins.module.css";
 import { useTranslations } from "next-intl";
 
 export default function AdminsPage() {
@@ -249,7 +249,7 @@ export default function AdminsPage() {
             name="companyId"
             value={companyFormData.companyId}
             onChange={handleCompanyChange}
-            className={styles.select}
+            className={styles.input}
           >
             <option value="" disabled>
               {t("admins.selectCompany", { defaultValue: "Select Company" })}
@@ -326,7 +326,7 @@ export default function AdminsPage() {
             name="userId"
             value={resetFormData.userId}
             onChange={handleResetChange}
-            className={styles.select}
+            className={styles.input}
           >
             <option value="" disabled>
               {t("admins.selectAdmin", { defaultValue: "Select Admin" })}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SuperAdminSidebar from "@/app/ui/dashboard/sidebar/superAdminSidebar";
-import Topbar from "@/app/ui/dashboard/navbar/navbar";
+import Topbar from "@/app/ui/dashboard/navbar/superAdminNavbar";
 import styles from "@/app/ui/superadmin/dashboard/superAdminLayout.module.css";
 
 export default function SuperAdminLayout({ children }) {

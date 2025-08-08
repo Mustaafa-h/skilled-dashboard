@@ -1,7 +1,7 @@
 
 .container {
     padding: 1rem;
-    background-color: #121212;
+    background-color: var(--bg);
     color: #f0f0f0;
     min-height: 100vh;
     display: flex;

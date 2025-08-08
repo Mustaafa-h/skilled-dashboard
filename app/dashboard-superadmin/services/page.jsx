@@ -83,11 +83,13 @@ export default function SuperAdminServicesPage() {
           {services.map((service) => (
             <div key={service.id} className={styles.serviceCard}>
               {service.icon_url && (
-                <img
-                  src={service.image_url}
-                  alt={service.name}
-                  className={styles.serviceIcon}
-                />
+                <div className={styles.serviceIcondiv}>
+                  <img
+                    src={service.icon_url}
+                    alt={service.name}
+                    className={styles.serviceIcon}
+                  />
+                </div>
               )}
               <h2 className={styles.serviceTitle}>{service.name}</h2>
               <p className={styles.serviceDescription}>
@@ -120,6 +122,9 @@ export default function SuperAdminServicesPage() {
                     .map((sub) => (
                       <li key={sub.id} className={styles.subServiceItem}>
                         <div className={styles.subServiceDetails}>
+                          <div className={styles.subIconDiv}>
+                            <img className={styles.subIcon} src={sub.icon_url} alt="icon"  />
+                          </div>
                           <span className={styles.subServiceName}>{sub.name}</span> -{" "}
                           {sub.description || t("noDescription", { defaultValue: "No description" })}
                           <div className={styles.buttonGroup}>

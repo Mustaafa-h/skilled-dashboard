@@ -9,7 +9,6 @@ export default function SuperAdminDashboardPage() {
         companies: 0,
         workers: 0,
         admins: 5,
-        transactions: 12
     });
     const [loading, setLoading] = useState(true);
 
@@ -66,10 +65,6 @@ export default function SuperAdminDashboardPage() {
                     <div className={styles.card}>
                         <h3>Total Admins</h3>
                         { <p>{metrics.admins}</p> }
-                    </div>
-                    <div className={styles.card}>
-                        <h3>Total Transactions</h3>
-                        { <p>{metrics.transactions}</p> }
                     </div>
                 </div>
             )}
