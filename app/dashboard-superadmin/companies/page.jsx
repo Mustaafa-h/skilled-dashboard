@@ -95,6 +95,7 @@ export default function SuperAdminCompaniesPage() {
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>{t("Company.logo", { defaultValue: "logo" })}</th>
               <th>{t("Company.name", { defaultValue: "Name" })}</th>
               <th>{t("Company.status", { defaultValue: "Status" })}</th>
               <th>{t("Company.actions", { defaultValue: "Actions" })}</th>
@@ -104,10 +105,8 @@ export default function SuperAdminCompaniesPage() {
             {filteredCompanies.map((company) => (
               <tr
                 key={company.id}
-                onClick={() =>
-                  router.push(`/dashboard-superadmin/companies/${company.id}`)
-                }
               >
+                <td className={styles.logo}> <img src={company.logo_url} alt="logo" /></td>
                 <td>{company.name}</td>
                 <td className={styles.statusText}>{company.status}</td>
                 <td className={styles.actions}>

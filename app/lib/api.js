@@ -278,6 +278,7 @@ export const getChatRooms = () =>
  * @param {number} [page=1]
  * @param {number} [limit=50]
  */
+
 export const getChatMessages = (roomId, page = 1, limit = 50) =>
   withCatch(() =>
     JSON_API.get(`chat/rooms/${roomId}/messages?page=${page}&limit=${limit}`)

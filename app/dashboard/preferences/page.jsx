@@ -1,5 +1,5 @@
 "use client";
-//app/dashboard/preferences/page.jsx
+
 import { useState, useEffect } from 'react';
 import styles from '@/app/ui/dashboard/preferences/preferences.module.css';
 import {

@@ -19,8 +19,8 @@ body {
   --input-bg: #1f2937;
   --text-primary: var(--text);
   --border: #334155;
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
+  --accent: #305ba2;
+  --accent-hover: #1e3667;
   --accent-transparent: rgba(59, 130, 246, 0.3);
   --disabled-bg: #475569;
 

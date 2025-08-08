@@ -12,6 +12,7 @@ import {
   subscribeNotifications,
   clearNotifications,
 } from "@/app/lib/notificationsClient";
+import PreferencesPage from "@/app/dashboard/preferences/page";
 
 const Navbar = ({ onToggleSidebar }) => {
   const t = useTranslations();
@@ -57,7 +58,14 @@ const Navbar = ({ onToggleSidebar }) => {
   const titles = {
     users: t("workers", { defaultValue: "Workers" }),
     products: t("services", { defaultValue: "Services" }),
-    // add additional page title mappings if needed
+    admins: t("admins", { defaultValue: "Admins" }),
+    chat: t("Chat", { defaultValue: "Chat" }),
+    orders: t("orders", { defaultValue: "Orders" }),
+    gallery: t("gallery", { defaultValue: "gallery" }),
+    privacy: t("services", { defaultValue: "services" }),
+    settings: t("settings", { defaultValue: "settings" }),
+    notifications: t("notifications", { defaultValue: "notifications" }),
+    preferences: t("preferences", { defaultValue: "preferences" }),
   };
 
   return (

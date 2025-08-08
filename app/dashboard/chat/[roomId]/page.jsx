@@ -42,12 +42,12 @@ export default function ChatWindowPage() {
     };
     onEvent("new_message", handleNewMessage);
 
-    const handleMessageSent = (message) => {
-      if (message.chatRoomId !== roomId) return;
-      console.log("[Socket] message_sent for room", roomId, message);
-      setMessages((prev) => [...prev, message]);
-    };
-    onEvent("message_sent", handleMessageSent);
+    // const handleMessageSent = (message) => {
+    //   if (message.chatRoomId !== roomId) return;
+    //   console.log("[Socket] message_sent for room", roomId, message);
+    //   setMessages((prev) => [...prev, message]);
+    // };
+    // onEvent("message_sent", handleMessageSent);
 
     const handleTyping = ({ chatRoomId, isTyping: typing }) => {
       if (chatRoomId !== roomId) return;
@@ -67,7 +67,7 @@ export default function ChatWindowPage() {
     return () => {
       console.log("[ChatWindow] cleaning up listeners");
       offEvent("new_message", handleNewMessage);
-      offEvent("message_sent", handleMessageSent);
+      // offEvent("message_sent", handleMessageSent);
       offEvent("user_typing", handleTyping);
       offEvent("messages_read", handleRead);
     };
@@ -81,6 +81,7 @@ export default function ChatWindowPage() {
         const msgs = Array.isArray(data)
           ? data
           : data.messages ?? [];
+        console.log("=====data=========", data)
         console.log("[ChatWindow] fetched messages page", pageNum, msgs);
         setMessages((prev) =>
           pageNum === 1 ? msgs : [...msgs, ...prev]
@@ -94,15 +95,18 @@ export default function ChatWindowPage() {
       });
   };
 
+
   // Infinite scroll up
   const handleScroll = () => {
+    console.log("scroll",containerRef.current)
     const el = containerRef.current;
-    if (!el) return;
+    if (!el) {console.log("fetchmsgs(pg+1 not triggered",containerRef.current)};
     if (el.scrollTop === 0 && hasMore) {
-      console.log("[ChatWindow] loading more messages");
+      console.log("[ChatWindow] loading more messages", el);
       fetchMessages(page + 1);
     }
   };
+
 
   // Handle sending a message
   const sendMessage = () => {
@@ -135,6 +139,13 @@ export default function ChatWindowPage() {
   const goBack = () => {
     router.push("/dashboard/chat");
   };
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Scroll to bottom after first message load
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      console.log("===========", containerRef.current.scrollHeight)
+    }
+  }, [messages.length]);
 
   return (
     <div className={styles.container}>
@@ -154,7 +165,7 @@ export default function ChatWindowPage() {
           <div
             key={msg.id}
             className={
-              msg.senderRole === "company_admin"
+              msg.senderType === "company_admin"
                 ? styles.messageOutgoing
                 : styles.messageIncoming
             }
@@ -167,7 +178,16 @@ export default function ChatWindowPage() {
                 {new Date(msg.createdAt).toLocaleTimeString()}
               </span>
             </div>
-            <div className={styles.messageContent}>{msg.content}</div>
+
+            <div className={styles.messageContent}>
+              {msg.content}
+            </div>
+            {msg.isRead === true && (
+              <div className={styles.seenLabel}>
+                {t("chat.seen", { defaultValue: "Seen" })}
+              </div>
+            )}
+
           </div>
         ))}
 

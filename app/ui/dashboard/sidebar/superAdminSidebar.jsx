@@ -14,7 +14,6 @@ import {
     MdTune,
     MdPhotoLibrary,
     MdSettings,
-    MdNotifications
 } from "react-icons/md";
 
 const SuperAdminSidebar = ({ onClose, menuOpen }) => {
@@ -70,11 +69,6 @@ const SuperAdminSidebar = ({ onClose, menuOpen }) => {
                     title: t("settings", { defaultValue: "Settings" }),
                     path: "/dashboard-superadmin/settings",
                     icon: <MdSettings />,
-                },
-                {
-                    title: t("notifications", { defaultValue: "Notifications" }),
-                    path: "/dashboard-superadmin/notifications",
-                    icon: <MdNotifications />,
                 },
             ],
         },

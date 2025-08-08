@@ -10,7 +10,6 @@ import {
   MdBusiness,
   MdDashboard,
   MdSupervisedUserCircle,
-  MdShoppingBag,
   MdAttachMoney,
   MdOutlineSettings,
   MdHelpCenter,
@@ -106,13 +105,8 @@ const Sidebar = ({ onClose }) => {
   return (
     <div className={styles.container}>
       <div className={styles.user}>
-        <Image
-          className={styles.userImage}
-          src={user.img}
-          alt="Company Logo"
-          width={50}
-          height={50}
-        />
+
+        <img className={styles.userImage} src={user.img} alt="company logo" width={50} height={50}/>
         <div className={styles.userDetail}>
           <span className={styles.username}>{user.username}</span>
           <span className={styles.userTitle}>{user.role}</span>

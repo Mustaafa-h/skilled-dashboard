@@ -106,6 +106,7 @@
 
 .composer {
   display: flex;
+  flex-shrink: 0;
   gap: var(--gap-sm);
   margin-top: var(--gap-md);
 }

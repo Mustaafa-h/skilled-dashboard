@@ -8,6 +8,10 @@ import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { connectSocket, onEvent, offEvent } from "../../lib/socket";
 import { getChatRooms } from "../../lib/api";
+import {
+  MdOutlineContentPasteSearch,
+
+} from "react-icons/md";
 
 export default function RoomsPage() {
   const t = useTranslations();
@@ -81,6 +85,7 @@ export default function RoomsPage() {
               >
                 <div className={styles.name}>
                   {room.customerName || room.id}
+
                 </div>
                 <div className={styles.snippet}>
                   {room.lastMessageSenderId || ""}
@@ -101,6 +106,15 @@ export default function RoomsPage() {
                   )}
                 </div>
               </Link>
+              {room.bookingId && (
+                <Link
+                  href={`/dashboard/orders/${room.bookingId}`}
+                  className={styles.bookingLink}
+                  title={t("chat.viewBooking")}
+                >
+                  <MdOutlineContentPasteSearch/> booking
+                </Link>
+              )}
             </li>
           ))}
         </ul>
