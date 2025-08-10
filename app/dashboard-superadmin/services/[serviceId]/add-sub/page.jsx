@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 export default function AddSubServicePage() {
     const router = useRouter();
     const params = useParams();
-    const t = useTranslations("AddSubService");
+    const t = useTranslations("AddSubServices");
     const serviceId = params.serviceId;
 
     const [loading, setLoading] = useState(false);

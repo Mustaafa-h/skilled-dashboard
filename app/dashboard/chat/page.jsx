@@ -110,9 +110,9 @@ export default function RoomsPage() {
                 <Link
                   href={`/dashboard/orders/${room.bookingId}`}
                   className={styles.bookingLink}
-                  title={t("chat.viewBooking")}
+                  title={t("booking")}
                 >
-                  <MdOutlineContentPasteSearch/> booking
+                  <MdOutlineContentPasteSearch/> {t("booking")}
                 </Link>
               )}
             </li>

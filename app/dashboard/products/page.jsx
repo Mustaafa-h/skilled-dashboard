@@ -196,8 +196,11 @@ export default function ProductsPage() {
           <div className={styles.modalContent}>
             <h3>{t("selectSubservice")}</h3>
             <select
+            className={styles.popupOption}
               value={selectedSubId}
-              onChange={(e) => setSelectedSubId(e.target.value)}
+              onChange={(e) => setSelectedSubId(e.target.value)
+              
+              }
             >
               <option value="">{t("selectPlaceholder")}</option>
               {selectableSubs.map((s) => (
@@ -207,8 +210,8 @@ export default function ProductsPage() {
               ))}
             </select>
             <div className={styles.modalActions}>
-              <button onClick={handleAddSubService}>{t("add")}</button>
-              <button onClick={() => setPopupServiceId(null)}>{t("cancel")}</button>
+              <button className={styles.actionBtn} onClick={handleAddSubService}>{t("add")}</button>
+              <button className={styles.deleteBtn} onClick={() => setPopupServiceId(null)}>{t("cancel")}</button>
             </div>
           </div>
         </div>

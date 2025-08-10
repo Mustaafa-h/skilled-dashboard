@@ -82,7 +82,7 @@ export default function LoginPage() {
       }
 
       // ▶️ 4. Redirect
-      if (role === "superadmin") {
+      if (role === "superadmin" || "admin") {
         router.push("/dashboard-superadmin");
       } else if (role === "company_admin") {
         router.push("/dashboard");

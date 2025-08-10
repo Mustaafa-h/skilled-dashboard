@@ -253,7 +253,7 @@ export default function EditPreferenceTypePage() {
             name="type"
             value={formData.type}
             onChange={handleChange}
-            className={styles.select}
+            className={styles.input}
           >
             <option value="single-select">
               {t("editPrefType.single", {

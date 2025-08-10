@@ -80,12 +80,12 @@ export default function AddPreferenceTypePage() {
     console.log("📋 Options:", options);
 
     if (!formData.name.trim() || !formData.field_name.trim()) {
-      toast.error(t("addPrefType.emptyFields", { defaultValue: "Name and Field Name cannot be empty." }));
+      toast.error(t("addPrefTypes.emptyFields", { defaultValue: "Name and Field Name cannot be empty." }));
       return;
     }
 
     if (!serviceId) {
-      toast.error(t("addPrefType.missingServiceId", { defaultValue: "Service ID missing from URL." }));
+      toast.error(t("addPrefTypes.missingServiceId", { defaultValue: "Service ID missing from URL." }));
       return;
     }
 
@@ -118,7 +118,7 @@ export default function AddPreferenceTypePage() {
     setLoading(true);
     try {
       await createPreferenceType(payload);
-      toast.success(t("addPrefType.success", { defaultValue: "Preference type created successfully." }));
+      toast.success(t("addPrefTypes.success", { defaultValue: "Preference type created successfully." }));
       router.push(`/dashboard-superadmin/preferences/${serviceId}`);
     } catch (error) {
       console.error("❌ Error:", error);
@@ -126,7 +126,7 @@ export default function AddPreferenceTypePage() {
       if (details && Array.isArray(details)) {
         details.forEach(msg => toast.error(msg));
       } else {
-        toast.error(t("addPrefType.failed", { defaultValue: "Failed to create preference type." }));
+        toast.error(t("addPrefTypes.failed", { defaultValue: "Failed to create preference type." }));
       }
     } finally {
       setLoading(false);
@@ -135,7 +135,7 @@ export default function AddPreferenceTypePage() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{t("addPrefType.title", { defaultValue: "Create New Preference Type" })}</h2>
+      <h2 className={styles.title}>{t("addPrefTypes.title", { defaultValue: "Create New Preference Type" })}</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Core Fields */}
         <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} className={styles.input} />
@@ -157,16 +157,16 @@ export default function AddPreferenceTypePage() {
         {/* Checkboxes */}
         <label className={styles.checkboxLabel}>
           <input type="checkbox" name="is_required" checked={formData.is_required} onChange={handleChange} />{" "}
-          {t("addPrefType.required", { defaultValue: "Required" })}
+          {t("addPrefTypes.required", { defaultValue: "Required" })}
         </label>
         <label className={styles.checkboxLabel}>
           <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} />{" "}
-          {t("addPrefType.active", { defaultValue: "Active" })}
+          {t("addPrefTypes.active", { defaultValue: "Active" })}
         </label>
 
         {/* Type Selection */}
-        <label className={styles.label}>{t("addPrefType.prefType", { defaultValue: "Preference Type:" })}</label>
-        <select name="type" value={formData.type} onChange={handleChange} className={styles.select}>
+        <label className={styles.label}>{t("addPrefTypes.prefType", { defaultValue: "Preference Type:" })}</label>
+        <select name="type" value={formData.type} onChange={handleChange} className={styles.input}>
           <option value="single-select">single-select</option>
           <option value="multi-select">multi-select</option>
           <option value="boolean">boolean</option>
@@ -176,7 +176,7 @@ export default function AddPreferenceTypePage() {
         {/* Conditional Fields */}
         {formData.type === "number" && (
           <div className={styles.section}>
-            <h4>{t("addPrefType.validationRules", { defaultValue: "Validation Rules" })}</h4>
+            <h4>{t("addPrefTypes.validationRules", { defaultValue: "Validation Rules" })}</h4>
             {Object.keys(validationRules).map((rule) => (
               <input
                 key={rule}
@@ -193,7 +193,7 @@ export default function AddPreferenceTypePage() {
 
         {["single-select", "multi-select"].includes(formData.type) && (
           <div className={styles.section}>
-            <h4>{t("addPrefType.options", { defaultValue: "Options" })}</h4>
+            <h4>{t("addPrefTypes.options", { defaultValue: "Options" })}</h4>
             {options.map((opt, i) => (
               <div key={i} className={styles.optionBlock}>
                 <input type="text" name="value" placeholder="Value" value={opt.value} onChange={(e) => handleOptionChange(i, e)} className={styles.input} />
@@ -202,29 +202,29 @@ export default function AddPreferenceTypePage() {
                 <textarea name="description" placeholder="Description" value={opt.description} onChange={(e) => handleOptionChange(i, e)} className={styles.textarea} />
                 <label>
                   <input type="checkbox" name="is_default" checked={opt.is_default} onChange={(e) => handleOptionChange(i, e)} />{" "}
-                  {t("addPrefType.default", { defaultValue: "Default" })}
+                  {t("addPrefTypes.default", { defaultValue: "Default" })}
                 </label>
                 <label>
                   <input type="checkbox" name="is_active" checked={opt.is_active} onChange={(e) => handleOptionChange(i, e)} />{" "}
-                  {t("addPrefType.activeOption", { defaultValue: "Active" })}
+                  {t("addPrefTypes.activeOption", { defaultValue: "Active" })}
                 </label>
                 {options.length > 1 && (
                   <button type="button" onClick={() => removeOption(i)}>
-                    {t("addPrefType.remove", { defaultValue: "Remove" })}
+                    {t("addPrefTypes.remove", { defaultValue: "Remove" })}
                   </button>
                 )}
               </div>
             ))}
-            <button type="button" onClick={addOption}>
-              {t("addPrefType.addOption", { defaultValue: "Add More Option" })}
+            <button className={styles.button} type="button" onClick={addOption}>
+              {t("addPrefTypes.addOption", { defaultValue: "Add More Option" })}
             </button>
           </div>
         )}
 
         <button type="submit" disabled={loading} className={styles.button}>
           {loading
-            ? t("addPrefType.creating", { defaultValue: "Creating..." })
-            : t("addPrefType.createBtn", { defaultValue: "Create Preference Type" })}
+            ? t("addPrefTypes.creating", { defaultValue: "Creating..." })
+            : t("addPrefTypes.createBtn", { defaultValue: "Create Preference Type" })}
         </button>
       </form>
     </div>

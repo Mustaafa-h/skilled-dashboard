@@ -5,10 +5,12 @@ import { useParams, useRouter } from "next/navigation";
 import { updateBanner, getAllBanners } from "@/app/lib/api";
 import toast from "react-hot-toast";
 import styles from "../../../ui/superadmin/shared/form.module.css";
+import { useTranslations } from "next-intl";
 
 export default function EditBannerPage() {
     const router = useRouter();
     const { id } = useParams();
+    const t = useTranslations();
     const [banner, setBanner] = useState(null);
     const [name, setName] = useState("");
     const [image, setImage] = useState(null);
@@ -23,14 +25,14 @@ export default function EditBannerPage() {
             const response = await getAllBanners(); // We fetch all then filter since there's no GET /banners/:id
             const found = response.data.data.find((b) => b.id === id);
             if (!found) {
-                toast.error("Banner not found");
+                toast.error(t("editBanner.toastNotFound"));
                 router.push("/dashboard-superadmin/banners");
                 return;
             }
             setBanner(found);
             setName(found.name);
         } catch (err) {
-            toast.error("Failed to fetch banner");
+            toast.error(t("editBanner.toastFailedFetch"));
         } finally {
             setLoading(false);
         }
@@ -40,28 +42,28 @@ export default function EditBannerPage() {
         e.preventDefault();
 
         if (image && image.size > 20 * 1024 * 1024) {
-            toast.error("Image must be under 20MB");
+            toast.error(t("editBanner.toastImageTooLarge"));
             return;
         }
 
         const formData = new FormData();
-        if (image) formData.append("image", image); // 
+        if (image) formData.append("image", image);
 
         try {
             await updateBanner(id, formData);
-            toast.success("Banner updated");
+            toast.success(t("editBanner.toastUpdated"));
             router.push("/dashboard-superadmin/banners");
         } catch (err) {
-            toast.error("Update failed");
+            toast.error(t("editBanner.toastUpdateFailed"));
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{t("editBanner.loading")}</p>;
     if (!banner) return null;
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Edit Banner</h1>
+            <h1 className={styles.title}>{t("editBanner.title")}</h1>
 
             <form className={styles.addForm} onSubmit={handleUpdate}>
                 <input
@@ -73,13 +75,13 @@ export default function EditBannerPage() {
                 {banner.image_url && (
                     <img
                         src={banner.image_url}
-                        alt="Current"
+                        alt={t("editBanner.currentImageAlt")}
                         style={{ maxHeight: "200px", borderRadius: "8px", marginTop: "1rem" }}
                     />
                 )}
 
                 <button type="submit" style={{ marginTop: "1rem" }}>
-                    Save Changes
+                    {t("editBanner.saveButton")}
                 </button>
             </form>
         </div>

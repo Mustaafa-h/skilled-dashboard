@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { getAllBanners, toggleBannerActive, deleteBanner, createBanner } from "@/app/lib/api";
 import toast from "react-hot-toast";
 import styles from "../../ui/superadmin/banners/Banners.module.css";
+import { useTranslations } from "next-intl";
 
 export default function BannersPage() {
     const router = useRouter();
+    const t = useTranslations();
     const [banners, setBanners] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newBannerName, setNewBannerName] = useState("");
@@ -23,9 +25,9 @@ export default function BannersPage() {
             setLoading(true);
             const response = await getAllBanners();
             setBanners(response.data.data || []);
-            console.log(banners)
+            console.log(banners);
         } catch (err) {
-            toast.error("Failed to load banners");
+            toast.error(t("banners.toastFailedLoad"));
         } finally {
             setLoading(false);
         }
@@ -34,33 +36,33 @@ export default function BannersPage() {
     const handleToggleActive = async (id) => {
         try {
             await toggleBannerActive(id);
-            toast.success("Banner status updated");
+            toast.success(t("banners.toastStatusUpdated"));
             fetchBanners();
         } catch (err) {
-            toast.error("Failed to toggle banner");
+            toast.error(t("banners.toastFailedToggle"));
         }
     };
 
     const handleDelete = async (id) => {
-        if (!confirm("Delete this banner?")) return;
+        if (!confirm(t("banners.deleteConfirm"))) return;
         try {
             await deleteBanner(id);
-            toast.success("Banner deleted");
+            toast.success(t("banners.toastDeleted"));
             setBanners((prev) => prev.filter((b) => b.id !== id));
         } catch (err) {
-            toast.error("Failed to delete banner");
+            toast.error(t("banners.toastFailedDelete"));
         }
     };
 
     const handleAddBanner = async (e) => {
         e.preventDefault();
         if (!newBannerName || !newBannerImage) {
-            toast.error("Name and image are required");
+            toast.error(t("banners.toastNameImageRequired"));
             return;
         }
 
         if (newBannerImage.size > 20 * 1024 * 1024) {
-            toast.error("Image must be less than 20MB");
+            toast.error(t("banners.toastImageTooLarge"));
             return;
         }
 
@@ -70,24 +72,24 @@ export default function BannersPage() {
             formData.append("image", newBannerImage);
 
             await createBanner(formData);
-            toast.success("Banner added");
+            toast.success(t("banners.toastAdded"));
             setNewBannerName("");
             setNewBannerImage(null);
             fetchBanners();
         } catch (err) {
-            toast.error("Failed to add banner");
+            toast.error(t("banners.toastFailedAdd"));
         }
     };
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Banners</h1>
+            <h1 className={styles.title}>{t("banners.title")}</h1>
 
             {/* Add Banner Form */}
             <form className={styles.addForm} onSubmit={handleAddBanner}>
                 <input
                     type="text"
-                    placeholder="Banner name"
+                    placeholder={t("banners.bannerNamePlaceholder")}
                     value={newBannerName}
                     onChange={(e) => setNewBannerName(e.target.value)}
                 />
@@ -96,19 +98,17 @@ export default function BannersPage() {
                     accept="image/*"
                     onChange={(e) => setNewBannerImage(e.target.files[0])}
                 />
-                <button type="submit">Add Banner</button>
+                <button type="submit">{t("banners.addBannerButton")}</button>
             </form>
 
             {/* Banners Grid */}
 
             {loading ? (
                 console.log(banners),
-                <p>Loading banners...</p>
+                <p>{t("banners.loading")}</p>
             ) : (
                 <div className={styles.grid}>
-
                     {banners.map((banner) => (
-
                         <div
                             key={banner.id}
                             className={`${styles.card} ${banner.is_active ? styles.active : ""}`}
@@ -125,7 +125,7 @@ export default function BannersPage() {
                                             handleDelete(banner.id);
                                         }}
                                     >
-                                        Delete
+                                        {t("banners.deleteButton")}
                                     </button>
                                     <button
                                         type="button"
@@ -134,7 +134,7 @@ export default function BannersPage() {
                                             router.push(`/dashboard-superadmin/banners/${banner.id}`);
                                         }}
                                     >
-                                        Update
+                                        {t("banners.updateButton")}
                                     </button>
                                 </div>
                             </div>

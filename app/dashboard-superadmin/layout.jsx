@@ -1,5 +1,5 @@
 "use client";
-
+// app/dashboard-superadmin/layout.jsx
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SuperAdminSidebar from "@/app/ui/dashboard/sidebar/superAdminSidebar";

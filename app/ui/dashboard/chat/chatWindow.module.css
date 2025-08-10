@@ -82,6 +82,11 @@
   font-weight: 500;
   color: var(--textSoft);
 }
+.seenLabel {
+  font-size: 0.55rem;
+  font-weight: 400;
+  color: var(--textSoft);
+}
 
 .messageTime {
   font-size: 0.75rem;

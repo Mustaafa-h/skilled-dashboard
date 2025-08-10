@@ -1,5 +1,6 @@
 {
   "settings": "الإعدادات",
+  "edit":"تعديل",
   "chooseLanguage": "اختر لغتك",
   "addNewSubService": "إضافة خدمة فرعية جديدة",
   "addProduct": "إضافة منتج",
@@ -92,7 +93,7 @@
   "companyInfoabout": "نبذة عن الشركة",
   "companyInfowebsite": "الموقع الإلكتروني",
   "companyInfostatus": "الحالة",
-  "companyInfologo": "رابط الشعار",
+  "companyInfologo": " الشعار",
   "companyInfopriceRange": "نطاق السعر",
   "companyInfoverified": "تم التحقق",
   "no": "لا",
@@ -123,6 +124,7 @@
   "orderscustomer": "العميل",
   "orderstotal": "الإجمالي",
   "ordersactions": "الإجراءات",
+  "ordersplaced":"التاريخ",
   "bookingFetchError": "فشل في تحميل الحجز.",
   "bookingNotFound": "لم يتم العثور على الحجز.",
   "booking": "الحجز",
@@ -210,6 +212,7 @@
   "selectFileFirst": "يرجى اختيار ملف أولاً",
   "enterDescription": "يرجى إدخال وصف",
   "Company": {
+    "logo":" الشعار",
     "fetchError": "فشل في جلب الشركات.",
     "confirmDelete": "هل أنت متأكد أنك تريد حذف هذه الشركة؟",
     "deleteSuccess": "تم حذف الشركة بنجاح.",
@@ -228,7 +231,7 @@
     "about": "نبذة:",
     "status": "الحالة:",
     "website": "رابط الموقع الإلكتروني:",
-    "logo": "رابط الشعار:",
+    "logo": " الشعار:",
     "priceRange": "نطاق الأسعار:",
     "verified": "موثّقة",
     "location": "موقع الشركة:",
@@ -272,6 +275,7 @@
     "uploading": "جارٍ التحميل...",
     "upload": "تحميل"
   },
+  "Companies":"الشركات",
   "companyServices": {
     "title": "الخدمات لـ",
     "company": "الشركة",
@@ -345,7 +349,6 @@
       "error": "حدث خطأ أثناء إضافة الخدمة الفرعية."
     }
   },
-  
   "addPrefType": {
     "title": "إنشاء نوع تفضيل جديد",
     "namePlaceholder": "اسم التفضيل",
@@ -367,40 +370,20 @@
     "success": "تم إنشاء نوع التفضيل بنجاح.",
     "failed": "فشل في إنشاء نوع التفضيل."
   },
-   "sidebar": {
+  "sidebar": {
     "userRole": "Super Admin",
     "SECTION": {
       "PLATFORM": "Platform"
     },
-    "dashboard": "Dashboard",
-    "companies": "Companies",
-    "services": "Services",
-    "preferences": "Preferences",
+    "dashboard": "لوحة التحكم",
+    "companies": "الشركات",
+    "services": "الخدمات",
+    "preferences": "التفضيلات",
     "banners": "Banners",
-    "admins": "Admins",
-    "settings": "Settings",
-    "notifications": "Notifications"
+    "admins": "المشرفون",
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات"
   },
-  "admins": {
-    "title": "Admins",
-    "addBtn": "Add Admin",
-    "name": "Name",
-    "phone": "Phone",
-    "email": "Email",
-    "password": "Password",
-    "selectCompany": "Select Company",
-    "createBtn": "Create Admin",
-    "creating": "Creating...",
-    "company": "Company:",
-    "role": "Role:",
-    "loading": "Loading...",
-    "emptyFields": "All fields are required.",
-    "success": "Admin registered successfully.",
-    "failed": "Failed to register admin.",
-    "loadError": "Failed to load data."
-  },
-
-
   "Sidebar": {
     "userRole": "مشرف عام",
     "SECTION": {
@@ -415,7 +398,11 @@
     "settings": "الإعدادات",
     "notifications": "الإشعارات"
   },
+  "Admins": "المشرفون",
   "admins": {
+    "addSuperBtn":"اضافة مشرف عام",
+    "addCompanyBtn":"اضافة مشرف شركة",
+    "resetBtn": "اعادة تعيين كلمة سر",
     "title": "المشرفون",
     "addBtn": "إضافة مشرف",
     "name": "الاسم",
@@ -434,8 +421,180 @@
     "loadError": "فشل في تحميل البيانات."
   },
   "Chat": "المحادثات",
-  "admins": "المشرفون"
+  "chat": {
+    "roomsTitle": "المحادثات",
+    "noChats": "لا توجد محادثات حالياً.",
+    "errorLoadingRooms": "فشل في تحميل غرف الدردشة.",
+    "viewBooking": "عرض الحجز",
+    "back": "رجوع",
+    "conversationTitle": "المحادثة",
+    "errorLoadingHistory": "فشل في تحميل سجل المحادثة.",
+    "customer": "الزبون",
+    "seen": "تمت المشاهدة",
+    "emptyHistory": "لا توجد رسائل حتى الآن.",
+    "typing": "{user} يكتب ...",
+    "sendPlaceholder": "اكتب رسالة...",
+    "sendButton": "إرسال"
+  },
+  "dashboardlatestTransactions": "الطلبات الاخيرة",
+  "ordersdate": "التاريخ",
+  "ordersconfirmed": "مؤكد",
+  "orderspending": "معلق",
+  "orderscancelled": "ملغي",
+  "orderscompleted": "مكتمل",
+   "Banners":"اللافتات",
+  "banners": {
+    "title": "الإعلانات",
+    "loading": "جاري تحميل الإعلانات...",
+    "bannerNamePlaceholder": "اسم الإعلان",
+    "addBannerButton": "إضافة إعلان",
+    "deleteConfirm": "هل تريد حذف هذا الإعلان؟",
+    "deleteButton": "حذف",
+    "updateButton": "تحديث",
+    "toastFailedLoad": "فشل في تحميل الإعلانات",
+    "toastStatusUpdated": "تم تحديث حالة الإعلان",
+    "toastFailedToggle": "فشل في تغيير حالة الإعلان",
+    "toastDeleted": "تم حذف الإعلان",
+    "toastFailedDelete": "فشل في حذف الإعلان",
+    "toastNameImageRequired": "الاسم والصورة مطلوبان",
+    "toastImageTooLarge": "يجب أن تكون الصورة أقل من 20 ميجابايت",
+    "toastAdded": "تمت إضافة الإعلان",
+    "toastFailedAdd": "فشل في إضافة الإعلان"
+  },
+    "editBanner": {
+    "toastNotFound": "لم يتم العثور على الإعلان",
+    "toastFailedFetch": "فشل في جلب الإعلان",
+    "toastImageTooLarge": "يجب أن تكون الصورة أقل من 20 ميجابايت",
+    "toastUpdated": "تم تحديث الإعلان",
+    "toastUpdateFailed": "فشل التحديث",
+    "loading": "جاري التحميل...",
+    "title": "تعديل الإعلان",
+    "currentImageAlt": "صورة الإعلان الحالية",
+    "saveButton": "حفظ التغييرات"
+  },
+   "editService": {
+    "fetchError": "فشل في جلب بيانات الخدمة.",
+    "success": "تم تحديث الخدمة بنجاح.",
+    "fail": "فشل في تحديث الخدمة.",
+    "error": "حدث خطأ أثناء تحديث الخدمة.",
+    "loading": "جاري التحميل...",
+    "title": "تعديل الخدمة",
+    "name": "اسم الخدمة",
+    "slug": "الاسم المختصر",
+    "description": "الوصف",
+    "sortOrder": "ترتيب العرض",
+    "currentIcon": "الأيقونة الحالية:",
+    "active": "نشط",
+    "updating": "جارٍ التحديث...",
+    "updateBtn": "تحديث الخدمة"
+  },
+    "AddSubServices": {
+    "success": "تم إنشاء الخدمة الفرعية بنجاح.",
+    "fail": "فشل في إنشاء الخدمة الفرعية.",
+    "error": "حدث خطأ أثناء إنشاء الخدمة الفرعية.",
+    "title": "إضافة خدمة فرعية جديدة",
+    "name": "اسم الخدمة الفرعية",
+    "slug": "الاسم المختصر (مثلاً تنظيف_السجاد)",
+    "description": "الوصف",
+    "active": "نشط",
+    "creating": "جاري الإنشاء...",
+    "createBtn": "إنشاء خدمة فرعية"
+  },
+    "EditSubService": {
+    "fetchError": "فشل في جلب الخدمة الفرعية.",
+    "success": "تم تحديث الخدمة الفرعية بنجاح.",
+    "fail": "فشل في التحديث.",
+    "error": "حدث خطأ أثناء التحديث.",
+    "loading": "جاري التحميل...",
+    "title": "تعديل الخدمة الفرعية",
+    "name": "الاسم",
+    "slug": "الاسم المختصر",
+    "description": "الوصف",
+    "currentIcon": "الأيقونة الحالية:",
+    "currentIconAlt": "الأيقونة الحالية",
+    "updating": "جاري التحديث...",
+    "updateBtn": "تحديث الخدمة الفرعية"
+  },
+  "servicePreferences": {
+    "fetchError": "فشل في تحميل تفضيلات الخدمة.",
+    "loading": "جارٍ تحميل التفضيلات...",
+    "serviceNotFound": "الخدمة غير موجودة.",
+    "preferencesFor": "التفضيلات لـ:",
+    "noDescription": "لم يتم توفير وصف.",
+    "createNewPrefType": "+ إنشاء نوع تفضيل جديد",
+    "noPreferences": "لا توجد تفضيلات لهذه الخدمة.",
+    "confirmDeletePrefType": "هل تريد حذف نوع التفضيل وخياراته؟",
+    "prefTypeDeleted": "تم حذف نوع التفضيل.",
+    "deletePrefTypeFail": "فشل في حذف نوع التفضيل.",
+    "confirmDeleteOption": "هل تريد حذف خيار التفضيل؟",
+    "optionDeleted": "تم حذف خيار التفضيل.",
+    "deleteOptionFail": "فشل في حذف الخيار.",
+    "editType": "تعديل النوع",
+    "deleteType": "حذف النوع",
+    "addOption": "+ إضافة خيار",
+    "options": "الخيارات:",
+    "noOptions": "لا توجد خيارات متاحة.",
+    "editOption": "تعديل الخيار",
+    "deleteOption": "حذف الخيار"
+  },
+   "addPrefTypes": {
+    "emptyFields": "لا يمكن أن يكون الاسم واسم الحقل فارغين.",
+    "missingServiceId": "معرف الخدمة مفقود من الرابط.",
+    "success": "تم إنشاء نوع التفضيل بنجاح.",
+    "failed": "فشل في إنشاء نوع التفضيل.",
+    "title": "إنشاء نوع تفضيل جديد",
+    "required": "مطلوب",
+    "active": "نشط",
+    "prefType": "نوع التفضيل:",
+    "validationRules": "قواعد التحقق",
+    "options": "الخيارات",
+    "default": "افتراضي",
+    "activeOption": "نشط",
+    "remove": "حذف",
+    "addOption": "إضافة خيار جديد",
+    "creating": "جارٍ الإنشاء...",
+    "createBtn": "إنشاء نوع التفضيل",
+    "displayOrder": "ترتيب العرض"
+  },
+   "editPrefType": {
+    "fetchError": "فشل في جلب نوع التفضيل.",
+    "emptyFields": "لا يمكن أن يكون الاسم واسم الحقل فارغين.",
+    "invalidType": "نوع غير صالح.",
+    "success": "تم تحديث نوع التفضيل بنجاح.",
+    "failed": "فشل في تحديث نوع التفضيل.",
+    "title": "تعديل نوع التفضيل",
+    "loading": "جارٍ تحميل بيانات نوع التفضيل...",
+    "name": "اسم التفضيل",
+    "nameAR": "اسم التفضيل (بالعربية)",
+    "fieldName": "اسم الحقل",
+    "description": "الوصف",
+    "descriptionAR": "الوصف (بالعربية)",
+    "displayOrder": "ترتيب العرض",
+    "required": "مطلوب",
+    "active": "نشط",
+    "typeLabel": "نوع التفضيل:",
+    "single": "اختيار فردي",
+    "multi": "اختيار متعدد",
+    "boolean": "قيمة منطقية",
+    "number": "رقم",
+    "updating": "جارٍ التحديث...",
+    "updateBtn": "تحديث نوع التفضيل"
+  },
+  "addPrefOption": {
+    "title": "إنشاء خيار تفضيل جديد",
+    "valuePlaceholder": "القيمة (مثلاً '3')",
+    "namePlaceholder": "اسم العرض (مثلاً '3 عمال')",
+    "nameARPlaceholder": "اسم العرض (بالعربية)",
+    "description": "الوصف",
+    "defaultOption": "الخيار الافتراضي",
+    "active": "نشط",
+    "creating": "جاري الإنشاء...",
+    "createBtn": "إنشاء خيار التفضيل",
+    "emptyValue": "لا يمكن أن تكون القيمة فارغة.",
+    "emptyName": "لا يمكن أن يكون اسم العرض فارغاً.",
+    "success": "تم إنشاء خيار التفضيل بنجاح.",
+    "failed": "فشل في إنشاء خيار التفضيل."
+  },
+  "displayOrder": "ترتيب العرض"
+
 }
-
-
-  

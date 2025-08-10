@@ -15,12 +15,12 @@ const SuperAdminNavbar = ({ onToggleSidebar }) => {
     const pageKey = pathname.split("/").pop();
 
     const titles = {
-        companies: t("companies", { defaultValue: "companies" }),
-        serviecs: t("serviecs", { defaultValue: "serviecs" }),
+        companies: t("Companies", { defaultValue: "companies" }),
+        serviecs: t("services", { defaultValue: "serviecs" }),
         preferences: t("preferences", { defaultValue: "preferences" }),
-        admins: t("admins Management", { defaultValue: "Admins Management" }),
+        admins: t("Admins", { defaultValue: "Admins Management" }),
         settings: t("settings", { defaultValue: "settings" }),
-        banners: t("banners", { defaultValue: "banners" }),
+        banners: t("Banners", { defaultValue: "banners" }),
     };
 
 

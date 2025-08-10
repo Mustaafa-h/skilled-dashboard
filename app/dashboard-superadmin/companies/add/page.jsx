@@ -111,7 +111,7 @@ export default function AddCompanyPage() {
           name="price_range"
           value={formData.price_range}
           onChange={handleChange}
-          className={styles.select}
+          className={styles.input}
         >
           <option value="low">{t("Price.low", { defaultValue: "Low" })}</option>
           <option value="medium">{t("Price.medium", { defaultValue: "Medium" })}</option>

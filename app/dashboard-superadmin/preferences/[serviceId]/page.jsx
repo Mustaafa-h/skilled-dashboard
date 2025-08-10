@@ -11,10 +11,12 @@ import {
 import toast from "react-hot-toast";
 import Link from "next/link";
 import styles from "@/app/ui/superadmin/preferences/[serviceId]/page.module.css";
+import { useTranslations } from "next-intl";
 
 export default function ServicePreferencesPage() {
   const { serviceId } = useParams();
   const router = useRouter();
+  const t = useTranslations("servicePreferences");
 
   const [service, setService] = useState(null);
   const [preferences, setPreferences] = useState([]);
@@ -42,7 +44,7 @@ export default function ServicePreferencesPage() {
       setPreferences(cleanedPrefs);
     } catch (error) {
       console.error("fetchData error:", error);
-      toast.error("Failed to load service preferences.");
+      toast.error(t("fetchError", { defaultValue: "Failed to load service preferences." }));
     } finally {
       setLoading(false);
     }
@@ -57,39 +59,39 @@ export default function ServicePreferencesPage() {
   }, [serviceId]);
 
   const handleDeletePrefType = async (prefTypeId) => {
-    if (!confirm("Delete this preference type and its options?")) return;
+    if (!confirm(t("confirmDeletePrefType", { defaultValue: "Delete this preference type and its options?" }))) return;
     try {
       await deletePreferenceType(prefTypeId);
-      toast.success("Preference type deleted.");
+      toast.success(t("prefTypeDeleted", { defaultValue: "Preference type deleted." }));
       fetchData();
     } catch (error) {
       console.error("deletePreferenceType error:", error);
-      toast.error("Failed to delete preference type.");
+      toast.error(t("deletePrefTypeFail", { defaultValue: "Failed to delete preference type." }));
       fetchData();
     }
   };
 
   const handleDeleteOption = async (optionId) => {
-    if (!confirm("Delete this preference option?")) return;
+    if (!confirm(t("confirmDeleteOption", { defaultValue: "Delete this preference option?" }))) return;
     try {
       await deletePreferenceOption(optionId);
-      toast.success("Preference option deleted.");
+      toast.success(t("optionDeleted", { defaultValue: "Preference option deleted." }));
       fetchData();
     } catch (error) {
       console.error("deletePreferenceOption error:", error);
-      toast.error("Failed to delete option.");
+      toast.error(t("deleteOptionFail", { defaultValue: "Failed to delete option." }));
       fetchData();
     }
   };
 
-  if (loading) return <p>Loading preferences...</p>;
-  if (!service) return <p>Service not found.</p>;
+  if (loading) return <p>{t("loading", { defaultValue: "Loading preferences..." })}</p>;
+  if (!service) return <p>{t("serviceNotFound", { defaultValue: "Service not found." })}</p>;
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Preferences for: {service.name}</h2>
+      <h2 className={styles.title}>{t("preferencesFor", { defaultValue: "Preferences for:" })} {service.name}</h2>
       <p className={styles.description}>
-        {service.description || "No description provided."}
+        {service.description || t("noDescription", { defaultValue: "No description provided." })}
       </p>
 
       <button
@@ -98,11 +100,11 @@ export default function ServicePreferencesPage() {
         }
         className={styles.addButton}
       >
-        + Create New Preference Type
+        {t("createNewPrefType", { defaultValue: "+ Create New Preference Type" })}
       </button>
 
       {preferences.length === 0 ? (
-        <p>No preferences found for this service.</p>
+        <p>{t("noPreferences", { defaultValue: "No preferences found for this service." })}</p>
       ) : (
         preferences.map((pref) => {
           const displayName = locale === "ar" ? pref.nameAR : pref.name;
@@ -122,51 +124,51 @@ export default function ServicePreferencesPage() {
             <div key={pref.id} className={styles.card}>
               <h3 className={styles.prefName}>{displayName}</h3>
               <p className={styles.prefDescription}>
-                {displayDesc || "No description provided."}
+                {displayDesc || t("noDescription", { defaultValue: "No description provided." })}
               </p>
 
               <div className={styles.buttonGroup}>
                 <Link
                   href={`/dashboard-superadmin/preferences/${serviceId}/edit/${pref.id}`}
                 >
-                  <button className={styles.button}>Edit Type</button>
+                  <button className={styles.button}>{t("editType", { defaultValue: "Edit Type" })}</button>
                 </Link>
                 <button
                   onClick={() => handleDeletePrefType(pref.id)}
                   className={`${styles.button} ${styles.deleteButton}`}
                 >
-                  Delete Type
+                  {t("deleteType", { defaultValue: "Delete Type" })}
                 </button>
 
                 {showAddOption && (
                   <Link
                     href={`/dashboard-superadmin/preferences/${serviceId}/add-option/${pref.id}`}
                   >
-                    <button className={styles.button}>+ Add Option</button>
+                    <button className={styles.button}>{t("addOption", { defaultValue: "+ Add Option" })}</button>
                   </Link>
                 )}
               </div>
 
-              <h4 className={styles.optionsTitle}>Options:</h4>
+              <h4 className={styles.optionsTitle}>{t("options", { defaultValue: "Options:" })}</h4>
               {pref.options.length === 0 ? (
-                <p className={styles.noOptions}>No options available.</p>
+                <p className={styles.noOptions}>{t("noOptions", { defaultValue: "No options available." })}</p>
               ) : (
                 <ul className={styles.optionList}>
                   {pref.options.map((option) => (
                     <li key={option.id} className={styles.optionItem}>
                       {option.display_name} -{" "}
-                      {option.description || "No description"}
+                      {option.description || t("noDescription", { defaultValue: "No description" })}
                       <div className={styles.optionButtonGroup}>
                         <Link
                           href={`/dashboard-superadmin/preferences/${serviceId}/edit-option/${option.id}`}
                         >
-                          <button className={styles.button}>Edit Option</button>
+                          <button className={styles.button}>{t("editOption", { defaultValue: "Edit Option" })}</button>
                         </Link>
                         <button
                           onClick={() => handleDeleteOption(option.id)}
                           className={`${styles.button} ${styles.deleteButton}`}
                         >
-                          Delete Option
+                          {t("deleteOption", { defaultValue: "Delete Option" })}
                         </button>
                       </div>
                     </li>

@@ -112,7 +112,8 @@
 }
 
 .iconButton.edit {
-  color: #4ade80; /* green-400 */
+  color: #4ade80;
+  /* green-400 */
 }
 
 .iconButton.disabled {
@@ -121,10 +122,10 @@
 }
 
 /* ========== POPUP ========== */
-.popup {
+.modal {
   position: absolute;
-  top: 2rem;
-  right: 1rem;
+  top: 50%;
+  right: 50%;
   background: var(--bgSoft);
   padding: 1rem;
   border: 1px solid var(--borderSoft);
@@ -132,9 +133,10 @@
   z-index: 1000;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   min-width: 250px;
+
 }
 
-.popup h4 {
+.modal h4 {
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
   color: var(--text);
@@ -143,18 +145,51 @@
 .popupOption {
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  background: transparent;
-  color: var(--text);
+  background: var(--bg);
+  color: #ffffff;
   font-size: 0.9rem;
   cursor: pointer;
   transition: background 0.2s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 2rem auto;
 }
 
-.popupOption:hover {
-  background: rgba(255, 255, 255, 0.04);
+.modalActions {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 2rem auto;
+  align-items: center;
+}
+
+.actionBtn {
+  color: #fff;
+  padding: .6rem 1rem;
+  background: rgb(35, 71, 108);
+  border-radius: .6rem;
+  transition: background ease .3s;
+  cursor: pointer;
+}
+
+.deleteBtn {
+  color: #fff;
+  padding: .6rem 1rem;
+  border-radius: .6rem;
+  background: rgb(165, 70, 70);
+  transition: background ease .3s;
+  cursor: pointer;
+
+}
+
+.deleteBtn:hover {
+  background: rgb(183, 90, 90);
+  scale: 1.03;
+}
+
+.actionBtn:hover {
+  background: rgb(76, 125, 174);
+  scale: 1.03;
 }
 
 .popupOption.disabled {
@@ -167,7 +202,7 @@
     grid-template-columns: 1fr;
   }
 
-  .popup {
+  .modal {
     right: 0.5rem;
     left: 0.5rem;
     min-width: auto;

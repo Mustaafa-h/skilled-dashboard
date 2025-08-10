@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import styles from "@/app/ui/superadmin/shared/form.module.css";
+import { useTranslations } from "next-intl";
 import { getSubServiceById, updateSubService } from "@/app/lib/api";
 
 export default function EditSubServicePage() {
   const router = useRouter();
   const { subServiceId } = useParams();
+  const t = useTranslations("EditSubService");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -38,14 +40,14 @@ export default function EditSubServicePage() {
         });
       } catch (error) {
         console.error("Error fetching sub-service:", error);
-        toast.error("Failed to fetch sub-service.");
+        toast.error(t("fetchError", { defaultValue: "Failed to fetch sub-service." }));
       } finally {
         setLoading(false);
       }
     };
 
     if (subServiceId) fetchSubService();
-  }, [subServiceId]);
+  }, [subServiceId, t]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,32 +84,32 @@ export default function EditSubServicePage() {
       const res = await updateSubService(subServiceId, formPayload); // this should handle form-data in api.js
 
       if (res?.data) {
-        toast.success("Sub-service updated successfully.");
+        toast.success(t("success", { defaultValue: "Sub-service updated successfully." }));
         router.push("/dashboard-superadmin/services");
       } else {
         console.log("Update failed:", res);
-        toast.error("Update failed.");
+        toast.error(t("fail", { defaultValue: "Update failed." }));
       }
     } catch (error) {
       console.error("Update error:", error);
-      toast.error("Something went wrong during update.");
+      toast.error(t("error", { defaultValue: "Something went wrong during update." }));
     } finally {
       setUpdating(false);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>{t("loading", { defaultValue: "Loading..." })}</p>;
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Edit Sub-Service</h1>
+      <h1 className={styles.title}>{t("title", { defaultValue: "Edit Sub-Service" })}</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Name"
+          placeholder={t("name", { defaultValue: "Name" })}
           required
           className={styles.input}
         />
@@ -116,7 +118,7 @@ export default function EditSubServicePage() {
           name="slug"
           value={formData.slug}
           onChange={handleChange}
-          placeholder="Slug"
+          placeholder={t("slug", { defaultValue: "Slug" })}
           required
           className={styles.input}
         />
@@ -124,7 +126,7 @@ export default function EditSubServicePage() {
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="Description"
+          placeholder={t("description", { defaultValue: "Description" })}
           className={styles.textarea}
         />
         <input
@@ -135,16 +137,16 @@ export default function EditSubServicePage() {
         />
         {formData.icon_url && !iconFile && (
           <div className={styles.previewContainer}>
-            <p>Current Icon:</p>
+            <p>{t("currentIcon", { defaultValue: "Current Icon:" })}</p>
             <img
               src={formData.icon_url}
-              alt="Current Icon"
+              alt={t("currentIconAlt", { defaultValue: "Current Icon" })}
               className={styles.imagePreview}
             />
           </div>
         )}
         <button type="submit" disabled={updating} className={styles.button}>
-          {updating ? "Updating..." : "Update Sub-Service"}
+          {updating ? t("updating", { defaultValue: "Updating..." }) : t("updateBtn", { defaultValue: "Update Sub-Service" })}
         </button>
       </form>
     </div>

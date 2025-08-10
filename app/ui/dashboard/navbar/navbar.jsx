@@ -58,10 +58,10 @@ const Navbar = ({ onToggleSidebar }) => {
   const titles = {
     users: t("workers", { defaultValue: "Workers" }),
     products: t("services", { defaultValue: "Services" }),
-    admins: t("admins", { defaultValue: "Admins" }),
+    admins: t("Admins", { defaultValue: "Admins" }),
     chat: t("Chat", { defaultValue: "Chat" }),
     orders: t("orders", { defaultValue: "Orders" }),
-    gallery: t("gallery", { defaultValue: "gallery" }),
+    gallery: t("Gallery", { defaultValue: "gallery" }),
     privacy: t("services", { defaultValue: "services" }),
     settings: t("settings", { defaultValue: "settings" }),
     notifications: t("notifications", { defaultValue: "notifications" }),

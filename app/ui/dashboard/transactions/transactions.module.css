@@ -38,7 +38,7 @@
 .table th,
 .table td {
   padding: var(--gap-xs) var(--gap-md);
-  text-align: left;
+  text-align: start;
   border-bottom: 1px solid var(--border);
   color: var(--text);
   white-space: nowrap;

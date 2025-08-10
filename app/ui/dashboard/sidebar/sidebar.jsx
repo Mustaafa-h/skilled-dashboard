@@ -1,5 +1,5 @@
 "use client";
-
+// company sidebar
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -94,7 +94,7 @@ const Sidebar = ({ onClose }) => {
     {
       title: t("company", { defaultValue: "Company" }),
       list: [
-        { title: t("admins", { defaultValue: "Admins" }), path: "/dashboard/admins", icon: <MdSupervisedUserCircle /> },
+        { title: t("Admins", { defaultValue: "Admins" }), path: "/dashboard/admins", icon: <MdSupervisedUserCircle /> },
         { title: t("preferences", { defaultValue: "Preferences" }), path: "/dashboard/preferences", icon: <MdRoomPreferences /> },
         { title: t("settings", { defaultValue: "Settings" }), path: "/dashboard/settings", icon: <MdOutlineSettings /> },
         { title: t("privacyPolicy", { defaultValue: "Privacy Policy" }), path: "/dashboard/privacy", icon: <MdHelpCenter /> },

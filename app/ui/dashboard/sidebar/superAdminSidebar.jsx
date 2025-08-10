@@ -1,5 +1,5 @@
 "use client";
-
+// superadmin sidebar 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
