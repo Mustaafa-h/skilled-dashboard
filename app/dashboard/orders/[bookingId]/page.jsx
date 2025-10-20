@@ -24,6 +24,20 @@ const SingleOrderPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelSubmitting, setCancelSubmitting] = useState(false);
+  const [cancelError, setCancelError] = useState("");
+
+  const CANCEL_REASON_OPTIONS = [
+    t("ordersreasonNoStaff"),
+    t("ordersreasonScheduling"),
+    t("ordersreasonNoShow"),
+    t("ordersreasonDuplicate"),
+    t("ordersreasonOutOfArea"),
+    t("ordersreasonPricing"),
+  ];
+
   const fetchBooking = async () => {
     try {
       const res = await fetch(`/api/bookings/${bookingId}`, {
@@ -124,7 +138,7 @@ const SingleOrderPage = () => {
     }
   };
 
-  const updateStatus = async (newStatus) => {
+  const updateStatus = async (newStatus, notes) => {
     try {
       const res = await fetch(
         `/api/bookings/${bookingId}/status`,
@@ -136,7 +150,7 @@ const SingleOrderPage = () => {
           },
           body: JSON.stringify({
             status: newStatus,
-            notes: `Marked ${newStatus}`,
+            notes: notes ?? `Marked ${newStatus}`,
           }),
         }
       );
@@ -157,6 +171,33 @@ const SingleOrderPage = () => {
       );
     }
   };
+  const openCancelModal = () => {
+    setCancelReason("");
+    setCancelError("");
+    setCancelModalOpen(true);
+  };
+  const closeCancelModal = () => {
+    setCancelModalOpen(false);
+    setCancelSubmitting(false);
+    setCancelError("");
+  };
+
+  const confirmCancelWithReason = async () => {
+    if (!cancelReason.trim()) {
+      setCancelError(t("orderscancelReasonRequired"));
+      return;
+    }
+    try {
+      setCancelSubmitting(true);
+      await updateStatus("cancelled", cancelReason.trim());
+      closeCancelModal();
+      // fetchBooking is already called inside updateStatus
+    } catch {
+      setCancelSubmitting(false);
+      setCancelError(t("statusUpdateError"));
+    }
+  };
+
 
   useEffect(() => {
     fetchBooking();
@@ -177,15 +218,15 @@ const SingleOrderPage = () => {
   const payment = booking.payment || {};
   const address = booking.address || {};
   const canAssign = booking.status === "in_progress";
-  const isNewOrPendingClient = ["new", "pending_client"].includes(
-    booking.status
-  );
+  const isNew = booking.status === "new";
+  const isPendingClient = booking.status === "pending_client";
 
   return (
     <div className={styles.container}>
       <h2>
         {t("booking")} #{booking.booking_number}
       </h2>
+      <h3> current status : {booking.status} , {booking.cancellation_reason}</h3>
 
       {/* ADDRESS & MAP */}
       <div className={styles.section}>
@@ -373,29 +414,24 @@ const SingleOrderPage = () => {
       </div> */}
 
       {/* STATUS BUTTONS */}
-      {isNewOrPendingClient && (
+      {isNew && (
         <div className={styles.section}>
-          <button
-            onClick={() => updateStatus("cancelled")}
-          >
-            {t("cancelOrder", {
-              defaultValue: "Cancel Order",
-            })}
-          </button>
-          <button
-            onClick={() => updateStatus("pending_client")}
-          >
-            {t("acceptOrder", {
-              defaultValue: "Accept Order",
-            })}
+          <button onClick={() => openCancelModal()}>{t("cancelOrder")}</button>
+          <button onClick={() => updateStatus("pending_client")}>
+            {t("acceptOrder")}
           </button>
         </div>
       )}
+
+      {isPendingClient && (
+        <div className={styles.section}>
+          <button onClick={() => openCancelModal()}>{t("cancelOrder")}</button>
+        </div>
+      )}
+
       {booking.status === "in_progress" && (
         <div className={styles.section}>
-          <button
-            onClick={() => updateStatus("completed")}
-          >
+          <button onClick={() => updateStatus("completed")}>
             {t("markCompleted")}
           </button>
         </div>
@@ -405,6 +441,57 @@ const SingleOrderPage = () => {
       <div className={styles.sectionHighlight}>
         {t("totalCost")}: {total} IQD
       </div>
+      {cancelModalOpen && (
+        <div className={styles.modalOverlay} onClick={closeCancelModal}>
+          <div
+            className={styles.modal}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cancelModalTitle"
+          >
+            <h3 id="cancelModalTitle" className={styles.modalTitle}>
+              {t("orderscancelTitle")}
+            </h3>
+
+            <label htmlFor="cancelReasonSelect" className={styles.modalLabel}>
+              {t("orderscancelReasonLabel")}
+            </label>
+            <select
+              id="cancelReasonSelect"
+              className={styles.modalInput}
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              disabled={cancelSubmitting}
+            >
+              <option value="">{t("ordersselectReasonPlaceholder")}</option>
+              {CANCEL_REASON_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+
+            {cancelError ? <p className={styles.error}>{cancelError}</p> : null}
+
+            <div className={styles.modalActions}> 
+              <button
+                onClick={confirmCancelWithReason}
+                disabled={cancelSubmitting}
+                className={styles.confirmBtn}
+              >
+                {cancelSubmitting ? t("orderssaving") : t("orderscancelConfirm")}
+              </button>
+              <button
+                onClick={closeCancelModal}
+                disabled={cancelSubmitting}
+                className={styles.cancelBtn}
+              >
+                {t("orderscancelDismiss")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

@@ -136,6 +136,13 @@ export const getCompanyImages = async (companyId, type = "gallery") =>
 
 export const deleteCompanyImage = async (imageId) =>
   API.delete(`/companies/images/${imageId}`);
+ 
+
+// ==================Fetch paginated company reviews================
+// lib/api.js
+export const getCompanyReviews = async (companyId, { page = 0, limit = 10 } = {}) =>
+  withCatch(() => JSON_API.get(`/companies/${companyId}/reviews?limit=${limit}&page=${page}`));
+
 
 
 // ===================== Company Preferences =====================
@@ -184,28 +191,28 @@ export const getPreferenceOptionById = async (optionId) =>
   withCatch(() => JSON_API.get(`/preferences/options/${optionId}`));
 
 // ===================== Bookings =====================
-export const getCompanyBookings = async () => {
-  try {
-    const res = await BOOKINGS_API.get("/bookings");
-    return res.data;
-  } catch (err) {
-    console.error("❌ Failed to fetch bookings:", err);
-    throw new Error("Failed to fetch bookings");
-  }
-};
+// export const getCompanyBookings = async () => {
+//   try {
+//     const res = await BOOKINGS_API.get("/bookings");
+//     return res.data;
+//   } catch (err) {
+//     console.error("❌ Failed to fetch bookings:", err);
+//     throw new Error("Failed to fetch bookings");
+//   }
+// };
 
 
-export const updateBookingStatus = async (id, data) =>
-  withCatch(() => BOOKINGS_API.put(`/bookings/${id}/status`, data));
+// export const updateBookingStatus = async (id, data) =>
+//   withCatch(() => BOOKINGS_API.put(`/bookings/${id}/status`, data));
 
-export const assignWorkerToBooking = async (id, data) =>
-  withCatch(() => BOOKINGS_API.put(`/bookings/${id}/assign-worker`, data));
+// export const assignWorkerToBooking = async (id, data) =>
+//   withCatch(() => BOOKINGS_API.put(`/bookings/${id}/assign-worker`, data));
 
-export const markCashAsPaid = async (id) =>
-  withCatch(() => BOOKINGS_API.put(`/bookings/${id}/mark-cash-paid`));
+// export const markCashAsPaid = async (id) =>
+//   withCatch(() => BOOKINGS_API.put(`/bookings/${id}/mark-cash-paid`));
 
-export const updatePaymentStatus = async (id, data) =>
-  withCatch(() => BOOKINGS_API.put(`/bookings/${id}/payment-status`, data));
+// export const updatePaymentStatus = async (id, data) =>
+//   withCatch(() => BOOKINGS_API.put(`/bookings/${id}/payment-status`, data));
 
 // ===================== Banners =====================
 
@@ -285,4 +292,3 @@ export const getChatMessages = (roomId, page = 1, limit = 50) =>
   );
 
 
-// ================ end chat endpoints ========================================

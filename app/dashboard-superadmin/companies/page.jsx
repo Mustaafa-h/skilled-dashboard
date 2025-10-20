@@ -105,6 +105,8 @@ export default function SuperAdminCompaniesPage() {
             {filteredCompanies.map((company) => (
               <tr
                 key={company.id}
+                onClick={() => router.push(`/dashboard-superadmin/companies/${company.id}`)}
+                className={styles.clickableRow}
               >
                 <td className={styles.logo}> <img src={company.logo_url} alt="logo" /></td>
                 <td>{company.name}</td>

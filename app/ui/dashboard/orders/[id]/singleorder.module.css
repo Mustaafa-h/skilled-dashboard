@@ -121,3 +121,89 @@
     margin-bottom: var(--gap-sm);
   }
 }
+
+/* modal frame */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* modal content */
+.modalTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;color: black;
+}
+
+.modalLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font: inherit;
+  margin-bottom: 10px;
+}
+
+/* actions */
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* keep buttons consistent with list page */
+.confirmBtn {
+  background: #648f6a;       /* your Barq green */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .3s ease;
+}
+.confirmBtn:hover{
+  background: #83c88c;
+}
+.confirmBtn[disabled] { opacity: .6; cursor: not-allowed; }
+
+.cancelBtn {
+  background: #a9573f;       /* light gray */
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+    transition: .3s ease;
+
+}
+.cancelBtn:hover{
+  background: #c35939;
+}
+
+/* reuse your error style name if it exists; otherwise add this */
+.error {
+  color: #b91c1c;
+  margin: 6px 0 0;
+  font-size: .9rem;
+}

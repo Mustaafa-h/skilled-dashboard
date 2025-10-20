@@ -1,0 +1,192 @@
+.container {
+  padding: var(--gap-lg) var(--gap-sm);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* --- Header --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
+@media (max-width: 640px) {
+  .header { flex-direction: column; align-items: stretch; gap: 10px; }
+}
+
+.subtitle {
+  color: var(--textSoft);
+  font-size: 0.92rem;
+  margin-top: 6px;
+}
+
+.controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.perPageLabel {
+  color: var(--textSoft);
+  font-size: 0.85rem;
+}
+.perPageSelect {
+  border: 1px solid var(--softBg);
+  background: #c9cdd4;
+  padding: 8px 10px;
+  border-radius: 10px;
+  min-width: 96px;
+}
+
+/* --- States --- */
+.loading,
+.empty,
+.error {
+  padding: var(--gap-lg);
+  border-radius: 12px;
+  text-align: center;
+}
+.loading { color: var(--textSoft); }
+.empty { background: var(--bg); border: 1px solid var(--softBg); color: var(--textSoft); }
+.error { background: #ffe8e8; border: 1px solid #ffc9c9; color: #a20000; }
+
+/* --- Grid --- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1280px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* --- Card --- */
+.card {
+  background: var(--bgSoft);
+  border-radius: 14px;
+  border: 1px solid var(--softBg);
+  box-shadow: var(--shadow-sm);
+  padding: 12px;
+}
+
+.cardTop {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.iconWrap {
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  flex: 0 0 40px;
+}
+
+.toneExcellent { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.toneGood { background: #eff6ff; color: #075985; border: 1px solid #bfdbfe; }
+.toneBad { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+
+.topRight { min-width: 0; }
+
+.badge {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+.badgeExcellent { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.badgeGood { background: #dbeafe; color: #075985; border: 1px solid #bfdbfe; }
+.badgeBad { background: #fde68a; color: #78350f; border: 1px solid #fcd34d; }
+
+/* Meta row stacks on small screens */
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 6px;
+  color: var(--textSoft);
+  font-size: 12px;
+}
+@media (max-width: 480px) {
+  .metaRow { flex-direction: column; gap: 4px; }
+}
+.metaItem { white-space: wrap; }
+.metaItemMuted { color: #9aa3b2; font-size: 12px; }
+
+/* Help long IDs wrap nicely instead of overflowing */
+.breakAnywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+.comment {
+  margin-top: 10px;
+  color: var(--text);
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 0.96rem;
+}
+
+.Nocomment{
+      margin-top: 10px;
+  color: #828282;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 0.96rem;
+}
+
+/* Booking button goes full width on mobile */
+.cardBottom {
+  margin-top: 12px;
+}
+.bookingBtn {
+  border: 1px solid var(--softBg);
+  background: var(--bg);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  width: auto;
+  transition: .3s ease;
+  cursor: pointer;
+}
+.bookingBtn:hover { background: #2e374a; }
+@media (max-width: 480px) {
+  .bookingBtn { width: 100%; }
+}
+
+/* --- Pagination --- */
+.pagination {
+  margin-top: var(--gap-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pageInfo {
+  color: var(--textSoft);
+  font-size: 0.9rem;
+}
+.pageControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pageBtn {
+  border: 1px solid var(--softBg);
+  background: var(--bg);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.pageBtn:disabled { opacity: 0.55; }
+.pageCount { color: var(--textSoft); font-size: 0.9rem; }

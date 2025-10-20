@@ -1,7 +1,7 @@
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const page = searchParams.get("page") || "1";
-  const limit = searchParams.get("limit") || "10";
+  const limit = searchParams.get("limit") || "13";
 
   const baseUrl = "http://ec2-3-68-193-86.eu-central-1.compute.amazonaws.com:3003";
 

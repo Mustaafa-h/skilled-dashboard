@@ -17,6 +17,7 @@ import {
   MdChatBubble,
   MdCleaningServices,
   MdRoomPreferences,
+  MdReviews,
 } from "react-icons/md";
 import { getCompany } from "../../../lib/api";
 
@@ -86,6 +87,7 @@ const Sidebar = ({ onClose }) => {
         { title: t("companyInfo", { defaultValue: "Company Info" }), path: "/dashboard/company-info", icon: <MdBusiness /> },
         { title: t("workers", { defaultValue: "Workers" }), path: "/dashboard/users", icon: <MdSupervisedUserCircle /> },
         { title: t("services", { defaultValue: "Services" }), path: "/dashboard/products", icon: <MdCleaningServices /> },
+        { title: t("reviews", { defaultValue: "reviews" }), path: "/dashboard/reviews", icon: <MdReviews /> },
         { title: t("orders", { defaultValue: "Orders" }), path: "/dashboard/orders", icon: <MdAttachMoney /> },
         { title: t("Chat", { defaultValue: "Chat" }), path: "/dashboard/chat", icon: <MdChatBubble /> },
         { title: t("Gallery", { defaultValue: "Gallery" }), path: "/dashboard/gallery", icon: <MdPhotoLibrary /> },
@@ -106,7 +108,7 @@ const Sidebar = ({ onClose }) => {
     <div className={styles.container}>
       <div className={styles.user}>
 
-        <img className={styles.userImage} src={user.img} alt="company logo" width={50} height={50}/>
+        <img className={styles.userImage} src={user.img} alt="company logo" width={50} height={50} />
         <div className={styles.userDetail}>
           <span className={styles.username}>{user.username}</span>
           <span className={styles.userTitle}>{user.role}</span>

@@ -212,7 +212,7 @@
   "selectFileFirst": "Please select a file first",
   "enterDescription": "Please enter a description",
   "Company": {
-    "logo":" Logo",
+    "logo": " Logo",
     "fetchError": "Failed to fetch companies.",
     "confirmDelete": "Are you sure you want to delete this company?",
     "deleteSuccess": "Company deleted successfully.",
@@ -391,6 +391,8 @@
   },
   "Admins": "Admins",
   "admins": {
+    "selectAdmin": "select Admin ",
+    "newPassword": "new Password  ",
     "addSuperBtn": "add company admin",
     "addCompanyBtn": " add admin",
     "title": "Admins",
@@ -427,8 +429,8 @@
     "sendPlaceholder": "Type a message...",
     "sendButton": "Send"
   },
-  "Banners":"Banners",
-    "banners": {
+  "Banners": "Banners",
+  "banners": {
     "title": "Banners",
     "loading": "Loading banners...",
     "bannerNamePlaceholder": "Banner name",
@@ -446,7 +448,7 @@
     "toastAdded": "Banner added",
     "toastFailedAdd": "Failed to add banner"
   },
-    "editBanner": {
+  "editBanner": {
     "toastNotFound": "Banner not found",
     "toastFailedFetch": "Failed to fetch banner",
     "toastImageTooLarge": "Image must be under 20MB",
@@ -473,7 +475,7 @@
     "updating": "Updating...",
     "updateBtn": "Update Service"
   },
-   "AddSubServices": {
+  "AddSubServices": {
     "success": "Sub-service created successfully.",
     "fail": "Failed to create sub-service.",
     "error": "Error creating sub-service.",
@@ -541,7 +543,7 @@
     "createBtn": "Create Preference Type",
     "displayOrder": "Display Order"
   },
-   "editPrefType": {
+  "editPrefType": {
     "fetchError": "Failed to fetch preference type.",
     "emptyFields": "Name and Field Name cannot be empty.",
     "invalidType": "Invalid type.",
@@ -580,5 +582,48 @@
     "success": "Preference option created successfully.",
     "failed": "Failed to create preference option."
   },
-  "displayOrder": "Display Order"
+  "displayOrder": "Display Order",
+   "orderscancelTitle": "Cancel Booking",
+  "orderscancelReasonLabel": "Reason",
+  "orderscancelReasonPlaceholder": "Type the cancellation reason for the customer...",
+  "orderscancelConfirm": "Confirm Cancel",
+  "orderscancelDismiss": "Close",
+  "orderscancelReasonRequired": "Please enter a reason.",
+  "orderssaving": "Saving...",
+  
+  "ordersselectReasonPlaceholder": "Select a reason",
+  "ordersreasonNoStaff": "reason: No staff available",
+  "ordersreasonScheduling": "reason: Scheduling conflict",
+  "ordersreasonNoShow": "reason: Customer no-show",
+  "ordersreasonDuplicate": "reason: Duplicate booking",
+  "ordersreasonOutOfArea": "reason: Out of service area",
+  "ordersreasonPricing": "reason: Pricing mismatch",
+    "orderspaginationPrev": "Prev",
+  "orderspaginationNext": "Next",
+  "orderspaginationPage": "Page",
+  "orderspaginationMeta": "Page {page} of {totalPages} • {total} orders",
+  "chat.loadingOlder": "Loading earlier messages…",
+  "reviews" :"reviews",
+    "reviewsTitle": "Reviews",
+  "reviewsSubtitle": "See what customers said about their bookings.",
+  "perPage": "Per page",
+
+  "reviewsExcellent": "Excellent",
+  "reviewsGood": "Good",
+  "reviewsBad": "Bad",
+  "reviewsRatedBy": "Customer",
+  "reviewsViewBooking": "View booking",
+  "reviewsBooking": "Booking",
+  "reviewsNoBookingId": "No booking id",
+  "reviewsEmpty": "No reviews yet.",
+  "reviewsFetchError": "Failed to fetch reviews.",
+
+  "ordersshowing": "Showing",
+  "ordersto": "to",
+  "ordersof": "of",
+  "orderspage": "Page",
+  "ordersprev": "Previous",
+  "ordersnext": "Next"
+
+
 }

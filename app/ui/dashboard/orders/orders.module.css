@@ -150,3 +150,109 @@
     font-size: 0.875rem;
   }
 }
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.modalTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgb(53, 102, 146);
+}
+
+.modalLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #456696;
+}
+
+.modalInput {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  font: inherit;
+  margin-bottom: 10px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.pageBtn {
+  min-width: 36px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.pageBtn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.activePage {
+  border-color: #527056;
+  background: #eef4ef;
+  font-weight: 600;
+}
+
+.ellipsis {
+  padding: 0 4px;
+  color: #64748b;
+}
+
+.pageMeta {
+  margin-left: 8px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* small screens */
+@media (max-width: 480px) {
+  .pageBtn {
+    min-width: 32px;
+    height: 30px;
+    padding: 0 8px;
+    font-size: 13px;
+  }
+  .pageMeta {
+    width: 100%;
+    text-align: right; /* or center */
+  }
+}
