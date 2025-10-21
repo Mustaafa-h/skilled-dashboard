@@ -1,0 +1,127 @@
+/* =============================
+   File ONLY: app/dashboard-superadmin/companies/[companyId]/orders/page.module.css
+   (Styles for Orders list — mirrors company dashboard feel)
+   ============================= */
+
+.container {
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+}
+
+.header {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.btnSecondary {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.75rem;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btnSecondary:hover {
+  background: #f9fafb; /* gray-50 */
+}
+
+.btnSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnGhost {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.5rem;
+  background: #ffffff;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btnGhost:hover {
+  background: #f9fafb;
+}
+
+.stateMuted {
+  padding: 4rem 0;
+  text-align: center;
+  color: #6b7280; /* gray-500 */
+  font-size: 0.875rem;
+}
+
+.stateError {
+  padding: 1rem 0;
+  color: #b91c1c; /* red-700 */
+  font-size: 0.875rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead {
+  background: #f9fafb; /* gray-50 */
+  color: #4b5563; /* gray-600 */
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.75rem;
+}
+
+.row {
+  border-top: 1px solid #e5e7eb; /* gray-200 */
+}
+
+.row:hover {
+  background: #f9fafb;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pager {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pagerText {
+  font-size: 0.75rem;
+  color: #6b7280; /* gray-500 */
+}
+
+.pagerBtns {
+  display: flex;
+  gap: 0.5rem;
+}

@@ -1,116 +1,229 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { getCompanyWorkers, updateCompanyWorker } from "@/app/lib/api";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { updateCompanyWorker, getCompanyWorkers } from "@/app/lib/api";
+import styles from "@/app/ui/dashboard/users/singleUser/singleUser.module.css";
 import toast from "react-hot-toast";
-import styles from "@/app/ui/superadmin/shared/form.module.css";
 import { useTranslations } from "next-intl";
 
-export default function EditWorkerPage() {
+export default function EditUserPage() {
     const t = useTranslations();
-    const { companyId, workerId } = useParams();
     const router = useRouter();
+    const { companyId, workerId } = useParams();
 
-    const [worker, setWorker] = useState(null);
-    const [loading, setLoading] = useState(true);
+
     const [formData, setFormData] = useState({
         full_name: "",
         nationality: "",
         phone: "",
-        gender: ""
+        gender: "",
     });
+
+    const [skills, setSkills] = useState([
+        { skill_name: "", years_of_experience: "", certification: "" },
+    ]);
+
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
         const fetchWorker = async () => {
             try {
-                const res = await getCompanyWorkers(companyId);
-                const foundWorker = res.data.data.find(w => w.id === workerId);
-                if (!foundWorker) {
-                    toast.error(t("editWorker.notFound", { defaultValue: "Worker not found in this company." }));
+                const { data } = await getCompanyWorkers(companyId);
+                const worker = data.data.find((w) => w.id === workerId);
+
+                if (worker) {
+                    setFormData({
+                        full_name: worker.full_name || "",
+                        nationality: worker.nationality || "",
+                        phone: worker.phone || "",
+                        gender: worker.gender || "",
+                    });
+
+                    if (worker.workerSkills?.length) {
+                        setSkills(
+                            worker.workerSkills.map((s) => ({
+                                skill_name: s.skill_name || "",
+                                years_of_experience: s.years_of_experience?.toString() || "",
+                                certification: s.certification || "",
+                            }))
+                        );
+                    }
+                } else {
+                    toast.error(t("workerNotFound", { defaultValue: "Worker not found." }));
                     router.push(`/dashboard-superadmin/companies/${companyId}/workers`);
-                    return;
                 }
-                setWorker(foundWorker);
-                setFormData({
-                    full_name: foundWorker.full_name || "",
-                    nationality: foundWorker.nationality || "",
-                    phone: foundWorker.phone || "",
-                    gender: foundWorker.gender || ""
-                });
-            } catch (err) {
-                console.error("Error fetching worker:", err);
-                toast.error(t("editWorker.fetchError", { defaultValue: "Failed to fetch worker data." }));
-            } finally {
-                setLoading(false);
+            } catch (error) {
+                console.error("❌ Error loading worker:", error);
+                toast.error(t("loadWorkerError", { defaultValue: "Failed to load worker data." }));
             }
         };
 
-        fetchWorker();
-    }, [companyId, workerId, router, t]);
+        if (workerId) fetchWorker();
+    }, [workerId]);
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSkillChange = (index, e) => {
+        const updatedSkills = [...skills];
+        updatedSkills[index][e.target.name] = e.target.value;
+        setSkills(updatedSkills);
+    };
+
+    const addSkillField = () => {
+        setSkills([...skills, { skill_name: "", years_of_experience: "", certification: "" }]);
+    };
+
+    const removeSkillField = (index) => {
+        const updatedSkills = skills.filter((_, i) => i !== index);
+        setSkills(updatedSkills);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const formattedSkills = skills
+            .filter((s) => s.skill_name.trim() !== "")
+            .map((s) => ({
+                skill_name: s.skill_name.trim(),
+                years_of_experience: s.years_of_experience
+                    ? parseInt(s.years_of_experience)
+                    : null,
+                certification: s.certification.trim() || null,
+            }));
+
+        if (!formData.full_name.trim()) {
+            toast.error(t("requiredField", { defaultValue: "Full name is required." }));
+            return;
+        }
+
+        if (formattedSkills.length === 0) {
+            toast.error(
+                t("pleaseAddSkill", {
+                    defaultValue: "Please add at least one skill with a name.",
+                })
+            );
+            return;
+        }
+
+        const payload = new FormData();
+        payload.append("full_name", formData.full_name);
+        payload.append("nationality", formData.nationality);
+        payload.append("phone", formData.phone);
+        payload.append("gender", formData.gender);
+        payload.append("workerSkills", JSON.stringify(formattedSkills));
+        if (imageFile) payload.append("image", imageFile);
+
+        console.log("🧠 Form values:", formData);
+        console.log("🖼️ Selected image file:", imageFile?.name);
+        console.log("🧰 WorkerSkills:", formattedSkills);
+        console.log("📤 Submitting payload:", Array.from(payload.entries()));
+
         try {
-            await updateCompanyWorker(workerId, formData);
-            toast.success(t("editWorker.success", { defaultValue: "Worker updated successfully." }));
-            router.push(`/dashboard-superadmin/companies/${companyId}/workers`);
-        } catch (err) {
-            console.error("Error updating worker:", err);
-            toast.error(err.response?.data?.message || t("editWorker.updateError", { defaultValue: "Failed to update worker." }));
+            await updateCompanyWorker(workerId, payload);
+            toast.success(t("workerUpdated", { defaultValue: "Worker updated successfully!" }));
+            router.push(`/dashboard-superadmin/companies/${companyId}/workers"`);
+        } catch (error) {
+            console.error("❌ Update error:", error);
+            toast.error(t("updateWorkerError", { defaultValue: "Failed to update worker." }));
         }
     };
 
-    if (loading) return <p>{t("editWorker.loading", { defaultValue: "Loading worker data..." })}</p>;
-
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>{t("editWorker.title", { defaultValue: "Edit Worker" })}</h1>
             <form onSubmit={handleSubmit} className={styles.form}>
                 <input
-                    type="text"
+                    className={styles.input}
                     name="full_name"
-                    placeholder={t("editWorker.fullName", { defaultValue: "Full Name" })}
+                    placeholder={t("fullName", { defaultValue: "Full Name" })}
                     value={formData.full_name}
                     onChange={handleChange}
                     required
-                    className={styles.input}
                 />
                 <input
-                    type="text"
+                    className={styles.input}
                     name="nationality"
-                    placeholder={t("editWorker.nationality", { defaultValue: "Nationality" })}
+                    placeholder={t("nationality", { defaultValue: "Nationality" })}
                     value={formData.nationality}
                     onChange={handleChange}
-                    className={styles.input}
                 />
                 <input
-                    type="text"
+                    className={styles.input}
                     name="phone"
-                    placeholder={t("editWorker.phone", { defaultValue: "Phone" })}
+                    placeholder={t("phone", { defaultValue: "Phone" })}
                     value={formData.phone}
                     onChange={handleChange}
-                    className={styles.input}
                 />
-                <select
+                <input
+                    className={styles.input}
                     name="gender"
+                    placeholder={t("gender", { defaultValue: "Gender" })}
                     value={formData.gender}
                     onChange={handleChange}
-                    className={styles.select}
+                />
+
+                <input
+                    className={styles.input}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                        setImageFile(e.target.files[0]);
+                        console.log("📸 Selected new image:", e.target.files[0]);
+                    }}
+                />
+
+                <h4>{t("skills", { defaultValue: "Skills" })}</h4>
+                {skills.map((skill, index) => (
+                    <div key={index} className={styles.skillGroup}>
+                        <input
+                            className={styles.input}
+                            name="skill_name"
+                            placeholder={t("skillName", { defaultValue: "Skill Name" })}
+                            value={skill.skill_name}
+                            onChange={(e) => handleSkillChange(index, e)}
+                            required
+                        />
+                        <input
+                            className={styles.input}
+                            name="years_of_experience"
+                            placeholder={t("yearsOfExperience", {
+                                defaultValue: "Years of Experience (optional)",
+                            })}
+                            type="number"
+                            value={skill.years_of_experience}
+                            onChange={(e) => handleSkillChange(index, e)}
+                        />
+                        <input
+                            className={styles.input}
+                            name="certification"
+                            placeholder={t("certification", {
+                                defaultValue: "Certification (optional)",
+                            })}
+                            value={skill.certification}
+                            onChange={(e) => handleSkillChange(index, e)}
+                        />
+                        {skills.length > 1 && (
+                            <button
+                                type="button"
+                                onClick={() => removeSkillField(index)}
+                                className={styles.button}
+                            >
+                                {t("remove", { defaultValue: "Remove" })}
+                            </button>
+                        )}
+                    </div>
+                ))}
+                <button
+                    type="button"
+                    onClick={addSkillField}
+                    className={styles.button}
                 >
-                    <option value="">{t("editWorker.selectGender", { defaultValue: "Select Gender" })}</option>
-                    <option value="male">{t("editWorker.male", { defaultValue: "Male" })}</option>
-                    <option value="female">{t("editWorker.female", { defaultValue: "Female" })}</option>
-                </select>
+                    {t("addAnotherSkill", { defaultValue: "Add Another Skill" })}
+                </button>
                 <button type="submit" className={styles.button}>
-                    {t("editWorker.updateButton", { defaultValue: "Update Worker" })}
+                    {t("updateWorker", { defaultValue: "Update Worker" })}
                 </button>
             </form>
         </div>

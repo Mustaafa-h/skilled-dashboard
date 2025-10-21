@@ -27,7 +27,8 @@ const Layout = ({ children }) => {
     if (role === "company_admin") {
       console.log("[Layout] Authorization OK");
       setIsAuthorized(true);
-    } else {
+    }
+    else {
       console.warn("[Layout] Not authorized, redirecting to /login");
       router.push("/login");
     }

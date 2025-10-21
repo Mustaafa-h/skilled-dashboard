@@ -53,10 +53,34 @@ export default function SingleCompanyPage() {
                 >
                     Manage Preferences
                 </button>
+                <button
+                    onClick={() => router.push(`/dashboard-superadmin/companies/${companyId}/orders`)}
+                    className={styles.button}
+                >
+                    orders
+                </button>
+                <button
+                    onClick={() => router.push(`/dashboard-superadmin/companies/${companyId}/reviews`)}
+                    className={styles.button}
+                >
+                    Reviews
+                </button>
+                <button
+                    onClick={() => router.push(`/dashboard-superadmin/companies/${companyId}/admins`)}
+                    className={styles.button}
+                >
+                    Admins
+                </button>
             </div>
 
             {/* Basic Company Overview */}
             <div className={styles.section}>
+                <p><span className={styles.label}>name:</span> <span className={styles.value}>{company.name || "N/A"}</span></p>
+                <p><span className={styles.label}>rating:</span> <span className={styles.value}>{company.rating || "N/A"}</span></p>
+                <p><span className={styles.label}>is_verified:</span> <span className={styles.value}>{company.is_verified === true ? "yes " : "No"}</span></p>
+                <p><span className={styles.label}>total_reviews:</span> <span className={styles.value}>{company.total_reviews || "N/A"}</span></p>
+                <p><span className={styles.label}>no_workers:</span> <span className={styles.value}>{company.no_workers || "N/A"}</span></p>
+
                 <p><span className={styles.label}>About:</span> <span className={styles.value}>{company.about || "N/A"}</span></p>
                 <p><span className={styles.label}>Website:</span> <span className={styles.value}>{company.website_url || "N/A"}</span></p>
                 <p><span className={styles.label}>Price Range:</span> <span className={styles.value}>{company.price_range || "N/A"}</span></p>
