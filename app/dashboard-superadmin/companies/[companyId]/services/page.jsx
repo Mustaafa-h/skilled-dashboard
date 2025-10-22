@@ -1,131 +1,225 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import toast from "react-hot-toast";
+import { FiTrash2, FiPlus } from "react-icons/fi";
+import styles from "@/app/ui/dashboard/products/products.module.css";
 import {
-    getCompany,
-    getAllServices,
-    removeCompanySubService
+  getCompany,
+  getAllServices,
+  getAllSubServices,
+  removeCompanySubService,
+  removeCompanyService,
+  addCompanySubService,
 } from "@/app/lib/api";
-import styles from "@/app/ui/superadmin/companies/[companyId]/services/page.module.css";
+import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { useParams, useRouter } from "next/navigation";
 
-export default function CompanyServicesPage() {
-    const t = useTranslations();
-    const { companyId } = useParams();
-    const router = useRouter();
+export default function ProductsPage() {
+  const t = useTranslations();
+  const [companyData, setCompanyData] = useState(null);
+  const [services, setServices] = useState([]);
+  const [subServices, setSubServices] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [popupServiceId, setPopupServiceId] = useState(null);
+  const [selectableSubs, setSelectableSubs] = useState([]);
+  const [selectedSubId, setSelectedSubId] = useState("");
 
-    const [companyData, setCompanyData] = useState(null);
-    const [allServices, setAllServices] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { companyId } = useParams();
 
-    const fetchData = useCallback(async () => {
-        setLoading(true);
-        try {
-            const [companyRes, servicesRes] = await Promise.all([
-                getCompany(companyId),
-                getAllServices()
-            ]);
-            setCompanyData(companyRes.data.data);
-            setAllServices(servicesRes.data.data);
-        } catch (error) {
-            console.error("Error fetching company services:", error);
-            toast.error(t("companyServices.loadError", { defaultValue: "Failed to load company services." }));
-        } finally {
-            setLoading(false);
-        }
-    }, [companyId, t]);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [companyRes, servicesRes, allSubsRes] = await Promise.all([
+        getCompany(companyId),
+        getAllServices(),
+        getAllSubServices(),
+      ]);
+      setCompanyData(companyRes.data.data);
+      setServices(servicesRes.data.data);
+      setSubServices(allSubsRes.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error(t("fetchDataError"));
+    } finally {
+      setLoading(false);
+    }
+  }, [companyId, t]);
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-    const handleDeleteSubService = async (subServiceId) => {
-        if (!confirm(t("companyServices.confirmDelete", { defaultValue: "Are you sure you want to remove this sub-service?" }))) return;
-        try {
-            await removeCompanySubService(companyId, subServiceId);
-            toast.success(t("companyServices.deleteSuccess", { defaultValue: "Sub-service removed successfully." }));
-            fetchData();
-        } catch (error) {
-            console.error("Error removing sub-service:", error);
-            toast.error(t("companyServices.deleteError", { defaultValue: "Failed to remove sub-service." }));
-        }
-    };
+  const handleDeleteSub = async (subServiceId) => {
+    if (!confirm(t("confirmRemoveSub"))) return;
+    try {
+      await removeCompanySubService(companyId, subServiceId);
+      toast.success(t("subRemoved"));
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error(t("removeSubError"));
+    }
+  };
 
-    const groupSubservicesByService = () => {
-        if (!companyData) return {};
-        const grouped = {};
-        companyData.subserviceDetails?.forEach((sub) => {
-            if (!grouped[sub.service_id]) {
-                grouped[sub.service_id] = [];
-            }
-            grouped[sub.service_id].push(sub);
-        });
-        return grouped;
-    };
+  const handleDeleteMainService = async (serviceId) => {
+    if (!confirm(t("confirmRemoveService"))) return;
 
-    const groupedSubservices = groupSubservicesByService();
+    try {
+      const subsToDelete = companyData.subserviceDetails.filter(
+        (s) => s.service_id === serviceId
+      );
 
-    const serviceIdToName = {};
-    allServices.forEach((service) => {
-        serviceIdToName[service.id] = service.name;
+      await Promise.all(
+        subsToDelete.map((sub) =>
+          removeCompanySubService(companyId, sub.id).catch((err) =>
+            console.warn(`Failed to remove subservice ${sub.id}`, err)
+          )
+        )
+      );
+
+      await removeCompanyService(companyId, serviceId);
+
+      toast.success(t("serviceRemoved"));
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error(t("removeServiceError"));
+    }
+  };
+
+  const handleAddSubService = async () => {
+    try {
+      await addCompanySubService(companyId, popupServiceId, selectedSubId);
+      toast.success(t("subAdded"));
+      setPopupServiceId(null);
+      setSelectedSubId("");
+      fetchData();
+    } catch (err) {
+      toast.error(t("addSubError"));
+    }
+  };
+
+  const openSubModal = (serviceId) => {
+    setPopupServiceId(serviceId);
+    const alreadyAdded = companyData.subserviceDetails
+      .filter((s) => s.service_id === serviceId)
+      .map((s) => s.id);
+    const relatedSubs = subServices.filter((s) => s.service_id === serviceId);
+    const available = relatedSubs.filter((s) => !alreadyAdded.includes(s.id));
+    setSelectableSubs(available);
+  };
+
+  const groupSubservicesByServiceId = () => {
+    if (!companyData) return {};
+    const grouped = {};
+    companyData.subserviceDetails?.forEach((sub) => {
+      if (!grouped[sub.service_id]) grouped[sub.service_id] = [];
+      grouped[sub.service_id].push(sub);
     });
+    return grouped;
+  };
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <h1 className={styles.title}>
-                    {t("companyServices.title", { defaultValue: "Services for" })} {companyData?.name || t("companyServices.company", { defaultValue: "Company" })}
-                </h1>
-                <Link href={`/dashboard-superadmin/companies/${companyId}/services/add`}>
-                    <button className={styles.addButton}>
-                        {t("companyServices.addService", { defaultValue: "Add New Service" })}
+  const groupedSubservices = groupSubservicesByServiceId();
+
+  const serviceIdToName = {};
+  services.forEach((service) => {
+    serviceIdToName[service.id] = service.name;
+  });
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <h2>{t("services")}</h2>
+         <button
+          onClick={() => router.push(`/dashboard-superadmin/companies/${companyId}/services/add`)}
+          className={styles.addButton}
+        >
+          {t("addNew")}
+        </button>
+      </div>
+
+      {loading ? (
+        <p>{t("loading")}</p>
+      ) : Object.keys(groupedSubservices).length > 0 ? (
+        <div className={styles.cardGrid}>
+          {Object.entries(groupedSubservices).map(([serviceId, subservices]) => {
+            const service = companyData.companyServices?.find((s) => s.service_id === serviceId);
+            const serviceName = serviceIdToName[serviceId] || "Unknown";
+
+            return (
+              <div className={styles.serviceCard} key={serviceId}>
+                <div className={styles.serviceHeader}>
+                  <h3>{`${t("services")}: ${serviceName}`}</h3>
+                  <div className={styles.serviceActions}>
+                    <button
+                      className={`${styles.iconButton}`}
+                      title={t("add")}
+                      onClick={() => openSubModal(serviceId)}
+                    >
+                      <FiPlus />
                     </button>
-                </Link>
-            </div>
-
-            {loading ? (
-                <p>{t("companyServices.loading", { defaultValue: "Loading services..." })}</p>
-            ) : Object.keys(groupedSubservices).length === 0 ? (
-                <p>{t("companyServices.noServices", { defaultValue: "No services/sub-services associated with this company yet." })}</p>
-            ) : (
-                <div className={styles.grid}>
-                    {Object.entries(groupedSubservices).map(([serviceId, subservices]) => {
-                        const service = companyData.companyServices?.find((s) => s.service_id === serviceId);
-                        const serviceName = serviceIdToName[serviceId] || t("companyServices.unknownService", { defaultValue: "Unknown Service" });
-                        return (
-                            <div key={serviceId} className={styles.card}>
-                                <h3 className={styles.serviceName}>
-                                    {t("companyServices.service", { defaultValue: "Service:" })} {serviceName}
-                                </h3>
-                                <p className={styles.baseCost}>
-                                    {t("companyServices.baseCost", { defaultValue: "Base Cost:" })} {service?.base_cost || t("companyServices.na", { defaultValue: "N/A" })}
-                                </p>
-                                <div className={styles.subServiceList}>
-                                    {subservices.map((sub) => (
-                                        <div key={sub.id} className={styles.subServiceItem}>
-                                            <div>
-                                                <strong>{sub.name}</strong>
-                                                <p className={styles.subDescription}>
-                                                    {sub.description || t("companyServices.noDescription", { defaultValue: "No description" })}
-                                                </p>
-                                            </div>
-                                            <button
-                                                onClick={() => handleDeleteSubService(sub.id)}
-                                                className={styles.removeButton}
-                                            >
-                                                {t("companyServices.remove", { defaultValue: "Remove" })}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        );
-                    })}
+                    <button
+                      className={`${styles.iconButton} ${styles.delete}`}
+                      title={t("cancel")}
+                      onClick={() => handleDeleteMainService(serviceId)}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </div>
                 </div>
-            )}
+
+                <p>{`${t("baseCost")}: ${service?.base_cost || "N/A"}`}</p>
+                <div className={styles.subServiceList}>
+                  {subservices.map((sub) => (
+                    <div className={styles.subServiceCard} key={sub.id}>
+                      <div>
+                        <strong>{sub.name}</strong>
+                        <p>{sub.description || t("noDescription")}</p>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteSub(sub.id)}
+                        className={`${styles.iconButton} ${styles.delete}`}
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
-    );
+      ) : (
+        <p>{t("noSubServicesFound")}</p>
+      )}
+
+      {popupServiceId && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h3>{t("selectSubservice")}</h3>
+            <select
+              className={styles.popupOption}
+              value={selectedSubId}
+              onChange={(e) => setSelectedSubId(e.target.value)
+
+              }
+            >
+              <option value="">{t("selectPlaceholder")}</option>
+              {selectableSubs.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            <div className={styles.modalActions}>
+              <button className={styles.actionBtn} onClick={handleAddSubService}>{t("add")}</button>
+              <button className={styles.deleteBtn} onClick={() => setPopupServiceId(null)}>{t("cancel")}</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

@@ -105,7 +105,7 @@ export const removeCompanySubService = async (companyId, subServiceId) =>
   withCatch(() => API.delete(`/companies/${companyId}/subservices/${subServiceId}`));
 
 // ===================== Companies =====================
-export const getAllCompanies = async () => withCatch(() => API.get("/companies"));
+export const getAllCompanies = async (params) => withCatch(() => API.get("/companies", { params }));
 export const getCompany = async (companyId) => withCatch(() => API.get(`/companies/${companyId}`));
 export const createCompany = async (companyData) => withCatch(() => API.post("/companies", companyData));
 export const updateCompany = async (companyId, companyData) =>
