@@ -1,3 +1,4 @@
+//aap/api/superadmin/companies/[companyId]/bookings/route.js
 import { NextResponse } from "next/server";
 
 const API_BASE = process.env.NEXT_PUBLIC_BOOKINGS_API_URL;
