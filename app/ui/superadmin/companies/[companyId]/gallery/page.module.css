@@ -77,3 +77,15 @@
     text-align: center;
     word-break: break-word;
 }
+.deleteButton{
+  margin-top: 8px;
+  padding: 0.35rem 0.75rem;
+  background-color: rgb(195, 47, 72);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color .2s ease;
+}
+.deleteButton:hover{ background-color: rgb(157, 68, 80); }

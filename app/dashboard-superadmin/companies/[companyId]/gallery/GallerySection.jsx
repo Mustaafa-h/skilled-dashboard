@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/app/lib/supabase";
-import { addCompanyImage, getCompanyImages } from "@/app/lib/api";
+import { addCompanyImage, getCompanyImages, deleteCompanyImage } from "@/app/lib/api";
 import toast from "react-hot-toast";
 import styles from "@/app/ui/superadmin/companies/[companyId]/gallery/page.module.css";
 import { useTranslations } from "next-intl";
@@ -74,6 +74,19 @@ export default function GallerySection({ companyId }) {
     }
   };
 
+  const handleDelete = async (imageId) => {
+    if (!confirm(t("gallery.confirmDelete", { defaultValue: "Delete this image?" }))) return;
+    try {
+      await deleteCompanyImage(imageId);
+      toast.success(t("gallery.deleteSuccess", { defaultValue: "Image deleted." }));
+      fetchImages();
+    } catch (err) {
+      console.error(err);
+      toast.error(t("gallery.deleteError", { defaultValue: "Failed to delete image." }));
+    }
+  };
+
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>{t("gallery.title", { defaultValue: "Company Gallery" })}</h2>
@@ -106,9 +119,15 @@ export default function GallerySection({ companyId }) {
           <div key={img.id} className={styles.imageCard}>
             <img src={img.url} alt={img.description} className={styles.image} />
             <p className={styles.imageDescription}>{img.description}</p>
+            <button
+              className={styles.deleteButton}
+              onClick={() => handleDelete(img.id)}
+            >
+              {t("delete", { defaultValue: "Delete" })}
+            </button>
           </div>
         ))}
       </div>
-    </div>
+    </div >
   );
 }

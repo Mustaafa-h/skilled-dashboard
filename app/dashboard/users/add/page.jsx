@@ -115,14 +115,12 @@ export default function AddUserPage() {
           onChange={handleChange}
           required
         />
-        <input
-          name="gender"
-          placeholder={t("genderPlaceholder", {
-            defaultValue: "Gender (male/female)",
-          })}
-          onChange={handleChange}
-          required
-        />
+        <select name="gender" id="" onSelect={handleChange} value={formData.gender} placeholder={formData.gender}>
+          <option value="male">
+            {t("gender")}
+          </option>
+          <option value="female">female</option>
+        </select>
 
         <input
           type="file"
