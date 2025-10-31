@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-const BOOKINGS_BASE = process.env.NEXT_PUBLIC_BOOKINGS_API_URL || "http://ec2-3-68-193-86.eu-central-1.compute.amazonaws.com:3003/api/v1";
+const BOOKINGS_BASE = process.env.NEXT_PUBLIC_BOOKINGS_API_URL ;
 
 const API = axios.create({
   baseURL: API_BASE,
