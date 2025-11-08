@@ -387,7 +387,8 @@
     "banners": "Banners",
     "admins": "Admins",
     "settings": "Settings",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "workers": "workers"
   },
   "Admins": "Admins",
   "admins": {
@@ -623,7 +624,140 @@
   "ordersof": "of",
   "orderspage": "Page",
   "ordersprev": "Previous",
-  "ordersnext": "Next"
+  "ordersnext": "Next",
+  "workers": {
+    "add": {
+      "title": "Add New Worker",
+      "subtitle": "Create a worker profile, choose a worker type, and attach relevant skills.",
+      "sections": {
+        "core": "Core Information",
+        "role": "Role & Skills",
+        "media": "Photo & Documents",
+        "review": "Review & Submit"
+      },
+      "fields": {
+        "full_name": "Full name",
+        "phone": "Phone number",
+        "nationality": "Nationality",
+        "gender": "Gender",
+        "gender_male": "Male",
+        "gender_female": "Female",
+        "type": "Worker type",
+        "type_placeholder": "Select worker type",
+        "skills": "Skills",
+        "skills_placeholder": "Select one or more skills",
+        "years": "Years of experience",
+        "certificate": "Certificate (optional)",
+        "image": "Profile photo",
+        "image_hint": "PNG/JPG up to 2MB. Square image recommended.",
+        "notes": "Notes (optional)"
+      },
+      "helper": {
+        "type_first": "Select a worker type to load its skills.",
+        "skills_hint": "You can add multiple skills. Drag to reorder in your UI if needed.",
+        "years_range": "Enter a value between 0 and 60 years."
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save worker",
+        "saving": "Saving..."
+      },
+      "toast": {
+        "created": "Worker created successfully.",
+        "updated": "Worker updated successfully.",
+        "deleted": "Worker deleted.",
+        "error": "Something went wrong. Please try again.",
+        "skills_required": "Please select at least one skill."
+      },
+      "badges": {
+        "draft": "Draft",
+        "required": "Required"
+      },
+      "debug": {
+        "selected_type": "Selected worker type",
+        "selected_skills": "Selected skills",
+        "payload": "Outgoing payload"
+      }
+    }
+  },
+  "catalog": {
+    "types": {
+      "title": "Worker types",
+      "empty": "No worker types found."
+    },
+    "skills": {
+      "title": "Skills",
+      "empty": "No skills for this worker type."
+    }
+  },
+  "common": {
+    "search": "Search",
+    "remove": "Remove",
+    "select": "Select",
+    "optional": "Optional"
+  },
+  "countries": {
+    "placeholder": "Select country"
+  },
+  "workers": {
+    "title": "Worker Types & Skills",
+    "subtitle": "Manage normalized worker types and their skills. These drive the company worker form.",
+    "loading": "Loading...",
+    "loadingSkills": "Loading skills...",
+    "empty": "No worker types yet.",
+    "noSkills": "No skills for this type yet.",
+    "badges": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "buttons": {
+      "addType": "Add Worker Type",
+      "editType": "Edit",
+      "deleteType": "Delete",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "addSkill": "Add Skill",
+      "editSkill": "Edit",
+      "deleteSkill": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "create": "Create"
+    },
+    "fields": {
+      "typeName": "Name",
+      "typeDesc": "Description",
+      "skillName": "Skill name",
+      "skillDesc": "Description",
+      "active": "Active"
+    },
+    "placeholders": {
+      "typeName": "e.g. Electrician",
+      "typeDesc": "Optional context shown for admins.",
+      "skillName": "e.g. Panel wiring",
+      "skillDesc": "Optional context shown for admins."
+    },
+    "modals": {
+      "addTypeTitle": "Add Worker Type",
+      "editTypeTitle": "Edit Worker Type",
+      "addSkillTitle": "Add Skill",
+      "editSkillTitle": "Edit Skill"
+    },
+    "validation": {
+      "nameRequired": "Name is required"
+    },
+    "confirm": {
+      "deleteType": "Delete this worker type?",
+      "deleteSkill": "Delete this skill?"
+    },
+    "errors": {
+      "loadTypes": "Failed to load worker types",
+      "loadSkills": "Failed to load skills",
+      "saveType": "Failed to save worker type",
+      "deleteType": "Failed to delete worker type",
+      "saveSkill": "Failed to save skill",
+      "deleteSkill": "Failed to delete skill"
+    }
+  }
 
 
 }

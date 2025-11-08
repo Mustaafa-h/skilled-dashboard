@@ -14,6 +14,7 @@ import {
     MdTune,
     MdPhotoLibrary,
     MdSettings,
+    MdPeople,
 } from "react-icons/md";
 
 const SuperAdminSidebar = ({ onClose, menuOpen }) => {
@@ -49,6 +50,11 @@ const SuperAdminSidebar = ({ onClose, menuOpen }) => {
                     title: t("companies", { defaultValue: "Companies" }),
                     path: "/dashboard-superadmin/companies",
                     icon: <MdBusiness />,
+                },
+                {
+                    title: t("workers", { defaultValue: "workers" }),
+                    path: "/dashboard-superadmin/workers",
+                    icon: <MdPeople />,
                 },
                 {
                     title: t("services", { defaultValue: "Services" }),

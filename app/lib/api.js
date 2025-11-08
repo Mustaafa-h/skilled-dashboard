@@ -292,3 +292,87 @@ export const getChatMessages = (roomId, page = 1, limit = 50) =>
   );
 
 
+// ===================== Catalog (Worker Types & Skills) =====================
+// Public catalog used by the Company dashboard to drive the Add Worker flow
+
+/** Get all worker types (e.g., Electrician, Plumber, ...). */
+export const getWorkerTypes = async () =>
+  withCatch(() => JSON_API.get("/worker-types"));
+
+/**
+ * Get skills belonging to a specific worker type.
+ * @param {string} workerTypeId
+ */
+export const getSkillsByWorkerType = async (workerTypeId) =>
+  withCatch(() => JSON_API.get(`/worker-types/${workerTypeId}/skills`));
+
+
+// ===================== Superadmin: Worker Types =====================
+// (Only if you need to manage catalog entities from the superadmin area)
+
+/** Create a worker type (name, description, active). */
+export const saCreateWorkerType = async (data) =>
+  withCatch(() => JSON_API.post("/superadmin/worker-types", data));
+
+/** Update a worker type by ID. */
+export const saUpdateWorkerType = async (id, data) =>
+  withCatch(() => JSON_API.put(`/superadmin/worker-types/${id}`, data));
+
+/** Delete a worker type by ID. */
+export const saDeleteWorkerType = async (id) =>
+  withCatch(() => JSON_API.delete(`/superadmin/worker-types/${id}`));
+
+
+// ===================== Superadmin: Skills =====================
+
+/**
+ * Create a skill.
+ * Payload shape usually: { worker_type_id, name, description?, active? }
+ */
+export const saCreateSkill = async (data) =>
+  withCatch(() => JSON_API.post("/superadmin/skills", data));
+
+/** Get all skills (optionally for admin lists). */
+export const saGetAllSkills = async () =>
+  withCatch(() => JSON_API.get("/superadmin/skills"));
+
+/** Update a skill by ID. */
+export const saUpdateSkill = async (id, data) =>
+  withCatch(() => JSON_API.put(`/superadmin/skills/${id}`, data));
+
+/** Delete a skill by ID. */
+export const saDeleteSkill = async (id) =>
+  withCatch(() => JSON_API.delete(`/superadmin/skills/${id}`));
+
+
+// ===================== Helpers for Add Worker payload =====================
+// (Optional convenience: build normalized skills payload you prefer)
+
+export const buildWorkerPayload = ({
+  company_id,
+  full_name,
+  nationality,
+  phone,
+  gender,
+  image,                // File or URL (your API accepts "image" or "image_url")
+  worker_type_id,       // required when sending skills
+  skills = [],          // [{ skill_id, years_of_experience?, certification? }]
+  is_active = true,
+}) => {
+  // This matches the shape that worked for you: skills: [{ skill_id: "..." }]
+  return {
+    company_id,
+    full_name,
+    nationality,
+    phone,
+    gender,
+    image,              // keep as-is; your server maps it if present
+    worker_type_id,
+    skills: skills.map((s) => ({
+      skill_id: s.skill_id,
+      years_of_experience: s.years_of_experience ?? null,
+      certification: s.certification ?? null,
+    })),
+    is_active,
+  };
+};

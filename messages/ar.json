@@ -382,7 +382,8 @@
     "banners": "Banners",
     "admins": "المشرفون",
     "settings": "الإعدادات",
-    "notifications": "الإشعارات"
+    "notifications": "الإشعارات",
+    "workers": "العمال"
   },
   "Sidebar": {
     "userRole": "مشرف عام",
@@ -396,7 +397,8 @@
     "banners": "اللافتات",
     "admins": "المشرفون",
     "settings": "الإعدادات",
-    "notifications": "الإشعارات"
+    "notifications": "الإشعارات",
+    "workers": "العمال"
   },
   "Admins": "المشرفون",
   "admins": {
@@ -637,5 +639,138 @@
   "ordersof": "من",
   "orderspage": "الصفحة",
   "ordersprev": "السابق",
-  "ordersnext": "التالي"
+  "ordersnext": "التالي",
+   "workers": {
+    "add": {
+      "title": "إضافة عامل جديد",
+      "subtitle": "أنشئ ملف العامل، اختر نوع العامل، ثم أضف المهارات المناسبة.",
+      "sections": {
+        "core": "المعلومات الأساسية",
+        "role": "الدور والمهارات",
+        "media": "الصورة والمستندات",
+        "review": "مراجعة وإرسال"
+      },
+      "fields": {
+        "full_name": "الاسم الكامل",
+        "phone": "رقم الهاتف",
+        "nationality": "الجنسية",
+        "gender": "الجنس",
+        "gender_male": "ذكر",
+        "gender_female": "أنثى",
+        "type": "نوع العامل",
+        "type_placeholder": "اختر نوع العامل",
+        "skills": "المهارات",
+        "skills_placeholder": "اختر مهارة أو أكثر",
+        "years": "سنوات الخبرة",
+        "certificate": "الشهادة (اختياري)",
+        "image": "صورة الملف",
+        "image_hint": "PNG/JPG حتى 2MB. يُفضّل صورة مربعة.",
+        "notes": "ملاحظات (اختياري)"
+      },
+      "helper": {
+        "type_first": "اختر نوع العامل لتحميل مهاراته.",
+        "skills_hint": "يمكنك إضافة عدة مهارات.",
+        "years_range": "أدخل قيمة بين 0 و 60 سنة."
+      },
+      "actions": {
+        "cancel": "إلغاء",
+        "save": "حفظ العامل",
+        "saving": "جاري الحفظ..."
+      },
+      "toast": {
+        "created": "تم إنشاء العامل بنجاح.",
+        "updated": "تم تحديث بيانات العامل.",
+        "deleted": "تم حذف العامل.",
+        "error": "حدث خطأ ما. حاول مرة أخرى.",
+        "skills_required": "الرجاء اختيار مهارة واحدة على الأقل."
+      },
+      "badges": {
+        "draft": "مسودة",
+        "required": "إلزامي"
+      },
+      "debug": {
+        "selected_type": "نوع العامل المحدد",
+        "selected_skills": "المهارات المحددة",
+        "payload": "البيانات المرسلة"
+      }
+    }
+  },
+  "catalog": {
+    "types": {
+      "title": "أنواع العاملين",
+      "empty": "لا توجد أنواع عاملين."
+    },
+    "skills": {
+      "title": "المهارات",
+      "empty": "لا توجد مهارات لهذا النوع."
+    }
+  },
+  "common": {
+    "search": "بحث",
+    "remove": "إزالة",
+    "select": "اختيار",
+    "optional": "اختياري"
+  },
+  "countries": {
+    "placeholder": "اختر الدولة"
+  },
+  "workers": {
+    "title": "أنواع العمال والمهارات",
+    "subtitle": "إدارة أنواع العمال المعيارية والمهارات التابعة لها. هذه البيانات تُستخدم في نموذج إضافة العامل للشركات.",
+    "loading": "جاري التحميل...",
+    "loadingSkills": "جاري تحميل المهارات...",
+    "empty": "لا توجد أنواع عمال بعد.",
+    "noSkills": "لا توجد مهارات لهذا النوع حتى الآن.",
+    "badges": {
+      "active": "مُفعل",
+      "inactive": "غير مُفعل"
+    },
+    "buttons": {
+      "addType": "إضافة نوع عامل",
+      "editType": "تعديل",
+      "deleteType": "حذف",
+      "expand": "عرض",
+      "collapse": "إخفاء",
+      "addSkill": "إضافة مهارة",
+      "editSkill": "تعديل",
+      "deleteSkill": "حذف",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "create": "إنشاء"
+    },
+    "fields": {
+      "typeName": "الاسم",
+      "typeDesc": "الوصف",
+      "skillName": "اسم المهارة",
+      "skillDesc": "الوصف",
+      "active": "حالة التفعيل"
+    },
+    "placeholders": {
+      "typeName": "مثال: كهربائي",
+      "typeDesc": "وصف اختياري يظهر للمشرفين.",
+      "skillName": "مثال: تمديد لوحات",
+      "skillDesc": "وصف اختياري يظهر للمشرفين."
+    },
+    "modals": {
+      "addTypeTitle": "إضافة نوع عامل",
+      "editTypeTitle": "تعديل نوع عامل",
+      "addSkillTitle": "إضافة مهارة",
+      "editSkillTitle": "تعديل مهارة"
+    },
+    "validation": {
+      "nameRequired": "الاسم مطلوب"
+    },
+    "confirm": {
+      "deleteType": "هل تريد حذف نوع العامل هذا؟",
+      "deleteSkill": "هل تريد حذف هذه المهارة؟"
+    },
+    "errors": {
+      "loadTypes": "فشل تحميل أنواع العمال",
+      "loadSkills": "فشل تحميل المهارات",
+      "saveType": "فشل حفظ نوع العامل",
+      "deleteType": "فشل حذف نوع العامل",
+      "saveSkill": "فشل حفظ المهارة",
+      "deleteSkill": "فشل حذف المهارة"
+    }
+  }
 }
