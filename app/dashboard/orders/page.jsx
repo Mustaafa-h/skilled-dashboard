@@ -103,7 +103,6 @@ const OrdersPage = () => {
       setRefreshing(false);
     }
   };
-
   // initial + auto-refresh current page
   useEffect(() => {
     fetchOrders(page);

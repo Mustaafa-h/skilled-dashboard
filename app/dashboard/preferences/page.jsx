@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import styles from '@/app/ui/dashboard/preferences/preferences.module.css';
 import {
   getCompanyPreferences,
-  getAllServices,
+  getCompanyServices,
   getPreferenceTypes,
   createCompanyPreference,
   updateCompanyPreference
@@ -21,8 +21,8 @@ export default function PreferencesPage() {
   const [states, setStates] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const companyId = typeof window !== "undefined" 
-    ? localStorage.getItem("companyId") 
+  const companyId = typeof window !== "undefined"
+    ? localStorage.getItem("companyId")
     : null;
 
   useEffect(() => {
@@ -33,9 +33,9 @@ export default function PreferencesPage() {
         console.log('Company preferences response:', cpData);
         setCompanyPreferences(cpData.data);
 
-        const { data: servicesRes } = await getAllServices();
-        console.log('All services response:', servicesRes);
-        const fetchedServices = servicesRes.data;
+        const { data: servicesRes } = await getCompanyServices(companyId);
+        console.log('company services response:', servicesRes); // <-- array of { id, name? }
+        const fetchedServices = Array.isArray(servicesRes) ? servicesRes : [];
 
         const servicePrefs = [];
         for (const service of fetchedServices) {
@@ -119,105 +119,152 @@ export default function PreferencesPage() {
     <div className={styles.container} dir={locale === "ar" ? "rtl" : "ltr"}>
       <h2 className={styles.title}>{t("companyPreferences")}</h2>
 
-      {services.map(({ service, preferences }) => (
-        <div key={service.id} className={styles.serviceBlock}>
-          <h3>
-            {locale === "ar" 
-              ? service.nameAR || service.name 
-              : service.name}
-          </h3>
+      {services.map(({ service, preferences }, idx) => {
+        // ---- Separation header (no extra API calls) ----
+        // Prefer any existing name fields; else show the ID as the header.
+        const headerLabel =
+          (locale === "ar" ? (service.nameAR || service.name) : (service.name || service.nameAR))
+          || `Service ${String(service.id).slice(0, 8)}`;
 
-          {preferences.length === 0 ? (
-            <p className={styles.noOptions}>{t("noPreferences")}</p>
-          ) : preferences.map(pref => {
-            const displayName = locale === "ar"
-              ? pref.nameAR || pref.name
-              : pref.name;
-            const displayDesc = locale === "ar"
-              ? pref.descriptionAR || pref.description
-              : pref.description;
-            console.log("Rendering pref:", { id: pref.id, displayName, displayDesc });
+        // Small short id badge
+        const shortId = String(service.id).slice(0, 8);
 
-            return (
-              <div key={pref.id} className={styles.prefBlock}>
-                <strong>{displayName}</strong>
-                <p className={styles.prefDescription}>{displayDesc}</p>
+        return (
+          <div key={service.id} className={styles.serviceBlock}>
+            {/* Divider between services (except first) */}
+            {idx > 0 && (
+              <hr style={{ borderColor: 'rgba(255,255,255,0.08)', margin: '24px 0' }} />
+            )}
 
-                {/* single-select */}
-                {pref.type === 'single-select' && pref.options.length > 0 && pref.options.map(option => {
-                  const optionName = locale === "ar"
-                    ? option.display_nameAR || option.display_name
-                    : option.display_name;
-                  const optionDesc = locale === "ar"
-                    ? option.descriptionAR || option.description
-                    : option.description;
-                  console.log("Rendering option:", { id: option.id, optionName, optionDesc });
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h3 style={{ margin: 0 }}>{headerLabel}</h3>
+              <code style={{ opacity: 0.6, fontSize: 12 }}>{shortId}</code>
+            </div>
 
-                  return (
-                    <div key={option.id} className={styles.optionRow}>
-                      <label>
+            {preferences.length === 0 ? (
+              <p className={styles.noOptions}>{t("noPreferences")}</p>
+            ) : preferences.map(pref => {
+              const displayName = locale === "ar"
+                ? pref.nameAR || pref.name
+                : pref.name;
+              const displayDesc = locale === "ar"
+                ? pref.descriptionAR || pref.description
+                : pref.description;
+              console.log("Rendering pref:", { id: pref.id, displayName, displayDesc });
+
+              return (
+                <div key={pref.id} className={styles.prefBlock}>
+                  <strong>{displayName}</strong>
+                  <p className={styles.prefDescription}>{displayDesc}</p>
+
+                  {/* single-select */}
+                  {pref.type === 'single-select' && pref.options.length > 0 && pref.options.map(option => {
+                    const optionName = locale === "ar"
+                      ? option.display_nameAR || option.display_name
+                      : option.display_name;
+                    const optionDesc = locale === "ar"
+                      ? option.descriptionAR || option.description
+                      : option.description;
+                    console.log("Rendering option:", { id: option.id, optionName, optionDesc });
+
+                    return (
+                      <div key={option.id} className={styles.optionRow}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={states[option.id]?.isActive || false}
+                            onChange={e => setStates(prev => ({
+                              ...prev,
+                              [option.id]: {
+                                ...prev[option.id],
+                                isActive: e.target.checked
+                              }
+                            }))}
+                          /> {optionName} - {optionDesc}
+                        </label>
                         <input
-                          type="checkbox"
-                          checked={states[option.id]?.isActive || false}
+                          type="number"
+                          placeholder={t("price")}
+                          value={states[option.id]?.price || ""}
                           onChange={e => setStates(prev => ({
                             ...prev,
                             [option.id]: {
                               ...prev[option.id],
+                              price: e.target.value
+                            }
+                          }))}
+                          className={styles.priceInput}
+                        />
+                        <button
+                          onClick={() => handleSave({
+                            company_id: companyId,
+                            preference_type_id: pref.id,
+                            preference_option_id: option.id,
+                            is_available: states[option.id]?.isActive || false,
+                            cost_type: "fixed",
+                            per_unit_cost: parseFloat(states[option.id]?.price) || 0
+                          }, option.id)}
+                          className={styles.saveButton}
+                        >
+                          {t("save")}
+                        </button>
+                      </div>
+                    );
+                  })}
+
+                  {/* boolean */}
+                  {pref.type === 'boolean' && (
+                    <div className={styles.optionRow}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={states[pref.id]?.isActive || false}
+                          onChange={e => setStates(prev => ({
+                            ...prev,
+                            [pref.id]: {
+                              ...prev[pref.id],
                               isActive: e.target.checked
                             }
                           }))}
-                        /> {optionName} - {optionDesc}
+                        /> {t("enable")} {displayName}
                       </label>
-                      <input
-                        type="number"
-                        placeholder={t("price")}
-                        value={states[option.id]?.price || ""}
-                        onChange={e => setStates(prev => ({
-                          ...prev,
-                          [option.id]: {
-                            ...prev[option.id],
-                            price: e.target.value
-                          }
-                        }))}
-                        className={styles.priceInput}
-                      />
+                      {states[pref.id]?.isActive && (
+                        <input
+                          type="number"
+                          placeholder={t("costIfEnabled")}
+                          value={states[pref.id]?.price || ""}
+                          onChange={e => setStates(prev => ({
+                            ...prev,
+                            [pref.id]: {
+                              ...prev[pref.id],
+                              price: e.target.value
+                            }
+                          }))}
+                          className={styles.priceInput}
+                        />
+                      )}
                       <button
                         onClick={() => handleSave({
                           company_id: companyId,
                           preference_type_id: pref.id,
-                          preference_option_id: option.id,
-                          is_available: states[option.id]?.isActive || false,
+                          is_available: states[pref.id]?.isActive || false,
                           cost_type: "fixed",
-                          per_unit_cost: parseFloat(states[option.id]?.price) || 0
-                        }, option.id)}
+                          per_unit_cost: parseFloat(states[pref.id]?.price) || 0
+                        }, pref.id)}
                         className={styles.saveButton}
                       >
                         {t("save")}
                       </button>
                     </div>
-                  );
-                })}
+                  )}
 
-                {/* boolean */}
-                {pref.type === 'boolean' && (
-                  <div className={styles.optionRow}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={states[pref.id]?.isActive || false}
-                        onChange={e => setStates(prev => ({
-                          ...prev,
-                          [pref.id]: {
-                            ...prev[pref.id],
-                            isActive: e.target.checked
-                          }
-                        }))}
-                      /> {t("enable")} {displayName}
-                    </label>
-                    {states[pref.id]?.isActive && (
+                  {/* number */}
+                  {pref.type === 'number' && (
+                    <div className={styles.optionRow}>
+                      <label>{t("baseCostPerUnitLabel")}</label>
                       <input
                         type="number"
-                        placeholder={t("costIfEnabled")}
+                        placeholder={t("baseCostPerUnitPlaceholder")}
                         value={states[pref.id]?.price || ""}
                         onChange={e => setStates(prev => ({
                           ...prev,
@@ -228,58 +275,26 @@ export default function PreferencesPage() {
                         }))}
                         className={styles.priceInput}
                       />
-                    )}
-                    <button
-                      onClick={() => handleSave({
-                        company_id: companyId,
-                        preference_type_id: pref.id,
-                        is_available: states[pref.id]?.isActive || false,
-                        cost_type: "fixed",
-                        per_unit_cost: parseFloat(states[pref.id]?.price) || 0
-                      }, pref.id)}
-                      className={styles.saveButton}
-                    >
-                      {t("save")}
-                    </button>
-                  </div>
-                )}
-
-                {/* number */}
-                {pref.type === 'number' && (
-                  <div className={styles.optionRow}>
-                    <label>{t("baseCostPerUnitLabel")}</label>
-                    <input
-                      type="number"
-                      placeholder={t("baseCostPerUnitPlaceholder")}
-                      value={states[pref.id]?.price || ""}
-                      onChange={e => setStates(prev => ({
-                        ...prev,
-                        [pref.id]: {
-                          ...prev[pref.id],
-                          price: e.target.value
-                        }
-                      }))}
-                      className={styles.priceInput}
-                    />
-                    <button
-                      onClick={() => handleSave({
-                        company_id: companyId,
-                        preference_type_id: pref.id,
-                        is_available: true,
-                        cost_type: "fixed",
-                        per_unit_cost: parseFloat(states[pref.id]?.price) || 0
-                      }, pref.id)}
-                      className={styles.saveButton}
-                    >
-                      {t("save")}
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ))}
+                      <button
+                        onClick={() => handleSave({
+                          company_id: companyId,
+                          preference_type_id: pref.id,
+                          is_available: true,
+                          cost_type: "fixed",
+                          per_unit_cost: parseFloat(states[pref.id]?.price) || 0
+                        }, pref.id)}
+                        className={styles.saveButton}
+                      >
+                        {t("save")}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 }

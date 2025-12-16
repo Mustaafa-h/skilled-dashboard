@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-const BOOKINGS_BASE = process.env.NEXT_PUBLIC_BOOKINGS_API_URL ;
+const BOOKINGS_BASE = process.env.NEXT_PUBLIC_BOOKINGS_API_URL;
 
 const API = axios.create({
   baseURL: API_BASE,
@@ -52,7 +52,7 @@ const BOOKINGS_API = axios.create({
   baseURL: BOOKINGS_BASE,
   headers: {
     "Content-Type": "application/json",
-    "Accept": "*/*"  
+    "Accept": "*/*"
   },
 });
 
@@ -75,20 +75,70 @@ export const login = async (email, password) =>
   withCatch(() => API.post("/auth/login", { email, password }));
 
 // ===================== Workers =====================
-export const getCompanyWorkers = async (companyId, activeOnly = false) =>
-  withCatch(() => API.get(`/companies/${companyId}/workers`, { params: { active_only: activeOnly } }));
 
-export const addCompanyWorker = async (companyId, workerData) =>
-  withCatch(() => API.post(`/companies/${companyId}/workers`, workerData));
+export const getCompanyWorkers = async (companyId, activeOnly = false) =>
+  withCatch(() =>
+    JSON_API.get(`/companies/${companyId}/workers`, {
+      params: { active_only: activeOnly }, // axios will serialize false -> "false"
+    })
+  );
 
 export const getCompanyWorkerById = async (workerId) =>
-  withCatch(() => API.get(`/companies/workers/${workerId}`));
+  withCatch(() => JSON_API.get(`/companies/workers/${workerId}`));
 
-export const updateCompanyWorker = async (workerId, updatedData) =>
-  withCatch(() => API.put(`/companies/workers/${workerId}`, updatedData));
+export const addCompanyWorker = async (companyId, workerData, imageFile = null) =>
+  withCatch(() => {
+    // If we have image -> multipart; otherwise -> JSON
+    if (imageFile) {
+      const fd = new FormData();
+
+      if (workerData?.full_name != null) fd.append("full_name", workerData.full_name);
+      if (workerData?.nationality != null) fd.append("nationality", workerData.nationality);
+      if (workerData?.phone != null) fd.append("phone", workerData.phone);
+      if (workerData?.gender != null) fd.append("gender", workerData.gender);
+      if (workerData?.worker_type_id != null) fd.append("worker_type_id", workerData.worker_type_id);
+
+      // IMPORTANT: multipart expects skills as JSON string
+      if (workerData?.skills != null) fd.append("skills", JSON.stringify(workerData.skills));
+      if (workerData?.workerSkills != null) fd.append("workerSkills", JSON.stringify(workerData.workerSkills)); // legacy optional
+
+      fd.append("image", imageFile);
+
+      console.log("[api] addCompanyWorker multipart entries:", Array.from(fd.entries()));
+      return API.post(`/companies/${companyId}/workers`, fd);
+    }
+
+    console.log("[api] addCompanyWorker json payload:", workerData);
+    return JSON_API.post(`/companies/${companyId}/workers`, workerData);
+  });
+
+export const updateCompanyWorker = async (workerId, updatedData, imageFile = null) =>
+  withCatch(() => {
+    if (imageFile) {
+      const fd = new FormData();
+
+      if (updatedData?.full_name != null) fd.append("full_name", updatedData.full_name);
+      if (updatedData?.nationality != null) fd.append("nationality", updatedData.nationality);
+      if (updatedData?.phone != null) fd.append("phone", updatedData.phone);
+      if (updatedData?.gender != null) fd.append("gender", updatedData.gender);
+      if (updatedData?.worker_type_id != null) fd.append("worker_type_id", updatedData.worker_type_id);
+
+      if (updatedData?.skills != null) fd.append("skills", JSON.stringify(updatedData.skills));
+      if (updatedData?.workerSkills != null) fd.append("workerSkills", JSON.stringify(updatedData.workerSkills)); // legacy optional
+
+      fd.append("image", imageFile);
+
+      console.log("[api] updateCompanyWorker multipart entries:", Array.from(fd.entries()));
+      return API.put(`/companies/workers/${workerId}`, fd);
+    }
+
+    console.log("[api] updateCompanyWorker json payload:", updatedData);
+    return JSON_API.put(`/companies/workers/${workerId}`, updatedData);
+  });
 
 export const deleteCompanyWorker = async (workerId) =>
   withCatch(() => API.delete(`/companies/workers/${workerId}`));
+
 
 // ===================== Sub-Services =====================
 export const getAllSubServices = async () => withCatch(() => API.get("/sub-services"));
@@ -127,6 +177,49 @@ export const addCompanyService = async (companyId, serviceId, baseCost) =>
 export const removeCompanyService = async (companyId, serviceId) =>
   withCatch(() => JSON_API.delete(`/companies/${companyId}/services/${serviceId}`));
 
+
+// --- Company-scoped Services (for Preferences page) ---
+
+
+// --- Company-scoped Services (for Preferences page) ---
+export const getCompanyServices = async (companyId) =>
+  withCatch(async () => {
+    if (!companyId) throw new Error("getCompanyServices: companyId is required");
+
+    const res = await API.get(`/companies/${companyId}`);
+    const payload = res?.data;
+
+    // Support BOTH:
+    // A) { success, message, data: [ { companyServices: [...] } ] }
+    // B) { success, message, ...company fields..., companyServices: [...] }
+    // C) (some backends) { success, message, data: { ...company fields..., companyServices: [...] } }
+    let companyObj = null;
+
+    if (Array.isArray(payload?.data)) {
+      companyObj = payload.data[0];
+    } else if (payload?.data && typeof payload.data === "object") {
+      companyObj = payload.data;
+    } else if (payload && typeof payload === "object") {
+      companyObj = payload;
+    }
+
+    const rows = Array.isArray(companyObj?.companyServices)
+      ? companyObj.companyServices
+      : [];
+
+    const normalized = rows
+      .map((row) => {
+        const id = row?.service_id || row?.service?.id;
+        const name = row?.service?.name || row?.service_name || null;
+        return id ? { id, name } : null;
+      })
+      .filter(Boolean);
+
+    return { data: normalized };
+  });
+
+
+
 // ===================== Company Images =====================
 export const addCompanyImage = async (companyId, imageData) =>
   withCatch(() => API.post(`/companies/${companyId}/images`, imageData));
@@ -136,7 +229,7 @@ export const getCompanyImages = async (companyId, type = "gallery") =>
 
 export const deleteCompanyImage = async (imageId) =>
   API.delete(`/companies/images/${imageId}`);
- 
+
 
 // ==================Fetch paginated company reviews================
 // lib/api.js
@@ -246,24 +339,24 @@ export const deleteBanner = async (bannerId) =>
 //=================admins==========================
 
 export const getAdmins = () =>
-   withCatch(() => JSON_API.get("auth/getUsers"));
+  withCatch(() => JSON_API.get("auth/getUsers"));
 
-export const registerAdmin = async(superFormData) =>
-   withCatch(() => JSON_API.post("auth/register-admin", superFormData));
+export const registerAdmin = async (superFormData) =>
+  withCatch(() => JSON_API.post("auth/register-admin", superFormData));
 
-export const registerCompanyAdmin = async(formData) =>
-   withCatch(() => JSON_API.post("auth/register-company-admin",formData));
+export const registerCompanyAdmin = async (formData) =>
+  withCatch(() => JSON_API.post("auth/register-company-admin", formData));
 
-export const resetAdminsPassword = async(formData) =>
-   withCatch(() => JSON_API.post("auth/reset-password-admins",formData));
+export const resetAdminsPassword = async (formData) =>
+  withCatch(() => JSON_API.post("auth/reset-password-admins", formData));
 
 
 //=================notifications===================
-export const pushFcmAndFid = async(deviceId, fcmToken) =>
-   withCatch(() => JSON_API.post("auth/devices",{deviceId, fcmToken}));
+export const pushFcmAndFid = async (deviceId, fcmToken) =>
+  withCatch(() => JSON_API.post("auth/devices", { deviceId, fcmToken }));
 
-export const getDevice = async() =>
-   withCatch(() => JSON_API.get("auth/devices"));
+export const getDevice = async () =>
+  withCatch(() => JSON_API.get("auth/devices"));
 
 export default API;
 

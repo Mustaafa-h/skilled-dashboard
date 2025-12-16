@@ -150,7 +150,7 @@ export default function AddWorkerPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!companyId) {
-      toast.error(t("company.missingCompanyId") || "Missing company id");
+      toast.error(t("missingCompanyId") || "Missing company id");
       return;
     }
     if (!fullName.trim()) {

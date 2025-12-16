@@ -618,12 +618,11 @@
   "orderspaginationNext": "التالي",
   "orderspaginationPage": "الصفحة",
   "orderspaginationMeta": "الصفحة {page} من {totalPages} • {total} طلب",
-  "chat.loadingOlder": "جارِ تحميل رسائل أقدم…" ,
-  "reviews" :"التقييمات",
-    "reviewsTitle": "التقييمات",
+  "chat.loadingOlder": "جارِ تحميل رسائل أقدم…",
+  "reviews": "التقييمات",
+  "reviewsTitle": "التقييمات",
   "reviewsSubtitle": "اطّلع على آراء العملاء حول حجوزاتهم.",
   "perPage": "لكل صفحة",
-
   "reviewsExcellent": "ممتاز",
   "reviewsGood": "جيد",
   "reviewsBad": "سيئ",
@@ -633,14 +632,13 @@
   "reviewsNoBookingId": "لا يوجد رقم حجز",
   "reviewsEmpty": "لا توجد تقييمات بعد.",
   "reviewsFetchError": "فشل في جلب التقييمات.",
-
   "ordersshowing": "عرض",
   "ordersto": "إلى",
   "ordersof": "من",
   "orderspage": "الصفحة",
   "ordersprev": "السابق",
   "ordersnext": "التالي",
-   "workers": {
+  "workers": {
     "add": {
       "title": "إضافة عامل جديد",
       "subtitle": "أنشئ ملف العامل، اختر نوع العامل، ثم أضف المهارات المناسبة.",
@@ -772,5 +770,35 @@
       "saveSkill": "فشل حفظ المهارة",
       "deleteSkill": "فشل حذف المهارة"
     }
+  },
+  "Workers": {
+    "addWorker": "إضافة عامل",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "اكتب الاسم الكامل",
+    "fullNameRequired": "الاسم الكامل مطلوب",
+    "nationality": "الجنسية",
+    "phone": "رقم الهاتف",
+    "gender": "الجنس",
+    "genderMale": "ذكر",
+    "genderFemale": "أنثى",
+    "workerType": "نوع العامل",
+    "skills": "المهارات",
+    "selectTypeFirst": "اختر نوع العامل أولاً",
+    "noSkillsForType": "لا توجد مهارات لهذا النوع",
+    "years": "سنوات الخبرة",
+    "certification": "الشهادة",
+    "certPlaceholder": "اختياري (مثال: ISO)",
+    "image": "الصورة",
+    "imageHint": "اختياري — يفضل JPG/PNG",
+    "addedSuccessfully": "تمت إضافة العامل بنجاح"
+  },
+  "missingCompanyId": "معرّف الشركة غير موجود",
+  "Common": {
+    "select": "اختر",
+    "loading": "جاري التحميل...",
+    "saving": "جاري الحفظ...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "error": "حدث خطأ ما"
   }
 }

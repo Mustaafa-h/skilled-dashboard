@@ -584,14 +584,13 @@
     "failed": "Failed to create preference option."
   },
   "displayOrder": "Display Order",
-   "orderscancelTitle": "Cancel Booking",
+  "orderscancelTitle": "Cancel Booking",
   "orderscancelReasonLabel": "Reason",
   "orderscancelReasonPlaceholder": "Type the cancellation reason for the customer...",
   "orderscancelConfirm": "Confirm Cancel",
   "orderscancelDismiss": "Close",
   "orderscancelReasonRequired": "Please enter a reason.",
   "orderssaving": "Saving...",
-  
   "ordersselectReasonPlaceholder": "Select a reason",
   "ordersreasonNoStaff": "reason: No staff available",
   "ordersreasonScheduling": "reason: Scheduling conflict",
@@ -599,16 +598,15 @@
   "ordersreasonDuplicate": "reason: Duplicate booking",
   "ordersreasonOutOfArea": "reason: Out of service area",
   "ordersreasonPricing": "reason: Pricing mismatch",
-    "orderspaginationPrev": "Prev",
+  "orderspaginationPrev": "Prev",
   "orderspaginationNext": "Next",
   "orderspaginationPage": "Page",
   "orderspaginationMeta": "Page {page} of {totalPages} • {total} orders",
   "chat.loadingOlder": "Loading earlier messages…",
-  "reviews" :"reviews",
-    "reviewsTitle": "Reviews",
+  "reviews": "reviews",
+  "reviewsTitle": "Reviews",
   "reviewsSubtitle": "See what customers said about their bookings.",
   "perPage": "Per page",
-
   "reviewsExcellent": "Excellent",
   "reviewsGood": "Good",
   "reviewsBad": "Bad",
@@ -618,7 +616,6 @@
   "reviewsNoBookingId": "No booking id",
   "reviewsEmpty": "No reviews yet.",
   "reviewsFetchError": "Failed to fetch reviews.",
-
   "ordersshowing": "Showing",
   "ordersto": "to",
   "ordersof": "of",
@@ -757,7 +754,35 @@
       "saveSkill": "Failed to save skill",
       "deleteSkill": "Failed to delete skill"
     }
+  },
+  "Workers": {
+    "addWorker": "Add Worker",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Enter full name",
+    "fullNameRequired": "Full name is required",
+    "nationality": "Nationality",
+    "phone": "Phone",
+    "gender": "Gender",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "workerType": "Worker type",
+    "skills": "Skills",
+    "selectTypeFirst": "Select a worker type first",
+    "noSkillsForType": "No skills found for this worker type",
+    "years": "Years",
+    "certification": "Certification",
+    "certPlaceholder": "Optional certificate (e.g., ISO)",
+    "image": "Image",
+    "imageHint": "Optional — JPG/PNG recommended",
+    "addedSuccessfully": "Worker added successfully"
+  },
+  "missingCompanyId": "Missing company id",
+  "Common": {
+    "select": "Select",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "error": "Something went wrong"
   }
-
-
 }
