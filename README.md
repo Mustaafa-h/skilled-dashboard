@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Barq Operations Dashboard
 
-## Getting Started
+A role-based administrative dashboard built for a multi-service platform.  
+The application contains separate interfaces and workflows for Super Admin and Company Admin users within one Next.js project.
 
-First, run the development server:
+> Project status: The platform reached the development and stakeholder handoff stage but was not commercially launched.
+
+## My Contribution
+
+I built the web dashboard system from scratch and later contributed across the platform's API integrations, backend services, database workflows, Flutter applications, and deployment preparation.
+
+My dashboard responsibilities included:
+
+- Building the Company Admin and Super Admin interfaces
+- Integrating dashboard workflows with multiple backend services
+- Implementing JWT authentication and role-based redirection
+- Creating worker, service, company, administrator, and order management
+- Implementing chat and notification functionality
+- Supporting Arabic and English interfaces
+- Debugging cross-service and deployment-related issues
+
+## Dashboard Roles
+
+### Company Admin
+
+Company administrators can manage:
+
+- Workers and administrators
+- Orders and worker assignment
+- Services and preferences
+- Company information and location
+- Gallery content
+- Notifications
+- Customer reviews
+- Chat rooms and messages
+- Settings and privacy content
+
+### Super Admin
+
+Super administrators can manage:
+
+- Companies
+- Global and company administrators
+- Workers
+- Services and sub-services
+- Banners
+- Worker types and skills
+- Platform preferences
+- System-wide settings
+
+## Technology Stack
+
+- Next.js 14
+- React 18
+- JavaScript
+- CSS Modules
+- Axios
+- Zustand
+- next-intl
+- Socket.IO Client
+- Firebase Cloud Messaging
+- Leaflet and React Leaflet
+- Recharts
+- react-hot-toast
+
+## Key Engineering Features
+
+- Role-based dashboards and protected navigation
+- API integration across multiple backend services
+- JWT-based authentication
+- Real-time chat using Socket.IO
+- Firebase foreground notifications
+- Arabic and English localization
+- Interactive location management with Leaflet
+- Responsive administrative interfaces
+- Normalized worker type and skill management
+
+## Project Structure
+
+```text
+app/
+├── dashboard/              # Company Admin dashboard
+├── dashboard-superadmin/   # Super Admin dashboard
+├── login/                  # Authentication interface
+├── lib/                    # API, Firebase and Socket.IO clients
+├── ui/                     # Shared UI components
+├── utils/                  # Shared utilities
+└── api/                    # Application API routes
+```
+
+## Local Development
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Create the required environment variables, then start the application:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Screenshots
 
-## Learn More
+Dashboard screenshots and a demonstration environment will be added after the demo configuration is completed.
 
-To learn more about Next.js, take a look at the following resources:
+## Disclaimer
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This repository represents the dashboard portion of a larger platform that included Flutter applications, NestJS microservices, PostgreSQL, Redis, and cloud-hosted infrastructure.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+All currently displayed demonstration data is fictional. The project was not commercially launched following a stakeholder decision.
